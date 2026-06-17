@@ -1,0 +1,37 @@
+<div class="panel">
+  <!-- Panel de control: cambia el estado para probar tus @case. -->
+  <div class="controls">
+    @for (e of estados; track e) {
+      <button
+        type="button"
+        class="controls__btn"
+        [class.is-active]="estado() === e"
+        (click)="setEstado(e)"
+      >
+        {{ e }}
+      </button>
+    }
+  </div>
+
+  <!-- ====================== ZONA DEL EJERCICIO ====================== -->
+  <div class="screen">
+    @switch (estado()) {
+      @case ('pendiente') {
+        <div class="status status--pendiente">
+          <span class="status__icon">⏳</span>
+          <p class="status__text">Tu pedido está pendiente de preparación.</p>
+        </div>
+      }
+
+      <!-- TODO 1: añade un @case ('enviado') que muestre que el pedido va en camino
+           (usa la clase .status--enviado y el icono que prefieras, p. ej. 🚚). -->
+
+      <!-- TODO 2: añade un @case ('entregado') con un mensaje de éxito
+           (clase .status--entregado, icono ✅). -->
+
+      <!-- TODO 3: añade un @default que cubra cualquier otro caso (p. ej.
+           'cancelado'): un mensaje neutro con la clase .status--default. -->
+    }
+  </div>
+  <!-- ==================== FIN ZONA DEL EJERCICIO ==================== -->
+</div>

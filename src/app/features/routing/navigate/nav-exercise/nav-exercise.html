@@ -1,0 +1,26 @@
+<div class="nav-ex">
+  <!-- 1) NAVEGACIÓN DECLARATIVA: enlaces routerLink (ya funcionan). -->
+  <div class="group">
+    <span class="group__label">Declarativa · routerLink</span>
+    <div class="group__row">
+      <a routerLink="inicio" routerLinkActive="is-active" class="link">Inicio</a>
+      <a routerLink="productos" routerLinkActive="is-active" class="link">Productos</a>
+      <a routerLink="contacto" routerLinkActive="is-active" class="link">Contacto</a>
+    </div>
+  </div>
+
+  <!-- 2) NAVEGACIÓN IMPERATIVA: botones que llaman a métodos con Router.navigate. -->
+  <div class="group">
+    <span class="group__label">Imperativa · Router.navigate()</span>
+    <div class="group__row">
+      <button type="button" class="btn" (click)="irAInicio()">Ir a Inicio</button>
+      <button type="button" class="btn" (click)="irAProductos()">Ir a Productos (TODO 1)</button>
+      <button type="button" class="btn" (click)="guardarYContacto()">Guardar → Contacto (TODO 2)</button>
+    </div>
+  </div>
+
+  <!-- Destino activo. -->
+  <div class="nav-ex__outlet">
+    <router-outlet />
+  </div>
+</div>

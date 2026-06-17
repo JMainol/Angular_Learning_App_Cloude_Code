@@ -1,0 +1,19 @@
+<app-section-shell
+  code="4.2"
+  title="Estrategias de carga"
+  [theory]="theory"
+  [docUrl]="docUrl"
+  [simile]="simile"
+  [examples]="examples"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="HTML"
+    filename="loading-exercise.html"
+  />
+
+  <!-- Ejercicio en vivo: bloque @defer. Se proyecta en la mitad derecha. -->
+  <app-loading-exercise exercise-result />
+</app-section-shell>

@@ -1,0 +1,70 @@
+:host {
+  display: block;
+}
+
+.cart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.5rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.cart__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.cart__row strong {
+  font-family: var(--font-mono);
+  color: var(--text-strong);
+}
+
+.cart__sep {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 0.25rem 0;
+}
+
+/* Clase auxiliar para destacar el total (TODO 2). */
+.cart__row--total {
+  font-size: 1.05rem;
+}
+.cart__row--total strong {
+  color: var(--accent);
+  font-size: 1.2rem;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.stepper__btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  color: var(--text);
+  background: var(--bg-base);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.stepper__btn:hover {
+  color: var(--text-strong);
+  border-color: var(--text-dim);
+}
+.stepper__value {
+  font-family: var(--font-mono);
+  min-width: 1.5rem;
+  text-align: center;
+  color: var(--text-strong);
+}

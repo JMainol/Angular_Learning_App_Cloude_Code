@@ -1,0 +1,21 @@
+<div class="rating">
+  <div class="rating__stars" role="group" aria-label="Valoración">
+    @for (estrella of estrellas; track estrella) {
+      <button
+        type="button"
+        class="star"
+        [class.is-filled]="estrella <= valor()"
+        (click)="valorar.emit(estrella)"
+        [attr.aria-label]="estrella + ' estrellas'"
+      >
+        ★
+      </button>
+    }
+  </div>
+
+  <!-- TODO 2: añade un botón "Quitar" que emita el output limpiar:
+       <button type="button" class="rating__clear" (click)="limpiar.emit()">
+         Quitar
+       </button>
+  -->
+</div>

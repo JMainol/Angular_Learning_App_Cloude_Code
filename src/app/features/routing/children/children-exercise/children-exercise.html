@@ -1,0 +1,21 @@
+<div class="ajustes">
+  <!-- Cabecera persistente: no se recrea al cambiar de pestaña. -->
+  <header class="ajustes__head">
+    <h3 class="ajustes__title">Ajustes de la cuenta</h3>
+    <p class="ajustes__sub">El marco se mantiene; solo cambia el contenido de abajo.</p>
+  </header>
+
+  <!-- Pestañas (rutas hijas). -->
+  <nav class="ajustes__tabs">
+    <a routerLink="perfil" routerLinkActive="is-active" class="tab">Perfil</a>
+    <a routerLink="seguridad" routerLinkActive="is-active" class="tab">Seguridad</a>
+
+    <!-- TODO 3: añade la pestaña de notificaciones (tras definir su ruta):
+         <a routerLink="notificaciones" routerLinkActive="is-active" class="tab">Notificaciones</a> -->
+  </nav>
+
+  <!-- Aquí se renderiza la pestaña activa. -->
+  <div class="ajustes__outlet">
+    <router-outlet />
+  </div>
+</div>

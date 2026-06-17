@@ -1,0 +1,19 @@
+<app-section-shell
+  code="2.2"
+  title="Input"
+  [theory]="theory"
+  [docUrl]="docUrl"
+  [simile]="simile"
+  [examples]="examples"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="profile-card.ts"
+  />
+
+  <!-- Ejercicio en vivo (host padre + tarjeta hija). Se proyecta a la derecha. -->
+  <app-input-exercise exercise-result />
+</app-section-shell>

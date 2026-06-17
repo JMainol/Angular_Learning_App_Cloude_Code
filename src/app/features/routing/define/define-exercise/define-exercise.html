@@ -1,0 +1,22 @@
+<div class="mini">
+  <!-- Navegación del mini-sitio. routerLinkActive marca el enlace activo. -->
+  <nav class="mini__nav">
+    <a routerLink="inicio" routerLinkActive="is-active" class="mini__link">Inicio</a>
+    <a routerLink="productos" routerLinkActive="is-active" class="mini__link">Productos</a>
+
+    <!-- TODO 2: añade el enlace a contacto (después de definir su ruta en
+         define.routes.ts):
+         <a routerLink="contacto" routerLinkActive="is-active" class="mini__link">Contacto</a> -->
+  </nav>
+
+  <!-- Aquí se renderiza la vista hija que coincide con la ruta activa. -->
+  <div class="mini__outlet">
+    <router-outlet />
+  </div>
+
+  <p class="mini__hint">
+    Cada pestaña cambia la URL y el <code>&lt;router-outlet&gt;</code> muestra la vista
+    de esa ruta. La pestaña <strong>Contacto</strong> no aparecerá hasta que definas su
+    ruta y su enlace.
+  </p>
+</div>

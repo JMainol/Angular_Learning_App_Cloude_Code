@@ -1,0 +1,19 @@
+<div class="panel">
+  <!-- Lectura del signal: se llama como una función, aforo(). -->
+  <div class="gauge">
+    <span class="gauge__value">{{ aforo() }}</span>
+    <span class="gauge__max">/ {{ AFORO_MAX }}</span>
+    <span class="gauge__label">personas en la sala</span>
+  </div>
+
+  <!-- Barra de ocupación: el ancho deriva del valor del signal. -->
+  <div class="bar" role="presentation">
+    <div class="bar__fill" [style.width.%]="(aforo() / AFORO_MAX) * 100"></div>
+  </div>
+
+  <div class="controls">
+    <button type="button" class="controls__btn" (click)="entrar()">Entra (+1)</button>
+    <button type="button" class="controls__btn" (click)="salir()">Sale (−1)</button>
+    <button type="button" class="controls__btn" (click)="reiniciar()">Vaciar sala</button>
+  </div>
+</div>

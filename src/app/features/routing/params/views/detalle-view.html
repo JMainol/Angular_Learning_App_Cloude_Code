@@ -1,0 +1,20 @@
+<div class="detalle">
+  <span class="detalle__badge">parámetro recibido</span>
+
+  <!-- El id viene del segmento dinámico :id de la URL. -->
+  <p class="detalle__text">
+    Has abierto el detalle del producto con <code>id = {{ id() }}</code>.
+  </p>
+
+  <!-- TODO 1: cuando definas el computed `producto`, muestra sus datos:
+       @if (producto(); as p) {
+         <h4 class="detalle__title">{{ p.nombre }}</h4>
+         <p class="detalle__price">{{ p.precio }} €</p>
+       } @else {
+         <p class="detalle__text">No existe un producto con ese id.</p>
+       } -->
+
+  <!-- TODO 2: enlace para volver a la lista:
+       <a class="detalle__back" routerLink="../../lista">← Volver a la lista</a>
+       (recuerda importar RouterLink en detalle-view.ts) -->
+</div>

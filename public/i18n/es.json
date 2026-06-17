@@ -1,0 +1,7 @@
+{
+  "demo": {
+    "titulo": "Internacionalización con ngx-translate",
+    "descripcion": "Los textos no se escriben a mano en la plantilla: se leen por clave desde archivos de idioma.",
+    "boton": "Cambiar idioma"
+  }
+}

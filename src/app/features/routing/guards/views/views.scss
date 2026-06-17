@@ -1,0 +1,34 @@
+.zona {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  animation: zona-in 0.2s ease;
+}
+.zona h4 {
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+.zona p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.zona--libre {
+  background: var(--surface-raised);
+}
+.zona--privada {
+  background: var(--surface-raised);
+  border-left: 2px solid #34d399;
+}
+
+@keyframes zona-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

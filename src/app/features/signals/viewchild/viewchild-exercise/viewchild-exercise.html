@@ -1,0 +1,15 @@
+<div class="panel">
+  <!-- La variable de plantilla #campo es lo que viewChild('campo') localiza. -->
+  <input #campo class="field" type="text" placeholder="Escribe algo y pulsa Leer" />
+
+  <div class="controls">
+    <button type="button" class="controls__btn" (click)="enfocar()">Enfocar</button>
+    <button type="button" class="controls__btn" (click)="leer()">Leer valor</button>
+    <button type="button" class="controls__btn" (click)="limpiar()">Limpiar</button>
+  </div>
+
+  <p class="readout">
+    Valor leído por ViewChild:
+    <strong>{{ eco() || '—' }}</strong>
+  </p>
+</div>

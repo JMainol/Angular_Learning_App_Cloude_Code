@@ -1,0 +1,29 @@
+<div class="panel">
+  <!-- Selector de idioma. -->
+  <div class="langs">
+    @for (l of idiomas; track l) {
+      <button
+        type="button"
+        class="langs__btn"
+        [class.is-active]="idioma() === l"
+        (click)="cambiarIdioma(l)"
+      >
+        {{ l }}
+      </button>
+    }
+  </div>
+
+  <!-- Textos por clave: el pipe translate los resuelve según el idioma activo. -->
+  <div class="card">
+    <h3 class="card__title">{{ 'demo.titulo' | translate }}</h3>
+    <p class="card__text">{{ 'demo.descripcion' | translate }}</p>
+
+    <!-- TODO 1: añade la clave "demo.saludo" en es.json y en.json, y muéstrala:
+         <p class="card__greet">{{ 'demo.saludo' | translate }}</p> -->
+
+    <!-- TODO 2: añade "demo.bienvenida" con un parámetro. En es.json:
+         "bienvenida": "Hola, {{nombre}}"   (en.json: "Hi, {{nombre}}")
+         y úsala pasando el parámetro al pipe:
+         <p>{{ 'demo.bienvenida' | translate: { nombre: 'Marta' } }}</p> -->
+  </div>
+</div>
