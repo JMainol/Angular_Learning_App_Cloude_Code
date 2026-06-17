@@ -1,0 +1,55 @@
+<section class="section">
+  <!-- Mitad izquierda: contenido educativo -->
+  <div class="edu">
+    <header class="edu__head">
+      <span class="edu__code">{{ code() }} · {{ title() }}</span>
+      <h1 class="edu__title">{{ title() }}</h1>
+    </header>
+
+    <!-- 1 · TEORÍA -->
+    <article class="part">
+      <span class="part__label">Teoría</span>
+      @for (p of theoryParagraphs(); track $index) {
+        <p class="part__text">{{ p }}</p>
+      }
+      <app-doc-link [href]="docUrl()" />
+    </article>
+
+    <!-- 2 · SÍMIL -->
+    <article class="part">
+      <span class="part__label">Símil</span>
+      <p class="part__text part__text--simile">{{ simile() }}</p>
+    </article>
+
+    <!-- 3 · EJEMPLOS DE USO COMÚN -->
+    <article class="part">
+      <span class="part__label">Ejemplos de uso común</span>
+      <ol class="examples">
+        @for (ex of examples(); track $index) {
+          <li class="examples__item">
+            <span class="examples__num">{{ $index + 1 }}</span>
+            <span>{{ ex }}</span>
+          </li>
+        }
+      </ol>
+    </article>
+
+    <!-- 4 · EJERCICIO PRÁCTICO (código con TODOs, proyectado) -->
+    <article class="part">
+      <span class="part__label">Ejercicio práctico</span>
+      <p class="part__hint">
+        Completa los <code>TODO</code> del código. Al guardar, el resultado de la derecha
+        se actualiza solo (hot reload).
+      </p>
+      <ng-content select="[exercise-code]" />
+    </article>
+  </div>
+
+  <!-- Mitad derecha: resultado renderizado del ejercicio -->
+  <div class="result">
+    <span class="result__label">Resultado</span>
+    <div class="result__stage">
+      <ng-content select="[exercise-result]" />
+    </div>
+  </div>
+</section>

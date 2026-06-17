@@ -1,0 +1,75 @@
+<aside class="bar" [class.is-collapsed]="collapsed()">
+  <div class="bar__top">
+    <a class="brand" routerLink="/" [class.is-hidden]="collapsed()">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__name">Guía Angular</span>
+    </a>
+
+    <button
+      type="button"
+      class="bar__toggle"
+      (click)="toggleCollapsed()"
+      [attr.aria-label]="collapsed() ? 'Mostrar menú' : 'Ocultar menú'"
+      [attr.aria-expanded]="!collapsed()"
+    >
+      <!-- Chevron que invierte su dirección según el estado. -->
+      <svg width="16" height="16" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true">
+        <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+      </svg>
+    </button>
+  </div>
+
+  @if (!collapsed()) {
+    <nav class="nav" aria-label="Temario">
+      @for (block of blocks; track block.id) {
+        <div class="block" [class.is-open]="openBlockId() === block.id">
+          <button
+            type="button"
+            class="block__head"
+            (click)="toggleBlock(block.id)"
+            [attr.aria-expanded]="openBlockId() === block.id"
+          >
+            <span class="block__code">{{ block.code }}</span>
+            <span class="block__title">{{ block.title }}</span>
+            <svg
+              class="block__chevron"
+              width="14"
+              height="14"
+              viewBox="0 -960 960 960"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M480-360 280-560h400L480-360Z" />
+            </svg>
+          </button>
+
+          <!-- Solo se monta la lista del bloque abierto: menos DOM y más claro. -->
+          @if (openBlockId() === block.id) {
+            <ul class="items">
+              @for (section of block.sections; track section.code) {
+                <li>
+                  @if (section.path) {
+                    <a
+                      class="item"
+                      [routerLink]="section.path"
+                      routerLinkActive="is-active"
+                    >
+                      <span class="item__code">{{ section.code }}</span>
+                      <span class="item__title">{{ section.title }}</span>
+                    </a>
+                  } @else {
+                    <span class="item item--soon" aria-disabled="true">
+                      <span class="item__code">{{ section.code }}</span>
+                      <span class="item__title">{{ section.title }}</span>
+                      <span class="item__soon">pronto</span>
+                    </span>
+                  }
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      }
+    </nav>
+  }
+</aside>

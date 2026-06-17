@@ -1,0 +1,42 @@
+<div class="panel">
+  <!-- Panel de control: cambia el estado para probar tus ramas @if/@else. -->
+  <div class="controls">
+    @for (e of estados; track e) {
+      <button
+        type="button"
+        class="controls__btn"
+        [class.is-active]="estado() === e"
+        (click)="setEstado(e)"
+      >
+        {{ e }}
+      </button>
+    }
+  </div>
+
+  <!-- ====================== ZONA DEL EJERCICIO ====================== -->
+  <div class="screen">
+    <!--
+      La base ya cubre 'cargando' y, con @else, "lo demás".
+      Tu trabajo es desglosar ese @else en ramas concretas.
+    -->
+    @if (estado() === 'cargando') {
+      <p class="state state--loading">Cargando sesión…</p>
+    }
+
+    <!-- TODO 1: añade una rama @else if para el estado 'error'.
+         Debe mostrar un mensaje de error claro (clase .state--error). -->
+
+    <!-- TODO 2: añade una rama @else if para 'autenticado' que use el alias `as`:
+         @if (usuario(); as u) { ... }
+         Dentro, muestra el nombre (u.nombre) y el rol (u.rol).
+         Pista: combina la condición de estado con la existencia de usuario. -->
+
+    @else {
+      <!-- TODO 3: este @else ahora captura TODO lo que no sea 'cargando'.
+           Cuando implementes los TODO 1 y 2, deja aquí solo el caso 'anonimo':
+           un mensaje invitando a iniciar sesión. -->
+      <p class="state">Estado pendiente de implementar: {{ estado() }}</p>
+    }
+  </div>
+  <!-- ==================== FIN ZONA DEL EJERCICIO ==================== -->
+</div>
