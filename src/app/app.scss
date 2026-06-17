@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.shell {
+  display: flex;
+  height: 100%;
+}
+
+.shell__content {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* En móvil dejamos crecer el contenido y permitimos scroll global. */
+@media (max-width: 900px) {
+  :host {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+  .shell {
+    flex-direction: column;
+    height: auto;
+  }
+  .shell__content {
+    height: auto;
+    overflow: visible;
+  }
+}

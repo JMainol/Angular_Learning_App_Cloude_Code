@@ -1,0 +1,152 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+/* Las dos mitades. Cada una con su propio fondo oscuro: el color separa lo que
+   enseña (izquierda) de lo que se ejecuta (derecha). */
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+/* --- Mitad izquierda: contenido educativo --- */
+.edu {
+  background: var(--surface-left);
+  border-right: 1px solid var(--border);
+  padding: 2.25rem 2.25rem 4rem;
+  overflow-y: auto;
+}
+
+.edu__head {
+  margin-bottom: 2rem;
+}
+
+.edu__code {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.edu__title {
+  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+/* Los 4 bloques comparten fondo; se separan con etiqueta + línea fina superior. */
+.part {
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.part:first-of-type {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.part__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+
+.part__text {
+  margin: 0 0 0.75rem;
+  max-width: 60ch; /* columna de lectura cómoda */
+}
+
+.part__text--simile {
+  color: var(--text-strong);
+  border-left: 2px solid var(--accent);
+  padding-left: 0.9rem;
+}
+
+.part__hint {
+  margin: 0 0 0.9rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.part__hint code {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  color: var(--text);
+}
+
+/* Lista de ejemplos: numeración real porque es una enumeración, no decoración. */
+.examples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.examples__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.examples__num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Mitad derecha: resultado --- */
+.result {
+  background: var(--surface-result);
+  padding: 2.25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.result__label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
+.result__stage {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Responsive: en pantallas estrechas las mitades se apilan. */
+@media (max-width: 900px) {
+  .section {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .edu {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    overflow-y: visible;
+    padding: 1.5rem 1.25rem 2.5rem;
+  }
+  .result {
+    overflow-y: visible;
+    padding: 1.5rem 1.25rem;
+  }
+}

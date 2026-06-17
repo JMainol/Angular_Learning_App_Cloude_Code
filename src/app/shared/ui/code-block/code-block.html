@@ -1,0 +1,24 @@
+<figure class="code">
+  <figcaption class="code__bar">
+    <span class="code__meta">
+      @if (filename()) {
+        <span class="code__file">{{ filename() }}</span>
+      }
+      @if (language()) {
+        <span class="code__lang">{{ language() }}</span>
+      }
+    </span>
+
+    <button
+      type="button"
+      class="code__copy"
+      [class.is-done]="copied()"
+      (click)="copy()"
+      [attr.aria-label]="copied() ? 'Código copiado' : 'Copiar código'"
+    >
+      {{ copied() ? 'Copiado' : 'Copiar' }}
+    </button>
+  </figcaption>
+
+  <pre class="code__pre"><code>{{ code() }}</code></pre>
+</figure>
