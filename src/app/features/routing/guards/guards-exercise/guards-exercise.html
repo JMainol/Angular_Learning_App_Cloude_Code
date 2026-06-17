@@ -1,0 +1,26 @@
+<div class="guard-ex">
+  <!-- Estado de sesión + interruptor. -->
+  <div class="session">
+    <span class="session__state" [class.is-on]="sesion.activa()">
+      {{ sesion.activa() ? 'Sesión iniciada' : 'Sin sesión' }}
+    </span>
+    <button type="button" class="session__btn" (click)="alternarSesion()">
+      {{ sesion.activa() ? 'Cerrar sesión' : 'Iniciar sesión' }}
+    </button>
+  </div>
+
+  <!-- Navegación a las dos zonas. -->
+  <nav class="zonas">
+    <a routerLink="libre" routerLinkActive="is-active" class="zona-link">Zona libre</a>
+    <a routerLink="privado" routerLinkActive="is-active" class="zona-link">Zona privada 🔒</a>
+  </nav>
+
+  <div class="guard-ex__outlet">
+    <router-outlet />
+  </div>
+
+  <p class="guard-ex__hint">
+    Prueba: sin sesión, pulsa <strong>Zona privada</strong>. Con el guard sin
+    proteger entrarás igual; al resolver el TODO, el guard te devolverá a la libre.
+  </p>
+</div>

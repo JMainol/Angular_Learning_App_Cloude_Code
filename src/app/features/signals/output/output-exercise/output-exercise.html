@@ -1,0 +1,17 @@
+<div class="panel">
+  <!-- El padre escucha el output del hijo con (valorar). El dato baja por
+       [valor] y el aviso sube por (valorar). -->
+  <app-star-rating
+    [valor]="valoracion()"
+    (valorar)="setValoracion($event)"
+  />
+  <!--
+    TODO 3: escucha también el output `limpiar` para reiniciar la valoración:
+        (limpiar)="reset()"
+  -->
+
+  <p class="readout">
+    Valoración recibida del hijo:
+    <strong>{{ valoracion() }}</strong> / 5
+  </p>
+</div>

@@ -1,0 +1,19 @@
+<app-section-shell
+  code="2.3"
+  title="Output"
+  [theory]="theory"
+  [docUrl]="docUrl"
+  [simile]="simile"
+  [examples]="examples"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="star-rating.ts"
+  />
+
+  <!-- Ejercicio en vivo (host padre + valoración hija). Se proyecta a la derecha. -->
+  <app-output-exercise exercise-result />
+</app-section-shell>

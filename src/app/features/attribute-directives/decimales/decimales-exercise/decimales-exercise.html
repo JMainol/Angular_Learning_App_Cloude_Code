@@ -1,0 +1,35 @@
+<div class="panel">
+  <!-- Selector de decimales permitidos: cambia el valor que recibe el setter. -->
+  <div class="control">
+    <span class="control__label">Decimales permitidos</span>
+    <div class="control__opts">
+      @for (n of opciones; track n) {
+        <button
+          type="button"
+          class="opt"
+          [class.is-active]="decimales() === n"
+          (click)="setDecimales(n)"
+        >
+          {{ n }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- El input recibe la directiva. Escribe un número con muchos decimales. -->
+  <label class="field-wrap">
+    <span class="field-wrap__label">Importe</span>
+    <input
+      class="field"
+      type="text"
+      inputmode="decimal"
+      placeholder="Ej. 12.3456"
+      [appDecimales]="decimales()"
+    />
+  </label>
+
+  <p class="hint">
+    Con <strong>{{ decimales() }}</strong> decimales permitidos, el campo recorta lo que
+    sobre al escribir (cuando completes los TODO de la directiva).
+  </p>
+</div>

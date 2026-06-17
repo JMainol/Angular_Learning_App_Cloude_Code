@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.ajustes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.ajustes__head {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.85rem;
+}
+.ajustes__title {
+  font-size: 1.1rem;
+}
+.ajustes__sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.ajustes__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.tab {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.tab:hover {
+  color: var(--text-strong);
+  background: rgba(255, 255, 255, 0.04);
+}
+.tab.is-active {
+  color: #fff;
+  background: var(--accent-grad);
+}
+
+.ajustes__outlet {
+  min-height: 110px;
+}

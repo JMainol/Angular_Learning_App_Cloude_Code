@@ -1,0 +1,57 @@
+:host {
+  display: block;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.langs {
+  display: flex;
+  gap: 0.3rem;
+}
+.langs__btn {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.langs__btn:hover {
+  color: var(--text-strong);
+  border-color: var(--border-strong);
+}
+.langs__btn.is-active {
+  color: #fff;
+  border-color: transparent;
+  background: var(--accent-grad);
+}
+
+.card {
+  padding: 1.5rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.card__title {
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+}
+.card__text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+.card__greet {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-mono);
+  color: var(--accent);
+}

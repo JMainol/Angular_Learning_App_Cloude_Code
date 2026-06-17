@@ -1,0 +1,34 @@
+<div class="panel">
+  <!--
+    [value] baja el dato del signal al input; (input) sube lo escrito al signal.
+    Es el patrón "value down, event up" hecho a mano con event listeners.
+    TODO 1: añade (keydown.enter)="enviar()" para enviar al pulsar Enter.
+  -->
+  <input
+    class="field"
+    type="text"
+    placeholder="Escribe un mensaje y pulsa Enter"
+    [value]="texto()"
+    (input)="onInput($event)"
+  />
+
+  <p class="live">
+    En vivo: <strong>{{ texto() || '—' }}</strong>
+    <span class="live__count">{{ texto().length }} car.</span>
+  </p>
+
+  <div class="controls">
+    <!-- TODO 2: añade un botón que llame a limpiar():
+         <button type="button" class="controls__btn" (click)="limpiar()">
+           Vaciar lista
+         </button> -->
+  </div>
+
+  <ul class="messages">
+    @for (mensaje of mensajes(); track $index) {
+      <li class="messages__item">{{ mensaje }}</li>
+    } @empty {
+      <li class="messages__empty">No hay mensajes. Escribe y pulsa Enter.</li>
+    }
+  </ul>
+</div>

@@ -1,0 +1,7 @@
+{
+  "demo": {
+    "titulo": "Internationalization with ngx-translate",
+    "descripcion": "Text is not hard-coded in the template: it is read by key from language files.",
+    "boton": "Change language"
+  }
+}

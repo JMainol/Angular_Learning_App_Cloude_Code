@@ -1,0 +1,26 @@
+<div class="panel">
+  <!--
+    @defer difiere la carga de HeavyPanel hasta cumplir el trigger.
+    Aquí el trigger es `on interaction`: se dispara al interactuar con el
+    placeholder (el botón de abajo).
+
+    TODO 1: añade un bloque @loading para mostrar algo DURANTE la descarga. Para
+    poder verlo aunque el chunk sea diminuto, usa un mínimo de tiempo:
+        @loading (minimum 800ms) {
+          <p class="hint">Cargando el panel…</p>
+        }
+
+    TODO 2: añade un bloque @error por si la carga falla:
+        @error {
+          <p class="hint">No se pudo cargar el panel.</p>
+        }
+  -->
+  @defer (on interaction) {
+    <app-heavy-panel />
+  } @placeholder {
+    <button type="button" class="trigger">
+      Cargar panel bajo demanda
+      <span class="trigger__sub">(clic para activar el &#64;defer)</span>
+    </button>
+  }
+</div>

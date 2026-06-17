@@ -1,0 +1,70 @@
+:host {
+  display: block;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.card__avatar {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-grad);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+.card__body {
+  min-width: 0;
+}
+
+.card__name {
+  font-size: 1.05rem;
+  color: var(--text-strong);
+}
+
+/* Clases auxiliares disponibles para tus TODO. */
+.card__role {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.05rem 0.5rem;
+}
+
+.card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.card__status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-dim);
+}
+.card__status.is-online {
+  color: #34d399;
+}
+.card__status.is-online::before {
+  background: #34d399;
+}

@@ -1,0 +1,19 @@
+<app-section-shell
+  code="1.3"
+  title="@switch"
+  [theory]="theory"
+  [docUrl]="docUrl"
+  [simile]="simile"
+  [examples]="examples"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="HTML"
+    filename="switch-exercise.html"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-switch-exercise exercise-result />
+</app-section-shell>

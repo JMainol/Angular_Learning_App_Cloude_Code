@@ -1,0 +1,37 @@
+<div class="panel">
+  <!-- Panel de control: modifica la lista para probar tu @for. -->
+  <div class="controls">
+    <button type="button" class="controls__btn" (click)="anadir()">+ Añadir</button>
+    <button type="button" class="controls__btn" (click)="quitarUltima()">– Quitar última</button>
+    <button type="button" class="controls__btn" (click)="vaciar()">Vaciar</button>
+  </div>
+
+  <!-- ====================== ZONA DEL EJERCICIO ====================== -->
+  <ul class="list">
+    <!--
+      La base usa `track $index`, que compila pero NO es lo ideal: si la lista
+      cambia en medio, Angular puede confundir qué fila es cuál.
+    -->
+    @for (tarea of tareas(); track $index) {
+      <li class="row">
+        <!-- TODO 2: muestra la posición usando la variable contextual $index
+             (recuerda que empieza en 0; suma 1 para enseñar "1, 2, 3…"). -->
+        <span class="row__num">·</span>
+
+        <span class="row__text">{{ tarea.texto }}</span>
+        <span class="row__tag" [attr.data-prioridad]="tarea.prioridad">{{ tarea.prioridad }}</span>
+      </li>
+    }
+
+    <!-- TODO 3: añade un bloque @empty (justo después del cierre del @for) que
+         muestre un mensaje cuando la lista esté vacía. Pruébalo con "Vaciar". -->
+  </ul>
+  <!-- ==================== FIN ZONA DEL EJERCICIO ==================== -->
+
+  <!--
+    TODO 1: cambia `track $index` por `track tarea.id`.
+    ¿Por qué? `track` le dice a Angular cómo identificar cada elemento entre
+    renders. Con el id estable, al añadir/quitar solo se toca la fila afectada;
+    con el índice, las posiciones "se reciclan" y puede re-renderizar de más.
+  -->
+</div>

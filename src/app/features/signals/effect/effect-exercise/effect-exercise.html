@@ -1,0 +1,26 @@
+<div class="panel">
+  <div class="counter">
+    <span class="counter__value">{{ contador() }}</span>
+    <div class="controls">
+      <button type="button" class="controls__btn" (click)="incrementar()">Incrementar</button>
+      <button type="button" class="controls__btn" (click)="reiniciar()">Reiniciar</button>
+    </div>
+  </div>
+
+  <!-- "Consola" alimentada por el effect (vacía hasta resolver el TODO 1). -->
+  <div class="console" aria-live="polite">
+    <span class="console__label">registro del effect</span>
+    @if (registro().length) {
+      <ul class="console__lines">
+        @for (linea of registro(); track $index) {
+          <li class="console__line">{{ linea }}</li>
+        }
+      </ul>
+    } @else {
+      <p class="console__empty">
+        (vacío) Resuelve el TODO 1 y pulsa "Incrementar" para ver el efecto.
+        Mientras tanto, revisa la consola del navegador: ya hay logs.
+      </p>
+    }
+  </div>
+</div>

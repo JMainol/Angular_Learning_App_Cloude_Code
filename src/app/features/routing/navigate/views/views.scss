@@ -1,0 +1,31 @@
+.dest {
+  padding: 1.25rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  animation: dest-in 0.2s ease;
+}
+.dest h4 {
+  font-size: 1.05rem;
+  margin-bottom: 0.4rem;
+}
+.dest p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.dest code {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+@keyframes dest-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

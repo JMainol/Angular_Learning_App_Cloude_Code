@@ -1,0 +1,86 @@
+/* Estilos compartidos por las vistas lista y detalle del ejercicio 4.3. */
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.lista__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.9rem;
+  color: var(--text-strong);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.lista__item:hover {
+  border-color: var(--accent);
+}
+.lista__id {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.detalle {
+  padding: 1.5rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  animation: detalle-in 0.25s ease;
+}
+.detalle__badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.detalle__text {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.detalle__text code {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+.detalle__title {
+  font-size: 1.2rem;
+  margin: 0.5rem 0 0.25rem;
+}
+.detalle__price {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-strong);
+}
+.detalle__back {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+.detalle__back:hover {
+  text-decoration: underline;
+}
+
+@keyframes detalle-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,19 @@
+<app-section-shell
+  code="2.1"
+  title="Signal"
+  [theory]="theory"
+  [docUrl]="docUrl"
+  [simile]="simile"
+  [examples]="examples"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="signal-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-signal-exercise exercise-result />
+</app-section-shell>

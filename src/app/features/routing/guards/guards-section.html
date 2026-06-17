@@ -1,0 +1,19 @@
+<app-section-shell
+  code="4.6"
+  title="Guards"
+  [theory]="theory"
+  [docUrl]="docUrl"
+  [simile]="simile"
+  [examples]="examples"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="sesion.guard.ts"
+  />
+
+  <!-- Ejercicio en vivo: zona libre vs privada protegida por el guard. A la derecha. -->
+  <app-guards-exercise exercise-result />
+</app-section-shell>

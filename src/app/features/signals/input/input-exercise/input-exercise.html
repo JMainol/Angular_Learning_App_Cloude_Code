@@ -1,0 +1,27 @@
+<div class="panel">
+  <!-- El padre pasa datos al hijo con property binding. La base solo enlaza
+       [nombre]; los TODO te piden enlazar también rol y online. -->
+  <app-profile-card
+    [nombre]="usuario().nombre"
+  />
+  <!--
+    TODO: añade los enlaces que faltan (después de declarar los inputs en
+    profile-card.ts):
+        [rol]="usuario().rol"
+        [online]="usuario().online"
+  -->
+
+  <div class="controls">
+    <button type="button" class="controls__btn" (click)="siguienteUsuario()">
+      Cambiar usuario
+    </button>
+    <button type="button" class="controls__btn" (click)="toggleOnline()">
+      Conectar / desconectar
+    </button>
+  </div>
+
+  <p class="hint">
+    Datos del padre →
+    <code>{{ usuario().nombre }} · {{ usuario().rol }} · {{ usuario().online ? 'online' : 'offline' }}</code>
+  </p>
+</div>
