@@ -8,7 +8,7 @@
 
     <!-- 1 · TEORÍA -->
     <article class="part">
-      <span class="part__label">Teoría</span>
+      <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
       @for (p of theoryParagraphs(); track $index) {
         <p class="part__text">{{ p }}</p>
       }
@@ -17,13 +17,13 @@
 
     <!-- 2 · SÍMIL -->
     <article class="part">
-      <span class="part__label">Símil</span>
+      <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
       <p class="part__text part__text--simile">{{ simile() }}</p>
     </article>
 
     <!-- 3 · EJEMPLOS DE USO COMÚN -->
     <article class="part">
-      <span class="part__label">Ejemplos de uso común</span>
+      <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
       <ol class="examples">
         @for (ex of examples(); track $index) {
           <li class="examples__item">
@@ -36,10 +36,9 @@
 
     <!-- 4 · EJERCICIO PRÁCTICO (código con TODOs, proyectado) -->
     <article class="part">
-      <span class="part__label">Ejercicio práctico</span>
+      <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
       <p class="part__hint">
-        Completa los <code>TODO</code> del código. Al guardar, el resultado de la derecha
-        se actualiza solo (hot reload).
+        {{ 'common.exerciseHint.before' | translate }}<code>TODO</code>{{ 'common.exerciseHint.after' | translate }}
       </p>
       <ng-content select="[exercise-code]" />
     </article>
@@ -47,7 +46,7 @@
 
   <!-- Mitad derecha: resultado renderizado del ejercicio -->
   <div class="result">
-    <span class="result__label">Resultado</span>
+    <span class="result__label">{{ 'common.labels.result' | translate }}</span>
     <div class="result__stage">
       <ng-content select="[exercise-result]" />
     </div>

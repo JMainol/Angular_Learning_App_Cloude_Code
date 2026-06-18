@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SectionShell } from '../../../shared/ui/section-shell/section-shell';
 import { CodeBlock } from '../../../shared/ui/code-block/code-block';
 import { ForExercise } from './for-exercise/for-exercise';
@@ -13,25 +14,15 @@ import { ForExercise } from './for-exercise/for-exercise';
 @Component({
   selector: 'app-for-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionShell, CodeBlock, ForExercise],
+  imports: [SectionShell, CodeBlock, ForExercise, TranslatePipe],
   templateUrl: './for-section.html',
 })
 export class ForSection {
   protected readonly docUrl = 'https://angular.dev/guide/templates/control-flow#repeat-content-with-the-for-block';
 
-  protected readonly theory =
-    '`@for` repite un trozo de plantilla por cada elemento de una colección, sustituyendo a la antigua directiva `*ngFor`.\n' +
-    'Es obligatorio declarar `track`: la expresión que identifica de forma única a cada elemento para que Angular sepa cuáles reutilizar, mover o destruir cuando la lista cambia (clave para el rendimiento).\n' +
-    'Ofrece variables contextuales (`$index`, `$count`, `$first`, `$last`, `$even`, `$odd`) y un bloque `@empty` que se muestra cuando la colección está vacía.';
-
-  protected readonly simile =
-    'Imagina una imprenta de sellos: `@for` estampa la misma plantilla una vez por cada elemento de la lista. El `track` es el número de serie de cada copia: gracias a él, cuando la lista cambia, la imprenta sabe qué sellos conservar y cuáles rehacer en lugar de reimprimirlo todo desde cero.';
-
-  protected readonly examples = [
-    'Pintar una rejilla de productos o tarjetas a partir de un array.',
-    'Generar las filas de una tabla desde los datos de una API.',
-    'Combinarlo con `@empty` para mostrar un estado de "no hay resultados".',
-  ];
+  // Teoría, símil y ejemplos se leen por clave desde los JSON de idioma
+  // (sections.for.*) con el pipe `translate` en la plantilla. El código del
+  // ejercicio (sandbox que el alumno edita) se mantiene aquí, en español.
 
   /** Código del ejercicio (con TODOs) que se muestra en el bloque copiable. */
   protected readonly exerciseCode = `<ul class="list">

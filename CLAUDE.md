@@ -70,6 +70,8 @@ La app tiene **dos elementos permanentes en todas las vistas:**
 
 ## 📦 Bloques y secciones
 
+Los bloques y secciones van a ir creciendo continuamente
+
 ### Bloque 1 — Control Flow
 
 | Sección   | Directiva Angular |
@@ -122,7 +124,23 @@ La app tiene **dos elementos permanentes en todas las vistas:**
 
 ## 📋 Estructura de cada sección (template obligatorio)
 
-Cada sección debe generarse siguiendo esta estructura sin excepción:
+Cada sección se genera según una de las tres modalidades siguientes. La modalidad se indica explícitamente al pedir la sección:
+
+---
+
+### 🔑 Palabras clave y sus modalidades
+
+| Lo que dices | Modalidad que se aplica |
+|---|---|
+| `sección con ejercicio` | Teoría + Símil + Ejemplos + Ejercicio con TODOs |
+| `sección con diagrama` | Teoría + Símil + Ejemplos + Descripción paso a paso + Diagramas visuales |
+| `sección con ejercicio y diagrama` | Teoría + Símil + Ejemplos + Descripción paso a paso + Diagramas visuales + Ejercicio con TODOs |
+
+---
+
+### 📝 Modalidad 1 — `sección con ejercicio`
+
+Estructura completa con ejercicio práctico. Usar cuando el concepto se aprende mejor haciendo.
 
 ```
 1. TEORÍA
@@ -141,6 +159,85 @@ Cada sección debe generarse siguiendo esta estructura sin excepción:
    - El código del ejercicio estará incompleto: incluirá varios TODO comentados
      para que el desarrollador complete el ejercicio y consolide el aprendizaje.
    - El resultado del ejercicio se renderiza en la mitad derecha de la pantalla.
+```
+
+---
+
+### 🗺️ Modalidad 2 — `sección con diagrama`
+
+Sin ejercicio práctico. Usar cuando el concepto es principalmente de configuración,
+flujo de datos o arquitectura, y lo que aporta valor es visualizar el proceso completo.
+
+```
+1. TEORÍA
+   - Explicación breve del concepto (máximo 5-6 líneas).
+   - Enlace a la documentación oficial: https://angular.dev
+
+2. SÍMIL
+   - Una analogía del mundo real que ilustre el concepto de forma memorable.
+
+3. EJEMPLOS DE USO COMÚN
+   - Listar 3 casos de uso reales. Solo títulos, sin código.
+
+4. DESCRIPCIÓN PASO A PASO
+   - Secuencia numerada de los pasos necesarios para aplicar el concepto.
+   - Cada paso incluye el fragmento de código relevante (instalación, configuración,
+     uso en plantilla, etc.) con comentarios explicativos del porqué.
+
+5. DIAGRAMAS VISUALES
+   - Cada diagrama y su bloque de instrucciones comparten el mismo número de referencia
+     (ej: Diagrama 1 ↔ Paso 1, Diagrama 2 ↔ Paso 2). El número se muestra visualmente
+     en ambos bloques para que la correspondencia sea inmediata aunque no estén alineados.
+   - Layout preferido: dos columnas por bloque numerado:
+     - Columna izquierda: el diagrama visual (CSS preferentemente).
+     - Columna derecha: las instrucciones / código correspondientes.
+   - Si el layout de dos columnas no es viable para un bloque concreto
+     (diagrama demasiado ancho, paso con mucho código, etc.), ese bloque
+     ocupa el ancho completo y la numeración compartida mantiene la referencia cruzada.
+   - Los diagramas deben ser claros, etiquetados en español e ingles y coherentes
+     con la paleta visual del proyecto.
+```
+
+---
+
+### 🔀 Modalidad 3 — `sección con ejercicio y diagrama`
+
+Combinación completa. Usar cuando el concepto requiere tanto entender el flujo
+(diagrama) como practicar la implementación (ejercicio).
+
+```
+1. TEORÍA
+   - Explicación breve del concepto (máximo 5-6 líneas).
+   - Enlace a la documentación oficial: https://angular.dev
+
+2. SÍMIL
+   - Una analogía del mundo real que ilustre el concepto de forma memorable.
+
+3. EJEMPLOS DE USO COMÚN
+   - Listar 3 casos de uso reales. Solo títulos, sin código.
+
+4. DESCRIPCIÓN PASO A PASO
+   - Secuencia numerada de los pasos necesarios para aplicar el concepto.
+   - Cada paso incluye el fragmento de código relevante con comentarios explicativos.
+
+5. DIAGRAMAS VISUALES
+   - Cada diagrama y su bloque de instrucciones comparten el mismo número de referencia
+     (ej: Diagrama 1 ↔ Paso 1, Diagrama 2 ↔ Paso 2). El número se muestra visualmente
+     en ambos bloques para que la correspondencia sea inmediata aunque no estén alineados.
+   - Layout preferido: dos columnas por bloque numerado:
+     - Columna izquierda: el diagrama visual (SVG preferentemente).
+     - Columna derecha: las instrucciones / código correspondientes.
+   - Si el layout de dos columnas no es viable para un bloque concreto
+     (diagrama demasiado ancho, paso con mucho código, etc.), ese bloque
+     ocupa el ancho completo y la numeración compartida mantiene la referencia cruzada.
+   - Los diagramas deben ser claros, etiquetados en español y coherentes
+     con la paleta visual del proyecto.
+
+6. EJERCICIO PRÁCTICO
+   - Nivel medio.
+   - Código incompleto con varios TODO comentados para que el desarrollador
+     complete el ejercicio y consolide el aprendizaje.
+   - El resultado se renderiza en la mitad derecha de la pantalla.
 ```
 
 ---

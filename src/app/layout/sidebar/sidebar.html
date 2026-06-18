@@ -2,14 +2,14 @@
   <div class="bar__top">
     <a class="brand" routerLink="/" [class.is-hidden]="collapsed()">
       <span class="brand__mark" aria-hidden="true"></span>
-      <span class="brand__name">Guía Angular</span>
+      <span class="brand__name">{{ 'common.brand' | translate }}</span>
     </a>
 
     <button
       type="button"
       class="bar__toggle"
       (click)="toggleCollapsed()"
-      [attr.aria-label]="collapsed() ? 'Mostrar menú' : 'Ocultar menú'"
+      [attr.aria-label]="(collapsed() ? 'common.sidebar.show' : 'common.sidebar.hide') | translate"
       [attr.aria-expanded]="!collapsed()"
     >
       <!-- Chevron que invierte su dirección según el estado. -->
@@ -20,7 +20,7 @@
   </div>
 
   @if (!collapsed()) {
-    <nav class="nav" aria-label="Temario">
+    <nav class="nav" [attr.aria-label]="'common.sidebar.nav' | translate">
       @for (block of blocks; track block.id) {
         <div class="block" [class.is-open]="openBlockId() === block.id">
           <button
@@ -30,7 +30,7 @@
             [attr.aria-expanded]="openBlockId() === block.id"
           >
             <span class="block__code">{{ block.code }}</span>
-            <span class="block__title">{{ block.title }}</span>
+            <span class="block__title">{{ 'blocks.' + block.id | translate }}</span>
             <svg
               class="block__chevron"
               width="14"
@@ -55,13 +55,13 @@
                       routerLinkActive="is-active"
                     >
                       <span class="item__code">{{ section.code }}</span>
-                      <span class="item__title">{{ section.title }}</span>
+                      <span class="item__title">{{ sectionTitleKey(section) | translate }}</span>
                     </a>
                   } @else {
                     <span class="item item--soon" aria-disabled="true">
                       <span class="item__code">{{ section.code }}</span>
-                      <span class="item__title">{{ section.title }}</span>
-                      <span class="item__soon">pronto</span>
+                      <span class="item__title">{{ sectionTitleKey(section) | translate }}</span>
+                      <span class="item__soon">{{ 'common.soon' | translate }}</span>
                     </span>
                   }
                 </li>

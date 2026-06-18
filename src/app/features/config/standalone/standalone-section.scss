@@ -1,0 +1,208 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+// Documentación a una columna (mismo patrón que la sección 6.2).
+.doc {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--surface-left);
+  padding: 2.25rem 2.25rem 5rem;
+}
+
+.doc__head {
+  max-width: 70ch;
+  margin: 0 auto 2.5rem;
+}
+.doc__tags {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.doc__code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.doc__badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+}
+.doc__title {
+  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-bottom: 0.9rem;
+}
+.doc__intro {
+  margin: 0 0 1rem;
+}
+
+// --- Cada flujo ---
+.flow {
+  max-width: 70ch;
+  margin: 2.5rem auto 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.flow__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.flow__heading {
+  font-size: 1.35rem;
+  margin-bottom: 0.75rem;
+}
+.flow__lead {
+  margin: 0 0 1.75rem;
+}
+
+// ============================ DIAGRAMA ============================
+.diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 1rem;
+  margin-bottom: 1.75rem;
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 340px;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.branch .node {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 150px;
+}
+.node__title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-strong);
+}
+.node__title--sm {
+  font-size: 0.74rem;
+}
+.node__cap {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.node--accent {
+  border-color: var(--accent);
+}
+.node--accent .node__title {
+  color: var(--accent);
+}
+.node--out {
+  background: var(--accent-soft);
+}
+
+// Tarjeta de "anatomía": campos del decorador alineados a la izquierda.
+.node--card {
+  max-width: 420px;
+  text-align: left;
+  gap: 0.4rem;
+}
+.node__line {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text);
+  padding-left: 1.2rem;
+}
+// Línea destacada: el `imports`, el corazón de un componente standalone.
+.node__line--hot {
+  color: var(--accent);
+  font-weight: 500;
+}
+.diagram__cap {
+  margin-top: 0.9rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+// Conector vertical con punta.
+.arrow {
+  width: 1px;
+  height: 26px;
+  background: var(--border-strong);
+  position: relative;
+}
+.arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--border-strong);
+}
+
+.branch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  width: 100%;
+  justify-content: center;
+}
+
+// ============================ PASO A PASO ============================
+.steps {
+  list-style: none;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.steps__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+}
+.steps__num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .doc {
+    overflow-y: visible;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+}

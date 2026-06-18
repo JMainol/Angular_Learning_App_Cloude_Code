@@ -1,4 +1,353 @@
 {
+  "common": {
+    "brand": "Guía Angular",
+    "soon": "pronto",
+    "docLink": "Documentación oficial",
+    "sidebar": {
+      "nav": "Temario",
+      "show": "Mostrar menú",
+      "hide": "Ocultar menú"
+    },
+    "language": {
+      "label": "Seleccionar idioma",
+      "es": "Español",
+      "en": "English"
+    },
+    "labels": {
+      "theory": "Teoría",
+      "simile": "Símil",
+      "examples": "Ejemplos de uso común",
+      "exercise": "Ejercicio práctico",
+      "result": "Resultado"
+    },
+    "exerciseHint": {
+      "before": "Completa los ",
+      "after": " del código. Al guardar, el resultado de la derecha se actualiza solo (hot reload)."
+    }
+  },
+  "blocks": {
+    "config": "Configuración inicial",
+    "control-flow": "Control Flow",
+    "signals": "Signals",
+    "template": "Template",
+    "routing": "Routing",
+    "i18n": "Internacionalización",
+    "attribute-directives": "Directivas de atributo"
+  },
+  "sections": {
+    "standalone": {
+      "title": "Arquitectura standalone",
+      "badge": "Documentación",
+      "intro": "Esta sección no tiene ejercicio: con la configuración de esta misma app, explica cómo arranca una app Angular moderna con componentes standalone y sin NgModules. Cuatro flujos, cada uno con un diagrama y el código real.",
+      "flowA": {
+        "label": "Flujo 1 · El arranque",
+        "heading": "Arrancar sin NgModules",
+        "lead": "Esta app no tiene `AppModule`. Arranca directamente desde un componente raíz más un objeto de configuración. Esta es la cadena, de la etiqueta HTML a la interfaz en marcha.",
+        "n1": "El navegador carga la página",
+        "n2": "Arranca desde un componente",
+        "n3": "Raíz: Sidebar + Topbar + RouterOutlet",
+        "n4": "Proveedores globales (DI)",
+        "n5": "App lista, sin NgModules",
+        "steps": [
+          "El `index.html` solo contiene la etiqueta `<app-root>`: el punto de anclaje de la app.",
+          "`main.ts` llama a `bootstrapApplication(App, appConfig)`. No hay `platformBrowserDynamic` ni `AppModule`: se arranca directamente desde un COMPONENTE raíz.",
+          "Ese componente raíz `App` es standalone: declara en su `imports` lo que usa (`Sidebar`, `Topbar`, `RouterOutlet`).",
+          "El segundo argumento, `appConfig`, es un `ApplicationConfig` con el array `providers`: ahí viven los servicios globales (router, HttpClient, ngx-translate).",
+          "Resultado: la app se monta sin un solo NgModule. Cada pieza declara sus propias dependencias y nada más."
+        ]
+      },
+      "flowB": {
+        "label": "Flujo 2 · El componente",
+        "heading": "Anatomía de un componente standalone",
+        "lead": "Todo componente de esta app es standalone: se basta a sí mismo. La clave está en el array `imports` del decorador, que sustituye a las `declarations` de un NgModule.",
+        "cap": "El componente raíz `App` (app.ts), declarado por completo en un solo sitio",
+        "steps": [
+          "Un componente standalone NO necesita declararse en un NgModule: es autónomo.",
+          "En `imports` declara los componentes, directivas y pipes que usa su plantilla. Es el equivalente directo a las `declarations` + `imports` de un NgModule, pero por componente.",
+          "Así cada pieza es autocontenida: ves de un vistazo de qué depende, y el tree-shaking elimina lo que no se usa.",
+          "Por eso cada sección de esta app importa solo lo suyo (`SectionShell`, `CodeBlock`, su ejercicio y `TranslatePipe`)."
+        ]
+      },
+      "flowC": {
+        "label": "Flujo 3 · app.config.ts",
+        "heading": "Servicios globales con provide* (ApplicationConfig)",
+        "lead": "Sin NgModules, los servicios globales se declaran en `app.config.ts`: un `ApplicationConfig` cuyo array `providers` usa funciones `provide*`. Eso alimenta el inyector raíz de la app.",
+        "c1": "Lista de proveedores globales",
+        "cRouter": "Enrutado",
+        "cHttp": "Peticiones HTTP",
+        "cI18n": "Internacionalización",
+        "c2": "Registra los servicios",
+        "c3": "Disponibles en cualquier componente",
+        "steps": [
+          "En vez de `NgModule.providers`, los servicios globales se registran en `appConfig.providers` con funciones `provide*`.",
+          "`provideRouter(routes, withComponentInputBinding())` configura el enrutado; `provideHttpClient()` habilita las peticiones HTTP; `provideTranslateService(...)` monta ngx-translate.",
+          "Todo eso alimenta el inyector raíz, así que cualquier componente puede pedir un servicio con `inject(...)`.",
+          "En esta app, `providers` incluye además `provideBrowserGlobalErrorListeners()`, y a `provideRouter` se le pasa `withComponentInputBinding()` para enlazar los parámetros de ruta a los `input()` del componente."
+        ]
+      },
+      "flowD": {
+        "label": "Flujo 4 · app.routes.ts",
+        "heading": "Las rutas con carga diferida (app.routes.ts)",
+        "lead": "El enrutado se declara en `app.routes.ts`: un array `Routes` donde cada sección se carga de forma diferida. Es, además, ejemplo vivo del Bloque 05 (Routing).",
+        "d1": "El usuario navega",
+        "d2": "Casa la primera ruta del array",
+        "d3": "Carga diferida: chunk bajo demanda",
+        "d4": "Se pinta en el <router-outlet>",
+        "steps": [
+          "Las rutas viven en un array `Routes`: cada entrada asocia un `path` (segmento de URL) con el componente a mostrar.",
+          "Aquí cada sección usa `loadComponent: () => import(...)`: carga diferida (lazy). El componente viaja en un chunk aparte que solo se descarga al navegar a su ruta, manteniendo pequeño el bundle inicial.",
+          "`title` fija el título del documento (la pestaña del navegador) para cada ruta.",
+          "La ruta vacía `''` redirige a la primera sección (`config/standalone`) y el comodín `'**'` captura cualquier URL desconocida y vuelve al inicio.",
+          "`provideRouter(routes, …)` (en app.config.ts) registra este array; el componente activo se renderiza en el `<router-outlet>` del layout."
+        ]
+      }
+    },
+    "if": {
+      "title": "@if",
+      "theory": "`@if` es el bloque de control de flujo de Angular para renderizar contenido de forma condicional directamente en la plantilla, sustituyendo a la antigua directiva `*ngIf`.\n Admite `@else if` y `@else` para encadenar condiciones, y la sintaxis `@if (expr; as variable)` para capturar el valor evaluado en un alias tipado y no nulo.\n Al ser sintaxis nativa del compilador (no una directiva), es más rápido, no necesita importarse y el contenido oculto ni siquiera se crea en el DOM.",
+      "simile": "Piensa en `@if` como el portero de un local: comprueba una condición en la puerta y solo deja pasar el contenido que la cumple. `@else if` son sus normas adicionales (\"si no cumples esto, mira si cumples aquello\") y `@else` es la puerta de salida por defecto para todo lo que no encaja en ninguna norma.",
+      "examples": [
+        "Mostrar un spinner mientras cargan los datos y el contenido cuando llegan.",
+        "Renderizar un bloque solo si el usuario tiene cierto rol o permiso.",
+        "Enseñar un mensaje de \"lista vacía\" cuando no hay elementos que mostrar."
+      ]
+    },
+    "for": {
+      "title": "@for",
+      "theory": "`@for` repite un trozo de plantilla por cada elemento de una colección, sustituyendo a la antigua directiva `*ngFor`.\n Es obligatorio declarar `track`: la expresión que identifica de forma única a cada elemento para que Angular sepa cuáles reutilizar, mover o destruir cuando la lista cambia (clave para el rendimiento).\n Ofrece variables contextuales (`$index`, `$count`, `$first`, `$last`, `$even`, `$odd`) y un bloque `@empty` que se muestra cuando la colección está vacía.",
+      "simile": "Imagina una imprenta de sellos: `@for` estampa la misma plantilla una vez por cada elemento de la lista. El `track` es el número de serie de cada copia: gracias a él, cuando la lista cambia, la imprenta sabe qué sellos conservar y cuáles rehacer en lugar de reimprimirlo todo desde cero.",
+      "examples": [
+        "Pintar una rejilla de productos o tarjetas a partir de un array.",
+        "Generar las filas de una tabla desde los datos de una API.",
+        "Combinarlo con `@empty` para mostrar un estado de \"no hay resultados\"."
+      ]
+    },
+    "switch": {
+      "title": "@switch",
+      "theory": "`@switch` elige qué bloque renderizar comparando un valor con varios `@case`, sustituyendo al antiguo `[ngSwitch]`.\n La comparación es por igualdad estricta (`===`) y solo se muestra el primer `@case` que coincide; no hay \"fallthrough\", así que no necesitas `break`.\n El bloque `@default` (opcional) se renderiza cuando ningún `@case` encaja. Es ideal cuando una sola variable decide entre varias vistas mutuamente excluyentes.",
+      "simile": "Piensa en `@switch` como el selector de canales de una tele antigua: giras el dial (el valor) y solo se ve el canal que coincide con la posición; los demás permanecen apagados. `@default` es la pantalla de \"sin señal\" que aparece cuando el dial no apunta a ningún canal conocido.",
+      "examples": [
+        "Mostrar una vista distinta según el rol del usuario (admin, editor, invitado).",
+        "Pintar un icono y color según el estado de una operación (éxito, aviso, error).",
+        "Cambiar el contenido del panel según la pestaña seleccionada."
+      ]
+    },
+    "signal": {
+      "title": "Signal",
+      "theory": "Un Signal es un contenedor de un valor que avisa a quien lo usa cuando ese valor cambia. Se crea con `signal(valorInicial)`.\n Se LEE llamándolo como una función (`contador()`) y se ESCRIBE con `.set(valor)` (reemplazar) o `.update(fn)` (calcular a partir del valor actual).\n Angular registra automáticamente qué partes de la plantilla leen cada Signal, así que solo se reevalúa lo que depende de él: detección de cambios fina y sin `Zone.js` ni `ngOnChanges`.",
+      "simile": "Un Signal es como el marcador de un partido: guarda un número que todos en el estadio miran. Cuando el árbitro lo cambia (`.set()` pone un resultado nuevo; `.update()` es \"+1 al actual\"), todas las miradas se actualizan a la vez sin que nadie tenga que preguntar \"¿cuánto vamos?\".",
+      "examples": [
+        "Llevar el estado de un contador o del aforo de una sala.",
+        "Guardar el valor actual de un campo de formulario.",
+        "Controlar un flag de visibilidad (abierto/cerrado, mostrado/oculto)."
+      ]
+    },
+    "input": {
+      "title": "Input",
+      "theory": "Un Input es la vía por la que un componente recibe datos de su padre. La API moderna es la función `input()`, que devuelve un Signal de solo lectura.\n Se declara con `input(valorPorDefecto)` (opcional) o `input.required<T>()` (obligatorio), y se lee en la plantilla como una función: `nombre()`.\n Al ser un Signal, cuando el padre cambia el valor enlazado el input se actualiza y solo se reevalúa lo que lo usa. Admite alias y funciones de transformación.",
+      "simile": "Un Input es como la ranura de entrada de una máquina expendedora: el componente hijo expone una ranura etiquetada (`nombre`, `rol`…) y el padre mete por ella el dato que corresponde. El hijo solo puede leer lo que recibe por la ranura; no puede meter la mano y cambiarlo desde dentro.",
+      "examples": [
+        "Pasar el objeto de usuario a una tarjeta de perfil.",
+        "Configurar un botón reutilizable (texto, variante, estado deshabilitado).",
+        "Enviar la lista de elementos a un componente de tabla o listado."
+      ]
+    },
+    "output": {
+      "title": "Output",
+      "theory": "Un Output es la vía por la que un componente avisa a su padre de que algo ha ocurrido. La API moderna es la función `output()`, que devuelve un emisor con `.emit(valor)`.\n El padre escucha con la sintaxis de evento `(nombreEvento)=\"manejador($event)\"`, donde `$event` es el valor emitido.\n Junto con Input forma el flujo unidireccional de datos: los datos BAJAN al hijo por input y los avisos SUBEN al padre por output. El hijo nunca muta el estado del padre directamente.",
+      "simile": "Un Output es como el timbre de una tienda: el cliente (hijo) pulsa el timbre para avisar de que necesita algo, pero es el dependiente (padre) quien decide qué hacer. El timbre solo transmite \"ha pasado esto\"; no entra a la trastienda a cambiar nada por su cuenta.",
+      "examples": [
+        "Avisar al padre de que se pulsó \"eliminar\" en una fila de una lista.",
+        "Emitir el valor seleccionado de un componente de valoración o selector.",
+        "Notificar que un formulario hijo se ha enviado con sus datos."
+      ]
+    },
+    "computed": {
+      "title": "Computed",
+      "theory": "Un Computed es un Signal de solo lectura cuyo valor se deriva de otros signals. Se crea con `computed(() => ...)`.\n Angular detecta automáticamente qué signals lees dentro de la función y los registra como dependencias: el computed se recalcula solo cuando alguna de ellas cambia.\n Además memoiza: si las dependencias no han cambiado, devuelve el último valor calculado sin reejecutar la función. Por eso es el sitio ideal para lógica derivada, en lugar de duplicar cálculos en la plantilla.",
+      "simile": "Un Computed es como la celda de una hoja de cálculo con una fórmula (=A1*B1): no escribes su resultado a mano, escribes de qué depende. Cuando cambias A1 o B1, la celda se actualiza sola; si no tocas nada, conserva su valor sin recalcular.",
+      "examples": [
+        "Calcular el total de un carrito a partir de precio y cantidad.",
+        "Derivar el número de tareas pendientes de una lista de tareas.",
+        "Componer un nombre completo a partir de nombre y apellidos."
+      ]
+    },
+    "effect": {
+      "title": "Effect",
+      "theory": "Un Effect ejecuta una función cada vez que cambia alguno de los signals que lee dentro. Se crea con `effect(() => ...)`, normalmente en el constructor (necesita un injection context).\n A diferencia de `computed()`, no devuelve un valor: su propósito son los EFECTOS SECUNDARIOS (logging, sincronizar con localStorage o el DOM, analítica…).\n Angular lo limpia automáticamente al destruir el componente. Regla: para DERIVAR datos usa `computed`; reserva `effect` para provocar cosas fuera del mundo reactivo.",
+      "simile": "Un Effect es como el sensor de luz de una farola: no calcula ni guarda nada para ti, simplemente observa una condición (anochece) y dispara una acción en el mundo real (encender la luz) cada vez que esa condición cambia.",
+      "examples": [
+        "Guardar una preferencia del usuario en localStorage cuando cambia.",
+        "Registrar (log/analítica) cada vez que cambia un estado importante.",
+        "Sincronizar un signal con algo externo: título del documento, foco, una librería no reactiva."
+      ]
+    },
+    "viewchild": {
+      "title": "ViewChild",
+      "theory": "ViewChild permite acceder desde la clase a un elemento o componente de la propia vista. La API moderna es la función `viewChild()`, que devuelve un Signal con la referencia.\n Localiza el objetivo por variable de plantilla (`#campo`) o por tipo de componente, y se lee como función: `campo()`. Hasta que la vista se renderiza vale `undefined`; usa `?.` o `viewChild.required()` si siempre existe.\n Es la herramienta para acciones imperativas que no tienen equivalente declarativo (poner el foco, medir el DOM, integrar una librería externa). Úsala como último recurso, no para leer datos que ya podrías enlazar.",
+      "simile": "ViewChild es como tener el número de asiento de alguien en un teatro: en vez de gritar al patio de butacas, vas directo a esa fila y butaca para hablar con esa persona concreta. La variable `#campo` es ese número de asiento que le pones al elemento.",
+      "examples": [
+        "Poner el foco en un campo al abrir un formulario o un modal.",
+        "Medir o desplazar un elemento del DOM (scroll, dimensiones).",
+        "Llamar a un método público de un componente hijo (un reproductor, un mapa)."
+      ]
+    },
+    "events": {
+      "title": "Event Listeners",
+      "theory": "El event binding conecta un evento del DOM con un método del componente usando paréntesis: `(click)=\"enviar()\"`, `(input)=\"onInput($event)\"`.\n `$event` es el objeto de evento nativo; para inputs sueles leer `($event.target as HTMLInputElement).value`. Angular reevalúa la vista tras el manejador, así que actualizar un signal se refleja al instante.\n Para teclado hay pseudo-eventos como `(keydown.enter)` o `(keydown.escape)`, que evitan comparar `event.key` a mano. Es la forma declarativa de responder a la interacción del usuario.",
+      "simile": "Un event listener es como el timbre de tu casa conectado a una acción concreta: cuando alguien lo pulsa (el evento), suena y tú vas a abrir (el manejador). Tú decides qué timbre escuchar —el de la puerta, el del horno— y qué hacer cuando suena cada uno.",
+      "examples": [
+        "Actualizar un signal en vivo mientras el usuario escribe en un campo.",
+        "Enviar un formulario al pulsar Enter con `(keydown.enter)`.",
+        "Ejecutar una acción al hacer clic en un botón con `(click)`."
+      ]
+    },
+    "define": {
+      "title": "Definir rutas",
+      "theory": "Las rutas se definen en un array `Routes`: cada entrada asocia un `path` (segmento de URL) con el componente que debe mostrarse, vía `component` o `loadComponent` (carga diferida).\n El componente que coincide se renderiza dentro de un `<router-outlet>`. Se registran con `provideRouter(routes)` en la configuración de la app.\n Hay paths especiales: `''` para la ruta vacía (a menudo con `redirectTo`) y `'**'` como comodín para URLs no encontradas. El orden importa: el router elige la primera coincidencia.",
+      "simile": "El array de rutas es como el directorio de un edificio en la entrada: relaciona cada nombre de despacho (la URL) con la planta y puerta donde está (el componente). Si un despacho no figura en el directorio, nadie puede llegar a él aunque exista la habitación.",
+      "examples": [
+        "Asociar `/productos` con el componente del catálogo.",
+        "Redirigir la ruta vacía `''` a una sección de inicio por defecto.",
+        "Capturar URLs desconocidas con `'**'` para una página 404."
+      ]
+    },
+    "loading": {
+      "title": "Estrategias de carga",
+      "theory": "Hay dos grandes estrategias de carga. Eager: el código se incluye en el bundle inicial y está disponible al arrancar. Lazy: se separa en un chunk y se descarga cuando hace falta.\n A nivel de ruta, la carga diferida se logra con `loadComponent` y `loadChildren` (lo que usa esta misma app). Opcionalmente, `withPreloading(PreloadAllModules)` precarga los chunks en segundo plano tras el arranque.\n A nivel de plantilla, el bloque `@defer` difiere parte de la vista según un trigger (`on interaction`, `on viewport`, `on idle`…), con bloques `@placeholder`, `@loading` y `@error`. Menos bundle inicial = arranque más rápido.",
+      "simile": "Eager vs lazy es como el equipaje de un viaje: lo que usas a diario va en la mochila de mano (eager, siempre contigo); lo que quizá no necesites va facturado y solo lo recoges si hace falta (lazy). Cargar de menos al inicio hace que despegues antes.",
+      "examples": [
+        "Diferir un panel pesado (gráfica, mapa) hasta que entra en pantalla con `on viewport`.",
+        "Cargar una ruta de administración solo para quien accede a ella (`loadChildren`).",
+        "Precargar en segundo plano las rutas probables con `PreloadAllModules`."
+      ]
+    },
+    "params": {
+      "title": "Rutas con parámetros",
+      "theory": "Un parámetro de ruta es un segmento dinámico de la URL declarado con dos puntos: `producto/:id`. Casa con cualquier valor (`producto/1`, `producto/2`) y lo expone como parámetro.\n La forma moderna de leerlo es activar `withComponentInputBinding()` en `provideRouter`: el parámetro se enlaza por nombre al `input()` del componente (`id = input.required<string>()`), como un Signal, sin inyectar `ActivatedRoute`.\n También existen los query params (`?orden=precio`) y los datos resueltos, que con el mismo mecanismo llegan igualmente como inputs.",
+      "simile": "Una ruta con parámetro es como el número de habitación de un hotel: `habitacion/:numero` es la plantilla, y `habitacion/204` te lleva a una concreta. La recepción (el Router) lee el número de la \"llave\" (la URL) y te entrega justo esa habitación, no otra.",
+      "examples": [
+        "Abrir el detalle de un producto con `producto/:id`.",
+        "Mostrar el perfil de un usuario con `usuario/:username`.",
+        "Filtrar u ordenar una lista con query params (`?orden=precio`)."
+      ]
+    },
+    "children": {
+      "title": "Rutas hijas",
+      "theory": "Las rutas hijas anidan rutas dentro de otra. La ruta padre renderiza un componente \"layout\" con su propio `<router-outlet>`, y las hijas se muestran ahí dentro según el segmento siguiente de la URL.\n Se declaran en la propiedad `children` (o `loadChildren`) de la ruta padre. La URL refleja la jerarquía: `ajustes/seguridad` = padre `ajustes` + hija `seguridad`.\n Ventaja clave: el layout padre (cabecera, pestañas, navegación) PERSISTE mientras cambian las hijas. La ruta hija vacía con `redirectTo` define qué se muestra por defecto al entrar.",
+      "simile": "Las rutas hijas son como las plantas de un edificio de oficinas: el vestíbulo, los ascensores y la recepción (el layout padre) son los mismos para todos. Solo cambia el despacho al que entras en cada planta (la vista hija). No reconstruyes el edificio cada vez que cambias de despacho.",
+      "examples": [
+        "Un panel de ajustes con pestañas: perfil, seguridad, notificaciones.",
+        "Un dashboard con menú lateral fijo y secciones que cambian a la derecha.",
+        "Una ficha de producto con sub-rutas: descripción, opiniones, preguntas."
+      ]
+    },
+    "navigate": {
+      "title": "Navegar a rutas",
+      "theory": "Hay dos formas de navegar. Declarativa: el atributo `routerLink` en una plantilla, para enlaces que el usuario pulsa directamente.\n Imperativa (programática): desde la clase, con `inject(Router)` y `router.navigate([...])` o `router.navigateByUrl('/...')`. Es la opción cuando la navegación es CONSECUENCIA de una acción: un login correcto, guardar un formulario, una validación.\n `navigate` acepta opciones como `relativeTo` (resolver relativo a la ruta actual), `queryParams` o `fragment`. Internamente, `routerLink` también llama al Router; son la cara declarativa e imperativa de lo mismo.",
+      "simile": "Es la diferencia entre un cartel indicador y un taxi. El `routerLink` es el cartel: está ahí y el usuario decide seguirlo. El `Router.navigate()` es pedir un taxi: tu código decide el destino y arranca solo cuando se cumple una condición (por ejemplo, \"cuando termines de pagar, te llevo a la página de gracias\").",
+      "examples": [
+        "Redirigir al dashboard tras un inicio de sesión correcto.",
+        "Volver al listado después de guardar un formulario.",
+        "Saltar a la siguiente pantalla de un asistente al pulsar \"Continuar\"."
+      ]
+    },
+    "guards": {
+      "title": "Guards",
+      "theory": "Un guard decide si una navegación puede ocurrir. El más común es `CanActivateFn`: una función que se ejecuta antes de activar una ruta y devuelve `true` (permite), `false` (bloquea) o un `UrlTree` (redirige).\n Se asocia a una ruta con `canActivate: [miGuard]`. Dentro del guard puedes usar `inject()` para pedir servicios (estado de sesión, Router, etc.).\n Los functional guards sustituyen a las antiguas clases con la interfaz `CanActivate`: son solo funciones, sin decoradores ni boilerplate, y se componen con facilidad. Existen variantes: `CanDeactivateFn`, `CanMatchFn`, `ResolveFn`.",
+      "simile": "Un guard es el portero de una discoteca con lista. Antes de dejarte entrar a la sala VIP (la ruta), comprueba si estás en la lista (la condición). Si estás, pasas; si no, o te da la vuelta (bloquea) o te manda a la sala general (redirige con un UrlTree).",
+      "examples": [
+        "Proteger rutas que requieren sesión iniciada (auth guard).",
+        "Restringir una sección de administración por rol del usuario.",
+        "Avisar antes de salir de un formulario con cambios sin guardar (CanDeactivate)."
+      ]
+    },
+    "translate": {
+      "title": "ngx-translate",
+      "theory": "ngx-translate es una librería de internacionalización en runtime: los textos viven en archivos de idioma (JSON) y se referencian por clave, no escritos a mano en la plantilla.\n Se configura con `provideTranslateService` y un loader (`provideTranslateHttpLoader`) que carga los JSON desde una carpeta. En la plantilla se usa el pipe `translate`: `{{ 'demo.titulo' | translate }}`.\n `TranslateService.use(lang)` cambia el idioma en caliente y el pipe reacciona actualizando todos los textos. Admite parámetros (`{{ clave | translate: { nombre } }}`) e idioma de respaldo (`fallbackLang`).",
+      "simile": "ngx-translate es como el menú de un restaurante con turistas: el plato es el mismo (la clave `demo.titulo`), pero la carta lo describe en el idioma de cada cliente. Cambiar de idioma es entregar otra carta: el plato no cambia, solo cómo se nombra.",
+      "examples": [
+        "Ofrecer la interfaz en varios idiomas con un selector.",
+        "Centralizar todos los textos en archivos JSON, fuera del código.",
+        "Insertar valores dinámicos en una frase traducida con parámetros."
+      ]
+    },
+    "setup": {
+      "title": "ngx-translate · Configuración",
+      "badge": "Documentación",
+      "intro": "Documenta cómo está montada la i18n de esta misma app: de la configuración inicial al cambio de idioma en caliente, paso a paso y con diagramas.",
+      "theory": "ngx-translate internacionaliza en runtime: los textos viven en archivos JSON por idioma y se referencian por clave, no escritos a mano en la plantilla.\n Se configura con `provideTranslateService` y un loader que carga esos archivos. En la plantilla, el pipe `translate` resuelve cada clave según el idioma activo.\n `TranslateService.use(lang)` cambia el idioma en caliente y el pipe reacciona. Esta misma app está montada así.",
+      "simile": "Configurar ngx-translate es como montar la traducción simultánea de un congreso: instalas las cabinas (el loader que carga los idiomas), repartes auriculares en cada asiento (el pipe `translate` en cada texto) y pones un único interruptor de canal (el menú) que cambia el idioma de toda la sala a la vez.",
+      "examples": [
+        "Servir la app en varios idiomas con un selector.",
+        "Centralizar todos los textos en archivos JSON, fuera del código.",
+        "Insertar valores dinámicos en una frase traducida con parámetros."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "Configurar el servicio en el arranque",
+        "lead": "En `app.config.ts` registras `provideHttpClient()` (el loader lo necesita para pedir los JSON) y `provideTranslateService()` con su loader, el idioma inicial (`lang`) y el de respaldo (`fallbackLang`). Es el único punto de configuración global.",
+        "n1": "Arranque de la app",
+        "n2": "Habilita las peticiones HTTP",
+        "n3": "Monta ngx-translate",
+        "n4": "Traducción lista en toda la app"
+      },
+      "p2": {
+        "title": "Crear los archivos de idioma",
+        "lead": "Cada texto es una clave con un valor por idioma, en `public/i18n/es.json` y `en.json`. Para interpolar un valor, deja un hueco con dobles llaves. La misma clave debe existir en ambos archivos.",
+        "n1": "Clave + valor en español",
+        "n2": "Clave + valor en inglés",
+        "n3": "Misma clave · dos idiomas"
+      },
+      "p3": {
+        "title": "Mostrar el texto en la plantilla",
+        "lead": "Usas el pipe `translate` con la clave. Para interpolar, le pasas un objeto de parámetros cuyas claves coinciden con los huecos del JSON. El pipe es reactivo: al cambiar el idioma, el texto se actualiza solo.",
+        "n1": "La clave del texto",
+        "n2": "El pipe resuelve e interpola",
+        "n3": "Texto final en pantalla",
+        "nameLabel": "Nombre a interpolar",
+        "demoLabel": "Demo en vivo (cambia el idioma arriba a la derecha):"
+      },
+      "p4": {
+        "title": "Cambiar de idioma en caliente",
+        "lead": "El menú llama a `LanguageService.setLanguage(lang)`, que ejecuta `TranslateService.use(lang)`: el loader recarga el JSON del idioma y el pipe re-emite cada texto. Además persiste la elección en `localStorage` y actualiza `<html lang>`.",
+        "n1": "Pulsas ES / EN",
+        "n2": "Punto único de verdad",
+        "n3": "Activa el idioma",
+        "n4": "Descarga los textos",
+        "n5": "Re-emite cada texto",
+        "n6": "Todo cambia de idioma",
+        "sideTitle": "+ efectos colaterales del servicio",
+        "branchStore": "Recuerda la elección",
+        "branchLang": "Accesibilidad / SEO"
+      },
+      "p5": {
+        "title": "Traducir desde el código (.ts)",
+        "lead": "Inyectas `TranslateService` y eliges según necesites reaccionar al idioma: `instant()` (síncrono, no reactivo), `get()` (Observable, una vez) o `stream()` (Observable que re-emite al cambiar de idioma). La interpolación va como segundo argumento.",
+        "n1": "Inyectas el servicio",
+        "nInstant": "Síncrono · no reactivo",
+        "nGet": "Observable · una vez",
+        "nStream": "Observable · reacciona al idioma",
+        "nOut": "Texto traducido e interpolado",
+        "demoLabel": "Demo en vivo con `instant()`:",
+        "note": "Truco: `instant()` por sí solo no es reactivo. El demo se recalcula porque lo envolvemos en un `computed` que lee el signal del idioma activo del `LanguageService`."
+      },
+      "demo": {
+        "saludo": "Hola, {{nombre}}"
+      }
+    },
+    "decimales": {
+      "title": "Control de decimales",
+      "theory": "Una directiva de atributo añade comportamiento a un elemento que ya existe (un input, un botón) sin renderizar plantilla propia. Se aplica como un atributo: `<input [appDecimales]=\"2\">`.\n Recibe datos con `@Input`. Si lo declaras como SETTER (`@Input() set appDecimales(v)`), el código del setter se ejecuta cada vez que el valor enlazado cambia: ideal cuando recibir el valor implica lógica (validar, transformar, reaccionar), no solo almacenarlo.\n Para reaccionar a eventos del elemento anfitrión se usa `@HostListener` (aquí, el evento `input`), y `ElementRef` da acceso al nodo del DOM para leer o ajustar su valor.",
+      "simile": "Una directiva de atributo es como un accesorio que enchufas a un electrodoméstico: el campo de texto sigue siendo el mismo, pero le acoplas un \"limitador\" que controla lo que deja pasar. El `@Input` setter es el dial de ese accesorio: cada vez que lo giras (cambias los decimales), el limitador se reajusta al instante.",
+      "examples": [
+        "Limitar los decimales o el rango de un campo de importe.",
+        "Resaltar un elemento al pasar el ratón (clásico appHighlight).",
+        "Aplicar una máscara de formato (teléfono, IBAN) mientras se escribe."
+      ]
+    }
+  },
   "demo": {
     "titulo": "Internacionalización con ngx-translate",
     "descripcion": "Los textos no se escriben a mano en la plantilla: se leen por clave desde archivos de idioma.",
