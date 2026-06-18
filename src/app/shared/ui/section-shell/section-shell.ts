@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { DocLink } from '../doc-link/doc-link';
 
 /**
@@ -19,7 +20,7 @@ import { DocLink } from '../doc-link/doc-link';
 @Component({
   selector: 'app-section-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DocLink],
+  imports: [DocLink, TranslatePipe],
   templateUrl: './section-shell.html',
   styleUrl: './section-shell.scss',
 })

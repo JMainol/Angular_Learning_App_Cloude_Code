@@ -1,0 +1,38 @@
+:host {
+  display: inline-block;
+}
+
+/* Control segmentado: un solo recuadro con dos opciones contiguas. */
+.switcher {
+  display: inline-flex;
+  padding: 2px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.switcher__btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.switcher__btn:hover {
+  color: var(--text-strong);
+}
+
+/* Opción activa: el "pulso" de acento, coherente con el ítem activo del sidebar. */
+.switcher__btn.is-active {
+  color: #fff;
+  background: var(--accent-grad);
+}

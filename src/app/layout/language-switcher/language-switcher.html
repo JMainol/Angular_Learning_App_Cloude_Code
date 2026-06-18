@@ -1,0 +1,14 @@
+<div class="switcher" role="group" [attr.aria-label]="'common.language.label' | translate">
+  @for (lang of langs; track lang) {
+    <button
+      type="button"
+      class="switcher__btn"
+      [class.is-active]="current() === lang"
+      [attr.aria-pressed]="current() === lang"
+      [attr.aria-label]="'common.language.' + lang | translate"
+      (click)="select(lang)"
+    >
+      {{ lang }}
+    </button>
+  }
+</div>

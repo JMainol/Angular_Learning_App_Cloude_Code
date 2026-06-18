@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SectionShell } from '../../../shared/ui/section-shell/section-shell';
 import { CodeBlock } from '../../../shared/ui/code-block/code-block';
 import { EffectExercise } from './effect-exercise/effect-exercise';
@@ -12,25 +13,11 @@ import { EffectExercise } from './effect-exercise/effect-exercise';
 @Component({
   selector: 'app-effect-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionShell, CodeBlock, EffectExercise],
+  imports: [SectionShell, CodeBlock, EffectExercise, TranslatePipe],
   templateUrl: './effect-section.html',
 })
 export class EffectSection {
   protected readonly docUrl = 'https://angular.dev/guide/signals#effects';
-
-  protected readonly theory =
-    'Un Effect ejecuta una función cada vez que cambia alguno de los signals que lee dentro. Se crea con `effect(() => ...)`, normalmente en el constructor (necesita un injection context).\n' +
-    'A diferencia de `computed()`, no devuelve un valor: su propósito son los EFECTOS SECUNDARIOS (logging, sincronizar con localStorage o el DOM, analítica…).\n' +
-    'Angular lo limpia automáticamente al destruir el componente. Regla: para DERIVAR datos usa `computed`; reserva `effect` para provocar cosas fuera del mundo reactivo.';
-
-  protected readonly simile =
-    'Un Effect es como el sensor de luz de una farola: no calcula ni guarda nada para ti, simplemente observa una condición (anochece) y dispara una acción en el mundo real (encender la luz) cada vez que esa condición cambia.';
-
-  protected readonly examples = [
-    'Guardar una preferencia del usuario en localStorage cuando cambia.',
-    'Registrar (log/analítica) cada vez que cambia un estado importante.',
-    'Sincronizar un signal con algo externo: título del documento, foco, una librería no reactiva.',
-  ];
 
   /** Código del ejercicio (con TODOs). */
   protected readonly exerciseCode = `protected readonly contador = signal(0);

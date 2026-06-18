@@ -5,6 +5,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
+import { getInitialLang } from './core/i18n/language.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,10 +24,13 @@ export const appConfig: ApplicationConfig = {
     // - provideTranslateHttpLoader carga los textos desde archivos JSON. Con
     //   prefix '/i18n/' y suffix '.json', el idioma 'es' se resuelve a
     //   '/i18n/es.json' (Angular sirve la carpeta public/ en la raíz).
-    // - lang: idioma inicial. fallbackLang: idioma de respaldo si falta una clave.
+    // - lang: idioma inicial. Lo resolvemos con getInitialLang() (idioma persistido
+    //   en localStorage o 'es' por defecto), para que el primer render ya salga en
+    //   el idioma elegido por el usuario sin parpadeo.
+    // - fallbackLang: idioma de respaldo si falta una clave.
     provideTranslateService({
       loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
-      lang: 'es',
+      lang: getInitialLang(),
       fallbackLang: 'es',
     }),
   ],

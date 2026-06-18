@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SectionShell } from '../../../shared/ui/section-shell/section-shell';
 import { CodeBlock } from '../../../shared/ui/code-block/code-block';
 import { SignalExercise } from './signal-exercise/signal-exercise';
@@ -13,25 +14,11 @@ import { SignalExercise } from './signal-exercise/signal-exercise';
 @Component({
   selector: 'app-signal-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionShell, CodeBlock, SignalExercise],
+  imports: [SectionShell, CodeBlock, SignalExercise, TranslatePipe],
   templateUrl: './signal-section.html',
 })
 export class SignalSection {
   protected readonly docUrl = 'https://angular.dev/guide/signals';
-
-  protected readonly theory =
-    'Un Signal es un contenedor de un valor que avisa a quien lo usa cuando ese valor cambia. Se crea con `signal(valorInicial)`.\n' +
-    'Se LEE llamándolo como una función (`contador()`) y se ESCRIBE con `.set(valor)` (reemplazar) o `.update(fn)` (calcular a partir del valor actual).\n' +
-    'Angular registra automáticamente qué partes de la plantilla leen cada Signal, así que solo se reevalúa lo que depende de él: detección de cambios fina y sin `Zone.js` ni `ngOnChanges`.';
-
-  protected readonly simile =
-    'Un Signal es como el marcador de un partido: guarda un número que todos en el estadio miran. Cuando el árbitro lo cambia (`.set()` pone un resultado nuevo; `.update()` es "+1 al actual"), todas las miradas se actualizan a la vez sin que nadie tenga que preguntar "¿cuánto vamos?".';
-
-  protected readonly examples = [
-    'Llevar el estado de un contador o del aforo de una sala.',
-    'Guardar el valor actual de un campo de formulario.',
-    'Controlar un flag de visibilidad (abierto/cerrado, mostrado/oculto).',
-  ];
 
   /** Código del ejercicio (con TODOs). Esta vez es TypeScript. */
   protected readonly exerciseCode = `// Crear el signal

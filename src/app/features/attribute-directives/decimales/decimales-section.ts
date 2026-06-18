@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { SectionShell } from '../../../shared/ui/section-shell/section-shell';
 import { CodeBlock } from '../../../shared/ui/code-block/code-block';
 import { DecimalesExercise } from './decimales-exercise/decimales-exercise';
@@ -12,25 +13,11 @@ import { DecimalesExercise } from './decimales-exercise/decimales-exercise';
 @Component({
   selector: 'app-decimales-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SectionShell, CodeBlock, DecimalesExercise],
+  imports: [SectionShell, CodeBlock, DecimalesExercise, TranslatePipe],
   templateUrl: './decimales-section.html',
 })
 export class DecimalesSection {
   protected readonly docUrl = 'https://angular.dev/guide/directives/attribute-directives';
-
-  protected readonly theory =
-    'Una directiva de atributo añade comportamiento a un elemento que ya existe (un input, un botón) sin renderizar plantilla propia. Se aplica como un atributo: `<input [appDecimales]="2">`.\n' +
-    'Recibe datos con `@Input`. Si lo declaras como SETTER (`@Input() set appDecimales(v)`), el código del setter se ejecuta cada vez que el valor enlazado cambia: ideal cuando recibir el valor implica lógica (validar, transformar, reaccionar), no solo almacenarlo.\n' +
-    'Para reaccionar a eventos del elemento anfitrión se usa `@HostListener` (aquí, el evento `input`), y `ElementRef` da acceso al nodo del DOM para leer o ajustar su valor.';
-
-  protected readonly simile =
-    'Una directiva de atributo es como un accesorio que enchufas a un electrodoméstico: el campo de texto sigue siendo el mismo, pero le acoplas un "limitador" que controla lo que deja pasar. El `@Input` setter es el dial de ese accesorio: cada vez que lo giras (cambias los decimales), el limitador se reajusta al instante.';
-
-  protected readonly examples = [
-    'Limitar los decimales o el rango de un campo de importe.',
-    'Resaltar un elemento al pasar el ratón (clásico appHighlight).',
-    'Aplicar una máscara de formato (teléfono, IBAN) mientras se escribe.',
-  ];
 
   /** Código del ejercicio (con TODOs). */
   protected readonly exerciseCode = `@Directive({ selector: '[appDecimales]' })

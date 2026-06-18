@@ -1,0 +1,269 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+// Documentación a una columna, con scroll propio.
+.doc {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--surface-left);
+  padding: 2.25rem 2.25rem 5rem;
+}
+
+.doc__head {
+  max-width: 70ch;
+  margin: 0 auto;
+}
+.doc__tags {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.doc__code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.doc__badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+}
+.doc__title {
+  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-bottom: 0.9rem;
+}
+
+// ===================== TEORÍA / SÍMIL / EJEMPLOS =====================
+.part {
+  max-width: 70ch;
+  margin: 2.25rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.part__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.part__text {
+  margin: 0 0 0.75rem;
+  white-space: pre-line; // respeta los saltos de línea de la teoría
+}
+.part__text--simile {
+  color: var(--text-strong);
+  border-left: 2px solid var(--accent);
+  padding-left: 0.9rem;
+}
+.examples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.examples__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.examples__num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============ BLOQUES NUMERADOS · Paso N ↔ Diagrama N (dos columnas) ============
+.block {
+  max-width: 980px;
+  margin: 2.5rem auto 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.block__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+// Etiqueta "Diagrama N": comparte número con el "Paso N" de la derecha.
+// (minmax(0,1fr) en el grid ya permite que el código haga scroll sin desbordar.)
+.block__tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+
+// Título del paso (clase flow__label) y su texto.
+.flow__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.flow__lead {
+  margin: 0 0 1.25rem;
+}
+
+// ============================ DIAGRAMA ============================
+.diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0.9rem;
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.branch .node {
+  flex: 1 1 0;
+  min-width: 130px;
+}
+.node__title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-strong);
+}
+.node__title--sm {
+  font-size: 0.72rem;
+}
+.node__cap {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.node--accent {
+  border-color: var(--accent);
+}
+.node--accent .node__title {
+  color: var(--accent);
+}
+.node--out {
+  background: var(--accent-soft);
+}
+
+// Conector vertical con punta.
+.arrow {
+  width: 1px;
+  height: 24px;
+  background: var(--border-strong);
+  position: relative;
+}
+.arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--border-strong);
+}
+
+.diagram__sidetitle {
+  margin: 1.25rem 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-dim);
+}
+.branch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+  justify-content: center;
+}
+
+// ============================ DEMO EN VIVO ============================
+.demo {
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  margin-bottom: 1.25rem;
+}
+.demo__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.9rem;
+}
+.demo__label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+.demo__input {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  background: var(--surface-code);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-strong);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+}
+.demo__caption {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+.demo__out {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  color: var(--accent);
+  padding: 0.6rem 0.9rem;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+.demo__note {
+  margin: 0.9rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  border-left: 2px solid var(--border-strong);
+  padding-left: 0.8rem;
+}
+
+// --- Responsive: las dos columnas del bloque se apilan ---
+@media (max-width: 900px) {
+  .doc {
+    overflow-y: visible;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+  .block__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Sidebar } from './layout/sidebar/sidebar';
+import { Topbar } from './layout/topbar/topbar';
 
 /**
  * App-shell: estructura permanente de la aplicación.
@@ -12,7 +13,7 @@ import { Sidebar } from './layout/sidebar/sidebar';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, Sidebar],
+  imports: [RouterOutlet, Sidebar, Topbar],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

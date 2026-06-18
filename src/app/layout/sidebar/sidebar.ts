@@ -1,6 +1,8 @@
 import { Component, ChangeDetectionStrategy, signal, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CURRICULUM } from '../../core/data/curriculum.data';
+import { Section } from '../../core/models/curriculum.model';
 
 /**
  * Barra lateral de navegación.
@@ -16,12 +18,24 @@ import { CURRICULUM } from '../../core/data/curriculum.data';
 @Component({
   selector: 'app-sidebar',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, TranslatePipe],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
 })
 export class Sidebar {
   protected readonly blocks = CURRICULUM;
+
+  /**
+   * Clave i18n del título de una sección, p. ej. 'sections.if.title'.
+   *
+   * La derivamos del último segmento del `path` ('control-flow/if' -> 'if') para
+   * no duplicar identificadores: `curriculum.data.ts` sigue siendo la fuente de la
+   * estructura y los JSON solo aportan los textos visibles.
+   */
+  protected sectionTitleKey(section: Section): string {
+    const key = section.path?.split('/').pop() ?? section.code;
+    return `sections.${key}.title`;
+  }
 
   /** Bloque abierto actualmente (acordeón). Por defecto, el primero. */
   protected readonly openBlockId = signal<string>(CURRICULUM[0].id);

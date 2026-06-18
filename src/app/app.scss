@@ -9,10 +9,18 @@
   height: 100%;
 }
 
-.shell__content {
+/* Columna derecha: topbar fija arriba + contenido que ocupa el resto. */
+.shell__main {
   flex: 1;
   min-width: 0;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell__content {
+  flex: 1;
+  min-height: 0; /* permite que el área de scroll interno funcione dentro del flex */
   overflow: hidden;
 }
 
@@ -25,6 +33,9 @@
   }
   .shell {
     flex-direction: column;
+    height: auto;
+  }
+  .shell__main {
     height: auto;
   }
   .shell__content {
