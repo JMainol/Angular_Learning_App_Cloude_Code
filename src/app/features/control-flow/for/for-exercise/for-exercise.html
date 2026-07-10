@@ -12,16 +12,19 @@
       La base usa `track $index`, que compila pero NO es lo ideal: si la lista
       cambia en medio, Angular puede confundir qué fila es cuál.
     -->
-    @for (tarea of tareas(); track $index) {
+    @for (tarea of tareas(); track tarea.id) {
       <li class="row">
         <!-- TODO 2: muestra la posición usando la variable contextual $index
              (recuerda que empieza en 0; suma 1 para enseñar "1, 2, 3…"). -->
-        <span class="row__num">·</span>
+        <span class="row__num">{{ $index + 1}}</span>
 
         <span class="row__text">{{ tarea.texto }}</span>
         <span class="row__tag" [attr.data-prioridad]="tarea.prioridad">{{ tarea.prioridad }}</span>
       </li>
     }
+  @empty {
+    <p class="empty">Lista vacias</p>
+  }
 
     <!-- TODO 3: añade un bloque @empty (justo después del cierre del @for) que
          muestre un mensaje cuando la lista esté vacía. Pruébalo con "Vaciar". -->
