@@ -1,0 +1,140 @@
+.exercise {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  height: 100%;
+
+  &__intro,
+  &__hint {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  &__layout {
+    display: flex;
+    align-items: stretch;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__arrow {
+    display: flex;
+    align-items: center;
+    font-size: 1.75rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    padding: 0 0.25rem;
+    opacity: 0.7;
+  }
+}
+
+// ── Panel compartido por Emisor y Receptor ────────────────────────────────────
+// Se define aquí (no en los componentes inline) porque ChangeDetection.OnPush
+// con ViewEncapsulation por defecto no encapsula estilos en componentes sin
+// styleUrl, así que los estilos globales del host llegan a los selectores hijos.
+
+:host ::ng-deep {
+  .panel {
+    flex: 1;
+    min-width: 180px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    &__role {
+      margin: 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    &__role-sub {
+      font-weight: 400;
+      font-style: italic;
+    }
+
+    &__row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    &__input {
+      flex: 1;
+      min-width: 0;
+      padding: 0.5rem 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: var(--text);
+      font-size: 0.875rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+
+      &:focus {
+        border-color: var(--accent);
+      }
+
+      &::placeholder {
+        color: var(--text-muted);
+        opacity: 0.6;
+      }
+    }
+
+    &__btn {
+      flex-shrink: 0;
+      padding: 0.5rem 1rem;
+      background: var(--accent-grad);
+      border: none;
+      border-radius: 0.5rem;
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s;
+
+      &:hover {
+        opacity: 0.85;
+      }
+
+      &:active {
+        opacity: 0.7;
+      }
+    }
+
+    &__message {
+      padding: 0.625rem 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      min-height: 2.5rem;
+      display: flex;
+      align-items: center;
+    }
+
+    &__value {
+      font-size: 0.9375rem;
+      color: var(--text);
+      word-break: break-word;
+    }
+  }
+
+  // Borde de acento para diferenciar visualmente los dos paneles
+  .emisor {
+    border-top: 2px solid var(--accent);
+  }
+
+  .receptor {
+    border-top: 2px solid var(--border);
+  }
+}

@@ -1,0 +1,351 @@
+<section class="doc">
+
+  <!-- Cabecera -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">13.1</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.signals-era.title' | translate }}</h1>
+  </header>
+
+  <!-- 1 · TEORÍA -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.signals-era.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- 2 · SÍMIL -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.signals-era.simile' | translate }}</p>
+  </article>
+
+  <!-- 3 · EJEMPLOS DE USO COMÚN -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.signals-era.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ===== PASO 1 / DIAGRAMA 1: ngOnChanges → input() Signal (ancho completo) ===== -->
+  <article class="block block--full">
+
+    <!-- Cabecera del bloque: etiquetas + descripción -->
+    <div class="step1-header">
+      <span class="block__tag">{{ 'sections.signals-era.diagramWord' | translate }} 1 &amp; {{ 'sections.signals-era.stepWord' | translate }} 1</span>
+      <span class="flow__label">{{ 'sections.signals-era.p1.title' | translate }}</span>
+      <p class="flow__lead">{{ 'sections.signals-era.p1.lead' | translate }}</p>
+    </div>
+
+    <!-- Diagrama + código en dos columnas simétricas -->
+    <div class="step1-grid">
+
+      <!-- Columna ANTES -->
+      <div class="step1-col step1-col--before">
+        <span class="compare-col__label compare-col__label--before">{{ 'sections.signals-era.p1.before' | translate }}</span>
+
+        <!-- Mini-diagrama antes -->
+        <div class="diagram diagram--half" role="img" [attr.aria-label]="'sections.signals-era.p1.before' | translate">
+          <div class="node node--muted">
+            <span class="node__title node__title--sm">@Input() precio</span>
+            <span class="node__cap">{{ 'sections.signals-era.p1.n1' | translate }}</span>
+          </div>
+          <div class="arrow arrow--small" aria-hidden="true"></div>
+          <div class="node node--muted">
+            <span class="node__title node__title--sm">Angular detecta el cambio</span>
+            <span class="node__cap">{{ 'sections.signals-era.p1.n2' | translate }}</span>
+          </div>
+          <div class="arrow arrow--small" aria-hidden="true"></div>
+          <div class="node node--warn">
+            <span class="node__title node__title--sm">ngOnChanges(SimpleChanges)</span>
+            <span class="node__cap">{{ 'sections.signals-era.p1.n3' | translate }}</span>
+          </div>
+          <div class="arrow arrow--small" aria-hidden="true"></div>
+          <div class="node node--muted">
+            <span class="node__title node__title--sm">lógica manual</span>
+            <span class="node__cap">{{ 'sections.signals-era.p1.n4' | translate }}</span>
+          </div>
+        </div>
+
+        <app-code-block [code]="codeBefore" language="TypeScript" filename="precio-display.before.ts" />
+      </div>
+
+      <!-- Divisor visual -->
+      <div class="step1-divider" aria-hidden="true"></div>
+
+      <!-- Columna DESPUÉS -->
+      <div class="step1-col step1-col--after">
+        <span class="compare-col__label compare-col__label--after">{{ 'sections.signals-era.p1.after' | translate }}</span>
+
+        <!-- Mini-diagrama después -->
+        <div class="diagram diagram--half" role="img" [attr.aria-label]="'sections.signals-era.p1.after' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">input() Signal</span>
+            <span class="node__cap">{{ 'sections.signals-era.p1.n1b' | translate }}</span>
+          </div>
+          <div class="arrow arrow--small arrow--green" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">Signal actualizado automáticamente</span>
+            <span class="node__cap">{{ 'sections.signals-era.p1.n2b' | translate }}</span>
+          </div>
+          <div class="arrow arrow--small arrow--green" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">computed() / effect()</span>
+            <span class="node__cap">{{ 'sections.signals-era.p1.n3b' | translate }}</span>
+          </div>
+          <div class="node node--none">
+            <span class="node__cap node__cap--center">{{ 'sections.signals-era.p1.n4b' | translate }}</span>
+          </div>
+        </div>
+
+        <app-code-block [code]="codeAfter" language="TypeScript" filename="precio-display.after.ts" />
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ===== PASO 2 / DIAGRAMA 2: ngOnInit → constructor + afterNextRender ===== -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.signals-era.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.signals-era.p2.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">constructor()</span>
+            <span class="node__cap">{{ 'sections.signals-era.p2.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--warn">
+            <span class="node__title node__title--sm">ngOnInit()</span>
+            <span class="node__cap">{{ 'sections.signals-era.p2.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">afterNextRender()</span>
+            <span class="node__cap">{{ 'sections.signals-era.p2.n3' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.signals-era.stepWord' | translate }} 2 · {{ 'sections.signals-era.p2.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.signals-era.p2.lead' | translate }}</p>
+        <app-code-block
+          language="TypeScript"
+          filename="mi-componente.ts"
+          [code]="codeNgOnInit"
+        />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 3 / DIAGRAMA 3: ngOnDestroy → DestroyRef ===== -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.signals-era.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.signals-era.p3.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">Componente destruido</span>
+            <span class="node__cap">{{ 'sections.signals-era.p3.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">DestroyRef callbacks</span>
+            <span class="node__cap">{{ 'sections.signals-era.p3.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">clearInterval / ws.close()…</span>
+            <span class="node__cap">{{ 'sections.signals-era.p3.n3' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.signals-era.stepWord' | translate }} 3 · {{ 'sections.signals-era.p3.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.signals-era.p3.lead' | translate }}</p>
+        <app-code-block
+          language="TypeScript"
+          filename="mi-componente.ts"
+          [code]="codeDestroyRef"
+        />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 4 / DIAGRAMA 4: ngAfterViewInit → viewChild() + afterNextRender ===== -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.signals-era.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.signals-era.p4.title' | translate">
+          <div class="node node--muted">
+            <span class="node__title node__title--sm">viewChild()</span>
+            <span class="node__cap node__cap--code">undefined</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">Primer render</span>
+            <span class="node__cap">{{ 'sections.signals-era.p4.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">viewChild()</span>
+            <span class="node__cap node__cap--code">ElementRef ✓</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">afterNextRender()</span>
+            <span class="node__cap">{{ 'sections.signals-era.p4.n3' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.signals-era.stepWord' | translate }} 4 · {{ 'sections.signals-era.p4.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.signals-era.p4.lead' | translate }}</p>
+        <app-code-block
+          language="TypeScript"
+          filename="mi-componente.ts"
+          [code]="codeViewChild"
+        />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== TABLA COMPARATIVA (ancho completo) ===== -->
+  <article class="block block--full">
+    <h2 class="compare__title">{{ 'sections.signals-era.compareTitle' | translate }}</h2>
+    <div class="compare-table" role="table" [attr.aria-label]="'sections.signals-era.compareTitle' | translate">
+      <div class="compare-table__head" role="row">
+        <span role="columnheader">{{ 'sections.signals-era.compare.hookCol' | translate }}</span>
+        <span role="columnheader">{{ 'sections.signals-era.compare.modernCol' | translate }}</span>
+        <span role="columnheader">{{ 'sections.signals-era.compare.statusCol' | translate }}</span>
+      </div>
+      @for (row of compareRows; track row.hook) {
+        <div class="compare-table__row" role="row">
+          <span class="compare-table__hook" role="cell">
+            <code>{{ row.hook }}</code>
+          </span>
+          <span class="compare-table__modern" role="cell">
+            <code>{{ row.modern }}</code>
+          </span>
+          <span class="compare-table__status" role="cell">
+            <span class="status-badge status-badge--{{ row.status }}">
+              {{ ('sections.signals-era.compare.' + row.status) | translate }}
+            </span>
+          </span>
+        </div>
+      }
+    </div>
+  </article>
+
+  <!-- 6 · EJERCICIO PRÁCTICO -->
+  <article class="block">
+    <div class="exercise">
+
+      <!-- Columna izquierda: enunciado + código con TODOs -->
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <h3 class="exercise__title">{{ 'sections.signals-era.exercise.title' | translate }}</h3>
+        <p class="exercise__desc">{{ 'sections.signals-era.exercise.desc' | translate }}</p>
+        <p class="exercise__hint">{{ 'sections.signals-era.exercise.hint' | translate }}</p>
+        <span class="code-file-label">precio-display.ts</span>
+        <app-code-block [code]="codeAfter" language="TypeScript" filename="precio-display.ts" />
+        <span class="code-file-label">precio-display.html</span>
+        <app-code-block [code]="codeTemplate" language="HTML" filename="precio-display.html" />
+      </div>
+
+      <!-- Columna derecha: resultado en vivo -->
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+
+        @if (!destroyed()) {
+          <div class="result-panel">
+
+            <!-- Controles del "padre" -->
+            <div class="controls">
+              <label class="control">
+                <span class="control__label">{{ 'sections.signals-era.exercise.precioLabel' | translate }}</span>
+                <div class="control__row">
+                  <input
+                    class="control__range"
+                    type="range"
+                    min="50"
+                    max="500"
+                    step="10"
+                    [value]="precio()"
+                    (input)="onPrecioChange($event)"
+                    [attr.aria-label]="'sections.signals-era.exercise.precioLabel' | translate"
+                  />
+                  <span class="control__value">{{ precio() }}€</span>
+                </div>
+              </label>
+              <label class="control">
+                <span class="control__label">{{ 'sections.signals-era.exercise.descuentoLabel' | translate }}</span>
+                <div class="control__row">
+                  <input
+                    class="control__range"
+                    type="range"
+                    min="0"
+                    max="80"
+                    step="5"
+                    [value]="descuento()"
+                    (input)="onDescuentoChange($event)"
+                    [attr.aria-label]="'sections.signals-era.exercise.descuentoLabel' | translate"
+                  />
+                  <span class="control__value">{{ descuento() }}%</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- Resultado del "hijo" -->
+            <div class="price-display">
+              <div class="price-row">
+                <span class="price-row__label">{{ 'sections.signals-era.exercise.precioFinalLabel' | translate }}</span>
+                <span class="price-row__value price-row__value--final">{{ precioFinal() | number:'1.2-2' }} €</span>
+              </div>
+              <div class="price-row">
+                <span class="price-row__label">{{ 'sections.signals-era.exercise.ahorroLabel' | translate }}</span>
+                <span class="price-row__value price-row__value--saving">− {{ ahorro() | number:'1.2-2' }} €</span>
+              </div>
+            </div>
+
+            <!-- Log del effect() -->
+            <div class="log-panel">
+              <span class="log-panel__label">{{ 'sections.signals-era.exercise.logLabel' | translate }}</span>
+              <ul class="log-list">
+                @for (entry of logEntries(); track $index) {
+                  <li class="log-list__item">{{ entry }}</li>
+                } @empty {
+                  <li class="log-list__empty">{{ 'sections.signals-era.exercise.logEmpty' | translate }}</li>
+                }
+              </ul>
+            </div>
+
+            <button class="destroy-btn" type="button" (click)="simulateDestroy()">
+              {{ 'sections.signals-era.exercise.destroyBtn' | translate }}
+            </button>
+          </div>
+        } @else {
+          <div class="result-panel result-panel--destroyed">
+            <p class="destroyed-msg">{{ 'sections.signals-era.exercise.destroyLog' | translate }}</p>
+          </div>
+        }
+      </div>
+
+    </div>
+  </article>
+
+</section>

@@ -40,6 +40,13 @@ export class Sidebar {
   /** Bloque abierto actualmente (acordeón). Por defecto, el primero. */
   protected readonly openBlockId = signal<string>(CURRICULUM[0].id);
 
+  /**
+   * Set de códigos de sub-grupos abiertos. Usamos un Set para soportar varios
+   * sub-grupos abiertos a la vez. Creamos un nuevo Set en cada actualización para
+   * que el Signal detecte el cambio de referencia y reevalúe la vista.
+   */
+  protected readonly openGroupIds = signal<Set<string>>(new Set());
+
   /** Estado colapsado del propio sidebar. */
   protected readonly collapsed = signal(false);
 
@@ -49,6 +56,19 @@ export class Sidebar {
   protected toggleBlock(id: string): void {
     // Si ya está abierto, lo cerramos; si no, lo abrimos (y el resto se cierra solo).
     this.openBlockId.update((current) => (current === id ? '' : id));
+  }
+
+  protected toggleGroup(groupId: string): void {
+    this.openGroupIds.update((ids) => {
+      const next = new Set(ids);
+      if (next.has(groupId)) next.delete(groupId);
+      else next.add(groupId);
+      return next;
+    });
+  }
+
+  protected isGroupOpen(groupId: string): boolean {
+    return this.openGroupIds().has(groupId);
   }
 
   protected toggleCollapsed(): void {

@@ -1,0 +1,80 @@
+<div class="panel">
+
+  <!-- Botón de acción + contador de clics ignorados -->
+  <div class="accion">
+    <button
+      class="btn-cargar"
+      [class.btn-cargar--bloqueado]="enVuelo()"
+      (click)="onClickCargar()"
+    >
+      @if (enVuelo()) {
+        <span class="btn-spinner"></span>
+        BLOQUEADO — petición en vuelo
+      } @else {
+        Cargar perfil del usuario #{{ proximoUserId() }}
+      }
+    </button>
+
+    @if (clicksIgnorados() > 0) {
+      <span class="ignorados-badge">
+        {{ clicksIgnorados() }}
+        {{ clicksIgnorados() === 1 ? 'clic ignorado' : 'clics ignorados' }}
+        por exhaustMap
+      </span>
+    }
+  </div>
+
+  <!-- Estado de la petición -->
+  <div class="estado">
+    @switch (estado()) {
+      @case ('idle') {
+        <span class="estado__badge estado__badge--idle">EN ESPERA</span>
+        <p class="estado__msg">
+          Pulsa el botón para cargar el perfil de un usuario.<br />
+          <span class="estado__sub">Completa el TODO 1 y el TODO 2 para activar la llamada HTTP.</span>
+        </p>
+      }
+      @case ('cargando') {
+        <span class="estado__badge estado__badge--cargando">
+          <span class="estado__spinner"></span> CARGANDO
+        </span>
+        <p class="estado__msg">
+          Petición HTTP en vuelo. Pulsa el botón varias veces:<br />
+          <span class="estado__sub">
+            @if (clicksIgnorados() > 0) {
+              exhaustMap está ignorando los clics extra. ¡Funciona!
+            } @else {
+              exhaustMap ignorará los clics hasta que la petición complete.
+            }
+          </span>
+        </p>
+      }
+      @case ('resultado') {
+        <span class="estado__badge estado__badge--resultado">✓ COMPLETADA</span>
+        <p class="estado__msg">Perfil cargado correctamente.</p>
+      }
+    }
+  </div>
+
+  <!-- Tarjeta de usuario -->
+  @if (usuario(); as u) {
+    <div class="usuario-card">
+      <div class="usuario-card__avatar">
+        {{ u.name.charAt(0).toUpperCase() }}
+      </div>
+      <div class="usuario-card__info">
+        <span class="usuario-card__nombre">{{ u.name }}</span>
+        <span class="usuario-card__dato">✉ {{ u.email }}</span>
+        <span class="usuario-card__dato">📞 {{ u.phone }}</span>
+        <span class="usuario-card__dato">🏢 {{ u.company.name }}</span>
+      </div>
+    </div>
+  } @else if (estado() === 'cargando') {
+    <div class="usuario-card usuario-card--placeholder">
+      <p class="placeholder__hint">
+        Resuelve el TODO 2 para que el perfil aparezca aquí.
+      </p>
+    </div>
+  }
+
+</div>

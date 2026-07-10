@@ -1,0 +1,282 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">11.1</span>
+      <span class="doc__badge">{{ 'sections.http.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.http.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.http.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.http.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.http.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.http.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: Configurar provideHttpClient ────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.http.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.http.p1.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">app.config.ts</span>
+            <span class="node__cap">{{ 'sections.http.p1.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">provideHttpClient(withFetch())</span>
+            <span class="node__cap">{{ 'sections.http.p1.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">Root Injector</span>
+            <span class="node__cap">{{ 'sections.http.p1.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">inject(HttpClient)</span>
+            <span class="node__cap">{{ 'sections.http.p1.n4' | translate }}</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">Fetch API</span>
+            <span class="node__badge node__badge--dim">SSR ready</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.http.stepWord' | translate }} 1 · {{ 'sections.http.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.http.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeProvide" language="TypeScript" filename="app.config.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: Modelo de datos ─────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.http.diagramWord' | translate }} 2</span>
+        <div class="diagram diagram--model" role="img" [attr.aria-label]="'sections.http.p2.title' | translate">
+          <div class="model-card">
+            <span class="model-card__name">Post</span>
+            <ul class="model-card__fields">
+              <li><span class="field-type">number</span><span class="field-name">id</span></li>
+              <li><span class="field-type">number</span><span class="field-name">userId</span></li>
+              <li><span class="field-type">string</span><span class="field-name">title</span></li>
+              <li><span class="field-type">string</span><span class="field-name">body</span></li>
+            </ul>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="model-card model-card--derived">
+            <span class="model-card__name">PostPayload</span>
+            <span class="model-card__sub">Omit&lt;Post, 'id'&gt;</span>
+            <ul class="model-card__fields">
+              <li><span class="field-type">number</span><span class="field-name">userId</span></li>
+              <li><span class="field-type">string</span><span class="field-name">title</span></li>
+              <li><span class="field-type">string</span><span class="field-name">body</span></li>
+            </ul>
+          </div>
+          <div class="model-note">{{ 'sections.http.p2.note' | translate }}</div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.http.stepWord' | translate }} 2 · {{ 'sections.http.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.http.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeModel" language="TypeScript" filename="post.model.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: PostService con CRUD ────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.http.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.http.p3.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">Componente</span>
+            <span class="node__cap">{{ 'sections.http.p3.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">PostService</span>
+            <span class="node__cap">{{ 'sections.http.p3.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">HttpClient</span>
+            <span class="node__cap">{{ 'sections.http.p3.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">Observable&lt;T&gt;</span>
+            <span class="node__cap">{{ 'sections.http.p3.n4' | translate }}</span>
+          </div>
+          <div class="verb-row" aria-hidden="true">
+            <span class="verb verb--get">GET</span>
+            <span class="verb verb--post">POST</span>
+            <span class="verb verb--put">PUT</span>
+            <span class="verb verb--delete">DELETE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.http.stepWord' | translate }} 3 · {{ 'sections.http.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.http.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeService" language="TypeScript" filename="post.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: Consumo con Signals ──────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.http.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.http.p4.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">svc.getAll()</span>
+            <span class="node__cap">Observable&lt;Post[]&gt;</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">toSignal(obs, &#123; initialValue: [] &#125;)</span>
+            <span class="node__cap">{{ 'sections.http.p4.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">posts()</span>
+            <span class="node__cap">{{ 'sections.http.p4.n2' | translate }}</span>
+          </div>
+          <div class="arrow-split" aria-hidden="true"></div>
+          <div class="signal-row">
+            <div class="signal-pill">
+              <span class="signal-pill__name">loading</span>
+              <span class="signal-pill__type">signal&lt;boolean&gt;</span>
+            </div>
+            <div class="signal-pill">
+              <span class="signal-pill__name">error</span>
+              <span class="signal-pill__type">signal&lt;string | null&gt;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.http.stepWord' | translate }} 4 · {{ 'sections.http.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.http.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeConsume" language="TypeScript" filename="http-exercise.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 5 / DIAGRAMA 5: Manejo de errores ───────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.http.diagramWord' | translate }} 5</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.http.p5.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">HttpClient request</span>
+            <span class="node__cap">Observable&lt;T&gt;</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">catchError(handleError)</span>
+            <span class="node__cap">{{ 'sections.http.p5.n1' | translate }}</span>
+          </div>
+          <div class="branch-fork" aria-hidden="true">
+            <span class="branch-fork__line branch-fork__line--left"></span>
+            <span class="branch-fork__line branch-fork__line--right"></span>
+          </div>
+          <div class="error-branch">
+            <div class="node node--out">
+              <span class="node__title node__title--sm">next(data)</span>
+              <span class="node__cap">{{ 'sections.http.p5.n2' | translate }}</span>
+            </div>
+            <div class="node node--error">
+              <span class="node__title node__title--sm">throwError(new Error(msg))</span>
+              <span class="node__cap">{{ 'sections.http.p5.n3' | translate }}</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--error-sink">
+            <span class="node__title node__title--sm">error.set(err.message)</span>
+            <span class="node__cap">{{ 'sections.http.p5.n4' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.http.stepWord' | translate }} 5 · {{ 'sections.http.p5.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.http.p5.lead' | translate }}</p>
+        <app-code-block [code]="codeError" language="TypeScript" filename="post.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.http.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeConsume" language="TypeScript" filename="http-exercise.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-http-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

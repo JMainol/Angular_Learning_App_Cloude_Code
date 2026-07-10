@@ -1,0 +1,293 @@
+<section class="doc">
+
+  <!-- ── Cabecera ───────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">11.3</span>
+      <span class="doc__badge">{{ 'sections.sse.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.sse.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.sse.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ─────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.sse.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.sse.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ─────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.sse.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: Handshake HTTP → Stream SSE ───────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sse.diagramWord' | translate }} 1</span>
+        <div class="diagram diagram--stream" role="img" [attr.aria-label]="'sections.sse.p1.title' | translate">
+
+          <!-- Columna cliente -->
+          <div class="hs-col">
+            <div class="hs-actor hs-actor--client">
+              <span class="hs-actor__icon">⬡</span>
+              <span class="hs-actor__label">{{ 'sections.sse.p1.n1' | translate }}</span>
+            </div>
+            <div class="hs-lifeline"></div>
+          </div>
+
+          <!-- Columna mensajes (centro) -->
+          <div class="hs-msgs">
+            <!-- Petición inicial: cliente → servidor -->
+            <div class="hs-msg hs-msg--right">
+              <span class="hs-msg__text">{{ 'sections.sse.p1.n2' | translate }}</span>
+              <span class="hs-msg__arrow hs-msg__arrow--right">→</span>
+            </div>
+            <!-- Respuesta inicial: servidor → cliente -->
+            <div class="hs-msg hs-msg--left">
+              <span class="hs-msg__arrow hs-msg__arrow--left">←</span>
+              <span class="hs-msg__text">{{ 'sections.sse.p1.n3' | translate }}</span>
+            </div>
+            <!-- Stream de datos unidireccional (solo de servidor a cliente) -->
+            <div class="sse-stream-rows">
+              <div class="sse-stream-row">
+                <span class="sse-stream-arrow">←</span>
+                <span class="sse-stream-data">data: &#123;...&#125;</span>
+              </div>
+              <div class="sse-stream-row">
+                <span class="sse-stream-arrow">←</span>
+                <span class="sse-stream-data">data: &#123;...&#125;</span>
+              </div>
+              <div class="sse-stream-row sse-stream-row--dim">
+                <span class="sse-stream-arrow">←</span>
+                <span class="sse-stream-data">data: &#123;...&#125;</span>
+              </div>
+              <span class="sse-stream-caption">{{ 'sections.sse.p1.n4' | translate }}</span>
+            </div>
+          </div>
+
+          <!-- Columna servidor -->
+          <div class="hs-col">
+            <div class="hs-actor hs-actor--server">
+              <span class="hs-actor__icon">▣</span>
+              <span class="hs-actor__label">{{ 'sections.sse.p1.server' | translate }}</span>
+            </div>
+            <div class="hs-lifeline"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sse.stepWord' | translate }} 1 · {{ 'sections.sse.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sse.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeConnect" language="TypeScript" filename="sse-monitor.component.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: Pipeline EventSource → Signal ─────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sse.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.sse.p2.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title">{{ 'sections.sse.p2.n1' | translate }}</span>
+            <span class="node__cap">API nativa del browser · EventTarget</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">{{ 'sections.sse.p2.n2' | translate }}</span>
+            <span class="node__cap">Observable tipado — RxJS</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">{{ 'sections.sse.p2.n3' | translate }}</span>
+            <span class="node__cap">Deserializa el JSON del evento</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">{{ 'sections.sse.p2.n4' | translate }}</span>
+            <span class="node__cap">Cancela la suscripción al destruir</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--warn">
+            <span class="node__title node__title--sm">{{ 'sections.sse.p2.n5' | translate }}</span>
+            <span class="node__cap">signal&lt;SseData | null&gt;(null)</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--closed">
+            <span class="node__title node__title--sm">{{ 'sections.sse.p2.n6' | translate }}</span>
+            <span class="node__cap">Actualización automática · OnPush</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sse.stepWord' | translate }} 2 · {{ 'sections.sse.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sse.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeSignals" language="TypeScript" filename="sse-monitor.component.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: Formato del protocolo SSE ─────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sse.diagramWord' | translate }} 3</span>
+        <div class="diagram diagram--packet" role="img" [attr.aria-label]="'sections.sse.p3.title' | translate">
+          <span class="packet__title">Evento SSE · text/event-stream</span>
+
+          <div class="packet__field packet__field--required">
+            <div class="packet__line">
+              <span class="packet__key">data:</span>
+              <span class="packet__val">&#123;"temperatura": 22.4&#125;</span>
+              <span class="packet__badge packet__badge--req">required</span>
+            </div>
+            <span class="packet__desc">{{ 'sections.sse.p3.f1' | translate }}</span>
+          </div>
+
+          <div class="packet__field">
+            <div class="packet__line">
+              <span class="packet__key">event:</span>
+              <span class="packet__val">alerta</span>
+              <span class="packet__badge">optional</span>
+            </div>
+            <span class="packet__desc">{{ 'sections.sse.p3.f2' | translate }}</span>
+          </div>
+
+          <div class="packet__field">
+            <div class="packet__line">
+              <span class="packet__key">id:</span>
+              <span class="packet__val">42</span>
+              <span class="packet__badge">optional</span>
+            </div>
+            <span class="packet__desc">{{ 'sections.sse.p3.f3' | translate }}</span>
+          </div>
+
+          <div class="packet__field">
+            <div class="packet__line">
+              <span class="packet__key">retry:</span>
+              <span class="packet__val">3000</span>
+              <span class="packet__badge">optional</span>
+            </div>
+            <span class="packet__desc">{{ 'sections.sse.p3.f4' | translate }}</span>
+          </div>
+
+          <div class="packet__separator"></div>
+
+          <div class="packet__field packet__field--empty">
+            <span class="packet__empty-label">↵ {{ 'sections.sse.p3.f5' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sse.stepWord' | translate }} 3 · {{ 'sections.sse.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sse.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeFormat" language="JavaScript" filename="sse-server.js" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: Estados + reconexión automática ───────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sse.diagramWord' | translate }} 4</span>
+        <div class="diagram diagram--sse-states" role="img" [attr.aria-label]="'sections.sse.p4.title' | translate">
+          <div class="sse-state-list">
+            <div class="state state--connecting">
+              <span class="state__dot state__dot--connecting"></span>
+              <div class="state__info">
+                <span class="state__name">{{ 'sections.sse.p4.s0' | translate }}</span>
+                <span class="state__sub">{{ 'sections.sse.p4.sub0' | translate }}</span>
+              </div>
+            </div>
+            <div class="state-arrow">↓</div>
+            <div class="state state--open">
+              <span class="state__dot state__dot--open"></span>
+              <div class="state__info">
+                <span class="state__name">{{ 'sections.sse.p4.s1' | translate }}</span>
+                <span class="state__sub">{{ 'sections.sse.p4.sub1' | translate }}</span>
+              </div>
+              <span class="state__badge">data ←</span>
+            </div>
+            <div class="state-arrow">↓</div>
+            <div class="state">
+              <span class="state__dot state__dot--closed"></span>
+              <div class="state__info">
+                <span class="state__name">{{ 'sections.sse.p4.s2' | translate }}</span>
+                <span class="state__sub">{{ 'sections.sse.p4.sub2' | translate }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicador de reconexión automática del browser -->
+          <div class="sse-reconnect">
+            <span class="sse-reconnect__icon">↺</span>
+            <span class="sse-reconnect__label">{{ 'sections.sse.p4.n4' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sse.stepWord' | translate }} 4 · {{ 'sections.sse.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sse.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeCleanup" language="TypeScript" filename="sse-monitor.component.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.sse.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="sse-exercise.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-sse-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

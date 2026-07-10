@@ -1,0 +1,112 @@
+<div class="sim">
+
+  <!-- ── Panel de estado del token ───────────────────────────────── -->
+  <div class="token-panel">
+    <span class="token-panel__label">{{ 'sections.auth-token.exercise.tokenLabel' | translate }}</span>
+    <div class="token-panel__value" [class.token-panel__value--empty]="!token()">
+      @if (tokenPreview()) {
+        <code class="token-code">{{ tokenPreview() }}</code>
+        <span class="token-badge token-badge--active">JWT</span>
+      } @else {
+        <span class="token-none">{{ 'sections.auth-token.exercise.noToken' | translate }}</span>
+      }
+    </div>
+    <div class="token-panel__actions">
+      <button type="button" class="btn btn--set" (click)="establecerToken()" [disabled]="!!token()">
+        {{ 'sections.auth-token.exercise.setToken' | translate }}
+      </button>
+      <button type="button" class="btn btn--clear" (click)="limpiarToken()" [disabled]="!token()">
+        {{ 'sections.auth-token.exercise.clearToken' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Controles de la simulación ───────────────────────────────── -->
+  <div class="controls">
+    <button type="button" class="btn btn--request" (click)="simularPeticion()">
+      {{ 'sections.auth-token.exercise.makeRequest' | translate }}
+    </button>
+    <label class="toggle">
+      <input
+        type="checkbox"
+        class="toggle__input"
+        [checked]="force401()"
+        (change)="alternarForzar401()"
+      />
+      <span class="toggle__track" [class.toggle__track--checked]="force401()">
+        <span class="toggle__thumb"></span>
+      </span>
+      <span class="toggle__label" [class.toggle__label--active]="force401()">
+        {{ 'sections.auth-token.exercise.simulate401' | translate }}
+      </span>
+    </label>
+  </div>
+
+  <!-- ── Resultado de la simulación ───────────────────────────────── -->
+  @if (lastRequest()) {
+    <div class="result-panels">
+
+      <!-- Panel: petición enviada -->
+      <div class="panel panel--request">
+        <div class="panel__head">
+          <span class="panel__title">{{ 'sections.auth-token.exercise.requestLabel' | translate }}</span>
+          <span class="panel__badge">{{ lastRequest()!.url }}</span>
+        </div>
+        <div class="headers">
+          @for (entry of lastRequest()!.headers | keyvalue; track entry.key) {
+            <div class="header-row" [class.header-row--auth]="entry.key === 'Authorization'">
+              <span class="header-key">{{ entry.key }}:</span>
+              <span class="header-val">{{ entry.value }}</span>
+              @if (entry.key === 'Authorization') {
+                <span class="header-badge">
+                  {{ 'sections.auth-token.exercise.interceptorBadge' | translate }}
+                </span>
+              }
+            </div>
+          }
+          @if (!lastRequest()!.headers['Authorization']) {
+            <div class="header-row header-row--missing">
+              <span class="header-key">Authorization:</span>
+              <span class="header-val header-val--dim">
+                {{ 'sections.auth-token.exercise.noAuthHeader' | translate }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Panel: respuesta recibida -->
+      <div class="panel" [class.panel--ok]="lastResponse()!.status === 200" [class.panel--err]="lastResponse()!.status !== 200">
+        <div class="panel__head">
+          <span class="panel__title">{{ 'sections.auth-token.exercise.responseLabel' | translate }}</span>
+          <span class="panel__status" [class.panel__status--ok]="lastResponse()!.status === 200" [class.panel__status--err]="lastResponse()!.status !== 200">
+            @if (lastResponse()!.status === 200) {
+              {{ 'sections.auth-token.exercise.statusOk' | translate }}
+            } @else {
+              {{ 'sections.auth-token.exercise.status401' | translate }}
+            }
+          </span>
+        </div>
+        <code class="resp-body">{{ lastResponse()!.body }}</code>
+
+        @if (lastResponse()!.interceptorActions.length > 0) {
+          <div class="interceptor-log">
+            @for (action of lastResponse()!.interceptorActions; track $index) {
+              <div class="log-entry">
+                <span class="log-entry__icon">⚡</span>
+                <span>{{ 'sections.auth-token.exercise.' + action | translate }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+  } @else {
+    <p class="sim__idle">{{ 'sections.auth-token.exercise.idle' | translate }}</p>
+  }
+
+  <!-- ── Hint ─────────────────────────────────────────────────────── -->
+  <p class="sim__hint">{{ 'sections.auth-token.exercise.hint' | translate }}</p>
+
+</div>

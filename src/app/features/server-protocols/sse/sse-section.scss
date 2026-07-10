@@ -1,0 +1,556 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.doc {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--surface-left);
+  padding: 2.25rem 2.25rem 5rem;
+}
+
+.doc__head {
+  max-width: 70ch;
+  margin: 0 auto;
+}
+.doc__tags {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.doc__code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.doc__badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+}
+.doc__title {
+  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-bottom: 0.9rem;
+}
+.doc__intro {
+  color: var(--text-dim);
+  margin: 0;
+}
+
+// ===================== TEORÍA / SÍMIL / EJEMPLOS =====================
+.part {
+  max-width: 70ch;
+  margin: 2.25rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.part__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.part__text {
+  margin: 0 0 0.75rem;
+  white-space: pre-line;
+}
+.part__text--simile {
+  color: var(--text-strong);
+  border-left: 2px solid var(--accent);
+  padding-left: 0.9rem;
+}
+.examples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.examples__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.examples__num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============ BLOQUES NUMERADOS · Paso N ↔ Diagrama N ============
+.block {
+  max-width: 1400px;
+  margin: 2.5rem auto 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.block__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+.block--wide .block__grid {
+  grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+}
+.block__tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+.flow__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.flow__lead {
+  margin: 0 0 1.25rem;
+}
+
+// ============================ DIAGRAMA BASE ============================
+.diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0.9rem;
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  gap: 0;
+}
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.node__title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-strong);
+}
+.node__title--sm { font-size: 0.72rem; }
+.node__cap {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.node--accent {
+  border-color: var(--accent);
+  .node__title { color: var(--accent); }
+}
+.node--out {
+  background: var(--accent-soft);
+}
+.node--warn {
+  border-color: #fbbf24;
+  .node__title { color: #fbbf24; }
+}
+.node--closed {
+  background: rgba(96, 165, 250, 0.08);
+  border-color: #60a5fa;
+  .node__title { color: #60a5fa; }
+}
+
+.arrow {
+  width: 1px;
+  height: 24px;
+  background: var(--border-strong);
+  position: relative;
+  flex-shrink: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid var(--border-strong);
+  }
+}
+
+// ===================== DIAGRAMA 1: SSE STREAM (handshake) =====================
+.diagram--stream {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  padding: 1.25rem 0.75rem;
+}
+
+.hs-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.hs-actor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  min-width: 64px;
+}
+.hs-actor--client { border-color: var(--accent); }
+.hs-actor--server { border-color: #60a5fa; }
+
+.hs-actor__icon {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+
+  .hs-actor--client & { color: var(--accent); }
+  .hs-actor--server & { color: #60a5fa; }
+}
+.hs-actor__label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.hs-lifeline {
+  flex: 1;
+  width: 1px;
+  background: var(--border-strong);
+  margin: 0 auto;
+  min-height: 60px;
+}
+
+.hs-msgs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.4rem 0;
+}
+
+.hs-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  &--right { justify-content: flex-end; }
+  &--left  { justify-content: flex-start; }
+}
+.hs-msg__text {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.3;
+}
+.hs-msg__arrow {
+  font-size: 1rem;
+  flex-shrink: 0;
+  &--right { color: var(--accent); }
+  &--left  { color: #60a5fa; }
+}
+
+// Filas de datos SSE unidireccionales (solo ←)
+.sse-stream-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px dashed #60a5fa;
+  border-radius: var(--radius-sm);
+  background: rgba(96, 165, 250, 0.05);
+}
+.sse-stream-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  &--dim { opacity: 0.45; }
+}
+.sse-stream-arrow {
+  font-size: 0.9rem;
+  color: #60a5fa;
+  flex-shrink: 0;
+}
+.sse-stream-data {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+}
+.sse-stream-caption {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  color: #60a5fa;
+  text-align: center;
+  margin-top: 0.25rem;
+  line-height: 1.3;
+}
+
+// ===================== DIAGRAMA 3: PACKET FORMAT =====================
+.diagram--packet {
+  align-items: stretch;
+  padding: 1rem 1.1rem;
+  gap: 0;
+}
+
+.packet__title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.packet__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.35rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+
+  &--required {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  &--empty {
+    background: transparent;
+    border: 1px dashed var(--border-strong);
+    align-items: center;
+  }
+}
+
+.packet__line {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.packet__key {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.packet__val {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-strong);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.packet__badge {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+  flex-shrink: 0;
+
+  &--req {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+}
+
+.packet__desc {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+.packet__separator {
+  height: 1px;
+  background: var(--border);
+  margin: 0.35rem 0;
+}
+
+.packet__empty-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+// ===================== DIAGRAMA 4: ESTADOS SSE + RECONEXIÓN =====================
+.diagram--sse-states {
+  padding: 1.25rem 1rem;
+  gap: 1rem;
+}
+
+.sse-state-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  max-width: 260px;
+}
+
+.state {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+
+  &--open {
+    border-color: #4ade80;
+    background: rgba(74, 222, 128, 0.05);
+  }
+}
+
+.state__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--connecting { background: #fbbf24; }
+  &--open       { background: #4ade80; }
+  &--closed     { background: var(--text-dim); }
+}
+
+.state__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex: 1;
+}
+
+.state__name {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-strong);
+}
+.state__sub {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+}
+.state__badge {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  border-radius: 999px;
+  padding: 0.1rem 0.4rem;
+  flex-shrink: 0;
+}
+.state-arrow {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 0.1rem 0;
+}
+
+// Badge de reconexión automática (ventaja SSE vs WebSocket)
+.sse-reconnect {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #fbbf24;
+  border-radius: var(--radius-sm);
+  background: rgba(251, 191, 36, 0.06);
+  width: 100%;
+  max-width: 260px;
+}
+.sse-reconnect__icon {
+  font-size: 1rem;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+.sse-reconnect__label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #fbbf24;
+  line-height: 1.3;
+}
+
+// ===================== EJERCICIO (dos columnas) =====================
+.exercise {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.exercise__code { min-width: 0; }
+.exercise__desc {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+}
+.exercise__result {
+  position: sticky;
+  top: 1.5rem;
+}
+
+// ---- Responsive ----
+@media (max-width: 900px) {
+  .doc {
+    overflow-y: visible;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+  .block__grid,
+  .block--wide .block__grid {
+    grid-template-columns: 1fr;
+  }
+  .exercise {
+    grid-template-columns: 1fr;
+  }
+  .exercise__result {
+    position: static;
+  }
+  .diagram--stream {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .hs-lifeline { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow { transition: none; }
+}

@@ -1,0 +1,16 @@
+<app-section-shell
+  code="8.1"
+  [title]="'sections.subject-vs-signal.title' | translate"
+  [theory]="'sections.subject-vs-signal.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.subject-vs-signal.simile' | translate"
+  [examples]="'sections.subject-vs-signal.examples' | translate"
+>
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="subject-vs-signal-exercise.ts"
+  />
+  <app-subject-vs-signal-exercise exercise-result />
+</app-section-shell>

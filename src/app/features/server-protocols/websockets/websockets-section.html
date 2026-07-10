@@ -1,0 +1,261 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">11.2</span>
+      <span class="doc__badge">{{ 'sections.websockets.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.websockets.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.websockets.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.websockets.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.websockets.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.websockets.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: El Handshake HTTP → WS ─────────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.websockets.diagramWord' | translate }} 1</span>
+        <div class="diagram diagram--handshake" role="img" [attr.aria-label]="'sections.websockets.p1.title' | translate">
+
+          <!-- Columna cliente -->
+          <div class="hs-col">
+            <div class="hs-actor hs-actor--client">
+              <span class="hs-actor__icon">⬡</span>
+              <span class="hs-actor__label">{{ 'sections.websockets.p1.n1' | translate }}</span>
+            </div>
+            <div class="hs-lifeline"></div>
+          </div>
+
+          <!-- Columna mensajes -->
+          <div class="hs-msgs">
+            <div class="hs-msg hs-msg--right">
+              <span class="hs-msg__text">{{ 'sections.websockets.p1.n2' | translate }}</span>
+              <span class="hs-msg__arrow hs-msg__arrow--right">→</span>
+            </div>
+            <div class="hs-msg hs-msg--left">
+              <span class="hs-msg__arrow hs-msg__arrow--left">←</span>
+              <span class="hs-msg__text">{{ 'sections.websockets.p1.n3' | translate }}</span>
+            </div>
+            <div class="hs-channel">
+              <span class="hs-channel__label">{{ 'sections.websockets.p1.n4' | translate }}</span>
+              <div class="hs-channel__line hs-channel__line--up">↑</div>
+              <div class="hs-channel__line hs-channel__line--down">↓</div>
+            </div>
+          </div>
+
+          <!-- Columna servidor -->
+          <div class="hs-col">
+            <div class="hs-actor hs-actor--server">
+              <span class="hs-actor__icon">▣</span>
+              <span class="hs-actor__label">Servidor WS</span>
+            </div>
+            <div class="hs-lifeline"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.websockets.stepWord' | translate }} 1 · {{ 'sections.websockets.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.websockets.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeHandshake" language="TypeScript" filename="ws-chat.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: Estado de la conexión con Signals ───────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.websockets.diagramWord' | translate }} 2</span>
+        <div class="diagram diagram--states" role="img" [attr.aria-label]="'sections.websockets.p2.title' | translate">
+          <div class="state-list">
+            <div class="state state--connecting">
+              <span class="state__dot state__dot--connecting"></span>
+              <div class="state__info">
+                <span class="state__name">{{ 'sections.websockets.p2.s0' | translate }}</span>
+                <span class="state__sub">{{ 'sections.websockets.p2.sub0' | translate }}</span>
+              </div>
+            </div>
+            <div class="state-arrow">↓</div>
+            <div class="state state--open">
+              <span class="state__dot state__dot--open"></span>
+              <div class="state__info">
+                <span class="state__name">{{ 'sections.websockets.p2.s1' | translate }}</span>
+                <span class="state__sub">{{ 'sections.websockets.p2.sub1' | translate }}</span>
+              </div>
+              <span class="state__badge">messages ↕</span>
+            </div>
+            <div class="state-arrow">↓</div>
+            <div class="state state--closing">
+              <span class="state__dot state__dot--closing"></span>
+              <div class="state__info">
+                <span class="state__name">{{ 'sections.websockets.p2.s2' | translate }}</span>
+                <span class="state__sub">{{ 'sections.websockets.p2.sub2' | translate }}</span>
+              </div>
+            </div>
+            <div class="state-arrow">↓</div>
+            <div class="state state--closed">
+              <span class="state__dot state__dot--closed"></span>
+              <div class="state__info">
+                <span class="state__name">{{ 'sections.websockets.p2.s3' | translate }}</span>
+                <span class="state__sub">{{ 'sections.websockets.p2.sub3' | translate }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.websockets.stepWord' | translate }} 2 · {{ 'sections.websockets.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.websockets.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeStatus" language="TypeScript" filename="ws-chat.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: Mensajes bidireccionales ────────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.websockets.diagramWord' | translate }} 3</span>
+        <div class="diagram diagram--bidi" role="img" [attr.aria-label]="'sections.websockets.p3.title' | translate">
+
+          <div class="bidi-actor bidi-actor--client">
+            <span class="bidi-actor__title">{{ 'sections.websockets.p3.n1' | translate }}</span>
+            <span class="bidi-actor__sub">Angular</span>
+          </div>
+
+          <div class="bidi-arrows">
+            <div class="bidi-arrow bidi-arrow--out">
+              <span class="bidi-arrow__label">{{ 'sections.websockets.p3.n2' | translate }}</span>
+              <div class="bidi-arrow__line">
+                <div class="bidi-arrow__head bidi-arrow__head--right"></div>
+              </div>
+            </div>
+            <div class="bidi-arrow bidi-arrow--in">
+              <div class="bidi-arrow__line">
+                <div class="bidi-arrow__head bidi-arrow__head--left"></div>
+              </div>
+              <span class="bidi-arrow__label">{{ 'sections.websockets.p3.n3' | translate }}</span>
+            </div>
+          </div>
+
+          <div class="bidi-actor bidi-actor--server">
+            <span class="bidi-actor__title">{{ 'sections.websockets.p3.n4' | translate }}</span>
+            <span class="bidi-actor__sub">WS Server</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.websockets.stepWord' | translate }} 3 · {{ 'sections.websockets.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.websockets.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeBidirectional" language="TypeScript" filename="ws-exercise.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: Ciclo de vida y cleanup ─────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.websockets.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.websockets.p4.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">{{ 'sections.websockets.p4.n1' | translate }}</span>
+            <span class="node__cap">ngOnDestroy / DestroyRef</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="cleanup-fork" aria-hidden="true">
+            <span class="cleanup-fork__line cleanup-fork__line--left"></span>
+            <span class="cleanup-fork__line cleanup-fork__line--right"></span>
+          </div>
+          <div class="cleanup-branch">
+            <div class="node node--out">
+              <span class="node__title node__title--sm">{{ 'sections.websockets.p4.n2' | translate }}</span>
+              <span class="node__cap">takeUntilDestroyed()</span>
+            </div>
+            <div class="node node--warn">
+              <span class="node__title node__title--sm">{{ 'sections.websockets.p4.n3' | translate }}</span>
+              <span class="node__cap">DestroyRef.onDestroy()</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--closed">
+            <span class="node__title node__title--sm">{{ 'sections.websockets.p4.n4' | translate }}</span>
+            <span class="node__cap">ws.close(1000)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.websockets.stepWord' | translate }} 4 · {{ 'sections.websockets.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.websockets.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeCleanup" language="TypeScript" filename="ws-exercise.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.websockets.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="ws-exercise.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-ws-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

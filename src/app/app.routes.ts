@@ -71,6 +71,12 @@ export const routes: Routes = [
     title: '3.6 ViewChild · Guía Angular',
   },
   {
+    path: 'signals/to-signal',
+    loadComponent: () =>
+      import('./features/signals/to-signal/to-signal-section').then((m) => m.ToSignalSection),
+    title: '3.7 toSignal · Guía Angular',
+  },
+  {
     path: 'template/events',
     loadComponent: () =>
       import('./features/template/events/events-section').then((m) => m.EventsSection),
@@ -144,6 +150,129 @@ export const routes: Routes = [
         (m) => m.DecimalesSection
       ),
     title: '7.1 Directiva de atributo · Guía Angular',
+  },
+
+  {
+    path: 'services/subject-vs-signal',
+    loadComponent: () =>
+      import('./features/services/subject-vs-signal/subject-vs-signal-section').then(
+        (m) => m.SubjectVsSignalSection
+      ),
+    title: '8.1 Subject vs Signal · Guía Angular',
+  },
+
+  {
+    path: 'observables/desubscribirse',
+    loadComponent: () =>
+      import('./features/observables/desubscribirse/desubscribirse-section').then(
+        (m) => m.DesubscribirseSection
+      ),
+    title: '9.1 Desubscribirse · Guía Angular',
+  },
+  {
+    path: 'observables/switch-map',
+    loadComponent: () =>
+      import('./features/observables/switch-map/switch-map-section').then(
+        (m) => m.SwitchMapSection
+      ),
+    title: '9.2 switchMap · Guía Angular',
+  },
+  {
+    path: 'observables/exhaust-map',
+    loadComponent: () =>
+      import('./features/observables/exhaust-map/exhaust-map-section').then(
+        (m) => m.ExhaustMapSection
+      ),
+    title: '9.3 exhaustMap · Guía Angular',
+  },
+  {
+    path: 'observables/merge-map',
+    loadComponent: () =>
+      import('./features/observables/merge-map/merge-map-section').then(
+        (m) => m.MergeMapSection
+      ),
+    title: '9.4 mergeMap · Guía Angular',
+  },
+  {
+    path: 'observables/concat-map',
+    loadComponent: () =>
+      import('./features/observables/concat-map/concat-map-section').then(
+        (m) => m.ConcatMapSection
+      ),
+    title: '9.5 concatMap · Guía Angular',
+  },
+
+  {
+    path: 'di/intro',
+    loadComponent: () =>
+      import('./features/di/intro/intro-section').then((m) => m.IntroSection),
+    title: '10.1 Introducción a la DI · Guía Angular',
+  },
+  {
+    path: 'di/injection-token',
+    loadComponent: () =>
+      import('./features/di/injection-token/injection-token-section').then(
+        (m) => m.InjectionTokenSection
+      ),
+    title: '10.2 InjectionToken · Guía Angular',
+  },
+
+  {
+    path: 'server-protocols/http',
+    loadComponent: () =>
+      import('./features/server-protocols/http/http-section').then((m) => m.HttpSection),
+    title: '11.1 HTTP (REST API) · Guía Angular',
+  },
+  {
+    path: 'server-protocols/websockets',
+    loadComponent: () =>
+      import('./features/server-protocols/websockets/websockets-section').then(
+        (m) => m.WebSocketsSection
+      ),
+    title: '11.2 WebSockets (WS / WSS) · Guía Angular',
+  },
+  {
+    path: 'server-protocols/sse',
+    loadComponent: () =>
+      import('./features/server-protocols/sse/sse-section').then((m) => m.SseSection),
+    title: '11.3 Server-Sent Events (SSE) · Guía Angular',
+  },
+
+  {
+    path: 'interceptors/auth-token',
+    loadComponent: () =>
+      import('./features/interceptors/auth-token/auth-token-section').then(
+        (m) => m.AuthTokenSection
+      ),
+    title: '12.1 Interceptores · Guía Angular',
+  },
+  {
+    path: 'interceptors/resolve',
+    loadComponent: () =>
+      import('./features/interceptors/resolve/resolve-section').then(
+        (m) => m.ResolveSection
+      ),
+    loadChildren: () =>
+      import('./features/interceptors/resolve/resolve.routes').then(
+        (m) => m.RESOLVE_ROUTES
+      ),
+    title: '12.2 ResolveFn · Guía Angular',
+  },
+
+  {
+    path: 'lifecycle/signals-era',
+    loadComponent: () =>
+      import('./features/lifecycle/signals-era/signals-era-section').then(
+        (m) => m.SignalsEraSection
+      ),
+    title: '13.1 Nuevo ciclo de vida era Signals · Guía Angular',
+  },
+
+  {
+    path: 'forms/control-value-accessor',
+    loadComponent: () =>
+      import('./features/forms/control-value-accessor/cva-section').then((m) => m.CvaSection),
+    title: '14.1 ControlValueAccessor · Guía Angular',
   },
 
   // Ruta por defecto: arrancamos en la primera sección del temario.

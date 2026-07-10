@@ -166,6 +166,58 @@ a.item.is-active .item__code {
   flex: 1;
 }
 
+/* Sub-grupo colapsable dentro de un bloque. */
+.group__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  margin-left: 0.4rem;
+  background: transparent;
+  border: 0;
+  border-left: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.group__head:hover {
+  color: var(--text-strong);
+  border-color: var(--text-dim);
+}
+.group__head.is-open {
+  color: var(--text);
+  border-left-color: var(--accent);
+}
+
+.group__title {
+  flex: 1;
+  line-height: 1.3;
+}
+
+.group__chevron {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  transition: transform 0.2s ease;
+}
+.group__head.is-open .group__chevron {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+.subitems {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 0.6rem;
+}
+
+.item--nested {
+  margin-left: 0.4rem;
+}
+
 /* Secciones aún no implementadas: visibles pero no interactivas. */
 .item--soon {
   color: var(--text-dim);

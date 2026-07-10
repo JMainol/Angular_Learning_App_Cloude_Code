@@ -1,0 +1,245 @@
+<section class="doc">
+
+  <!-- ── Cabecera ───────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">12.1</span>
+      <span class="doc__badge">{{ 'sections.auth-token.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.auth-token.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.auth-token.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ─────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.auth-token.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.auth-token.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ─────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.auth-token.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: Sin interceptor vs con interceptor ────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.auth-token.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.auth-token.p1.title' | translate">
+
+          <!-- SIN interceptor -->
+          <div class="compare">
+            <span class="compare__label compare__label--dim">{{ 'sections.auth-token.p1.left' | translate }}</span>
+            <div class="flow-row">
+              <div class="flow-node flow-node--angular">{{ 'sections.auth-token.p1.n1' | translate }}</div>
+              <div class="flow-arrow">
+                <span class="flow-arrow__line"></span>
+                <span class="flow-arrow__msg flow-arrow__msg--plain">{{ 'sections.auth-token.p1.req' | translate }}</span>
+                <span class="flow-arrow__tip">→</span>
+              </div>
+              <div class="flow-node flow-node--server">{{ 'sections.auth-token.p1.n2' | translate }}</div>
+            </div>
+          </div>
+
+          <div class="compare__divider">vs</div>
+
+          <!-- CON interceptor -->
+          <div class="compare">
+            <span class="compare__label compare__label--accent">{{ 'sections.auth-token.p1.right' | translate }}</span>
+            <div class="flow-row">
+              <div class="flow-node flow-node--angular">{{ 'sections.auth-token.p1.n3' | translate }}</div>
+              <div class="flow-arrow">
+                <span class="flow-arrow__line"></span>
+                <span class="flow-arrow__tip">→</span>
+              </div>
+              <div class="flow-node flow-node--interceptor">{{ 'sections.auth-token.p1.n4' | translate }}</div>
+              <div class="flow-arrow">
+                <span class="flow-arrow__line"></span>
+                <span class="flow-arrow__msg flow-arrow__msg--auth">{{ 'sections.auth-token.p1.reqAuth' | translate }}</span>
+                <span class="flow-arrow__tip">→</span>
+              </div>
+              <div class="flow-node flow-node--server">{{ 'sections.auth-token.p1.n5' | translate }}</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.auth-token.stepWord' | translate }} 1 · {{ 'sections.auth-token.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.auth-token.p1.lead' | translate }}</p>
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: Registro en app.config.ts ─────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.auth-token.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.auth-token.p2.title' | translate">
+
+          <div class="chain">
+            <div class="chain__node chain__node--boot">{{ 'sections.auth-token.p2.n1' | translate }}</div>
+            <div class="chain__arrow">↓</div>
+            <div class="chain__node chain__node--provider">{{ 'sections.auth-token.p2.n2' | translate }}</div>
+            <div class="chain__arrow">↓ array</div>
+            <div class="chain__row">
+              <div class="chain__fn chain__fn--active">{{ 'sections.auth-token.p2.n3' | translate }}</div>
+              <div class="chain__fn">{{ 'sections.auth-token.p2.n4' | translate }}</div>
+            </div>
+            <div class="chain__arrow">↓</div>
+            <div class="chain__row">
+              <div class="chain__node chain__node--http">{{ 'sections.auth-token.p2.n5' | translate }}</div>
+              <span class="chain__sep">→</span>
+              <div class="chain__node chain__node--server">{{ 'sections.auth-token.p2.n6' | translate }}</div>
+            </div>
+            <p class="chain__note">{{ 'sections.auth-token.p2.note' | translate }}</p>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.auth-token.stepWord' | translate }} 2 · {{ 'sections.auth-token.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.auth-token.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeRegister" language="TypeScript" filename="app.config.ts" />
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: Clonar la request ─────────────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.auth-token.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.auth-token.p3.title' | translate">
+
+          <div class="clone-demo">
+            <!-- Request original -->
+            <div class="req-box req-box--original">
+              <span class="req-box__label">{{ 'sections.auth-token.p3.original' | translate }}</span>
+              <div class="req-box__url">{{ 'sections.auth-token.p3.url' | translate }}</div>
+              <div class="req-box__header req-box__header--missing">{{ 'sections.auth-token.p3.noHeader' | translate }}</div>
+              <span class="req-box__badge req-box__badge--muted">{{ 'sections.auth-token.p3.immutable' | translate }}</span>
+            </div>
+
+            <!-- Operación clone -->
+            <div class="clone-op">
+              <span class="clone-op__fn">req.clone( setHeaders )</span>
+              <span class="clone-op__arrow">↓</span>
+            </div>
+
+            <!-- Request clonada -->
+            <div class="req-box req-box--cloned">
+              <span class="req-box__label">{{ 'sections.auth-token.p3.cloned' | translate }}</span>
+              <div class="req-box__url">{{ 'sections.auth-token.p3.url' | translate }}</div>
+              <div class="req-box__header req-box__header--present">{{ 'sections.auth-token.p3.withHeader' | translate }}</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.auth-token.stepWord' | translate }} 3 · {{ 'sections.auth-token.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.auth-token.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeClone" language="TypeScript" filename="auth.interceptor.ts" />
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: Manejo del 401 ────────────────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.auth-token.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.auth-token.p4.title' | translate">
+
+          <div class="decision-flow">
+            <div class="dec-node dec-node--response">{{ 'sections.auth-token.p4.n1' | translate }}</div>
+            <div class="dec-arrow">↓</div>
+            <div class="dec-diamond">
+              <span>{{ 'sections.auth-token.p4.n2' | translate }}</span>
+            </div>
+            <div class="dec-branches">
+              <div class="dec-branch dec-branch--yes">
+                <span class="dec-branch__label">{{ 'sections.auth-token.p4.yes' | translate }}</span>
+                <div class="dec-arrow">↓</div>
+                <div class="dec-node dec-node--action">{{ 'sections.auth-token.p4.n3' | translate }}</div>
+                <div class="dec-arrow">↓</div>
+                <div class="dec-node dec-node--action">{{ 'sections.auth-token.p4.n4' | translate }}</div>
+              </div>
+              <div class="dec-branch dec-branch--no">
+                <span class="dec-branch__label">{{ 'sections.auth-token.p4.no' | translate }}</span>
+                <div class="dec-arrow">↓</div>
+                <div class="dec-node dec-node--propagate">{{ 'sections.auth-token.p4.n5' | translate }}</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.auth-token.stepWord' | translate }} 4 · {{ 'sections.auth-token.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.auth-token.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeCatch" language="TypeScript" filename="auth.interceptor.ts" />
+      </div>
+
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.auth-token.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="auth.interceptor.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-auth-token-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

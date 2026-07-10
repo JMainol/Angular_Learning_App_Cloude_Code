@@ -1,0 +1,57 @@
+<div class="chat">
+
+  <!-- ── Barra de estado ───────────────────────────────────────────── -->
+  <div class="chat__bar">
+    <span class="chat__dot" [class]="'chat__dot--' + status()"></span>
+    <span class="chat__status">
+      {{ 'sections.websockets.exercise.status.' + status() | translate }}
+    </span>
+    <div class="chat__actions">
+      @if (status() === 'closed' || status() === 'error') {
+        <button class="chat__btn chat__btn--connect" (click)="connect()">
+          {{ 'sections.websockets.exercise.connectBtn' | translate }}
+        </button>
+      }
+      @if (status() === 'open' || status() === 'connecting') {
+        <button class="chat__btn chat__btn--disconnect" (click)="disconnect()">
+          {{ 'sections.websockets.exercise.disconnectBtn' | translate }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ── Lista de mensajes ─────────────────────────────────────────── -->
+  <div class="chat__messages">
+    @if (messages().length === 0) {
+      <p class="chat__empty">{{ 'sections.websockets.exercise.empty' | translate }}</p>
+    }
+    @for (msg of messages(); track $index) {
+      <div class="chat__msg" [class]="'chat__msg--' + msg.from">
+        <span class="chat__msg-text">{{ msg.text }}</span>
+        <span class="chat__msg-time">{{ msg.time | date:'HH:mm:ss' }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- ── Entrada de texto ──────────────────────────────────────────── -->
+  <div class="chat__input-row">
+    <input
+      class="chat__input"
+      type="text"
+      [placeholder]="'sections.websockets.exercise.placeholder' | translate"
+      [value]="inputText()"
+      (input)="inputText.set($any($event.target).value)"
+      (keydown)="onKeydown($event)"
+      [disabled]="status() !== 'open'"
+      autocomplete="off"
+    />
+    <button
+      class="chat__btn chat__btn--send"
+      (click)="sendMessage()"
+      [disabled]="status() !== 'open' || !inputText().trim()"
+    >
+      {{ 'sections.websockets.exercise.sendBtn' | translate }}
+    </button>
+  </div>
+
+</div>

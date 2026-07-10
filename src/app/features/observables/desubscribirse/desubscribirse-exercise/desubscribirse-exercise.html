@@ -1,0 +1,50 @@
+<div class="panel">
+
+  <!-- Precio actual + indicador de estado de la suscripción -->
+  <div class="ticker">
+    <div class="ticker__meta">
+      <span class="ticker__label">ACME Corp · precio</span>
+      <span
+        class="ticker__badge"
+        [class.ticker__badge--activa]="suscripcionActiva()"
+        [class.ticker__badge--cancelada]="!suscripcionActiva()"
+      >
+        {{ suscripcionActiva() ? 'ACTIVA' : 'CANCELADA' }}
+      </span>
+    </div>
+    <div class="ticker__precio">
+      {{ precio().toFixed(2) }} <span class="ticker__moneda">€</span>
+    </div>
+    <p class="ticker__hint">
+      @if (suscripcionActiva()) {
+        Navega a otra sección y vuelve: si el badge cambia a CANCELADA,
+        <code>takeUntilDestroyed</code> está funcionando.
+      } @else {
+        La suscripción fue cancelada al destruirse el componente. ¡Correcto!
+      }
+    </p>
+  </div>
+
+  <!-- Historial de precios (alimentado por el subscribe) -->
+  <div class="historial" aria-live="polite">
+    <span class="historial__label">historial de precios</span>
+    @if (historial().length) {
+      <ul class="historial__lista">
+        @for (entrada of historial(); track $index) {
+          <li
+            class="historial__entrada"
+            [class.historial__entrada--sube]="entrada.sube"
+            [class.historial__entrada--baja]="!entrada.sube"
+          >
+            {{ entrada.sube ? '▲' : '▼' }} {{ entrada.valor }}
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="historial__vacio">
+        Resuelve el TODO 2 para que el intervalo empiece a emitir.
+      </p>
+    }
+  </div>
+
+</div>

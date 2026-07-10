@@ -1,0 +1,27 @@
+<div class="resolve-ex">
+
+  <!-- Badge de estado del resolver, visible durante la navegación -->
+  <div class="resolve-ex__status">
+    <a class="resolve-ex__home" routerLink="lista">← Lista</a>
+
+    <span class="resolve-ex__badge" [class.is-resolving]="resolviendo()">
+      @if (resolviendo()) {
+        <span class="badge__pulse"></span>
+        Ejecutando resolver…
+      } @else {
+        Router en espera
+      }
+    </span>
+  </div>
+
+  <!-- Router outlet: muestra ListaView o DetalleView según la ruta activa -->
+  <div class="resolve-ex__outlet">
+    <router-outlet />
+  </div>
+
+  <p class="resolve-ex__hint">
+    Al pulsar un perfil verás el badge cambiar ~700 ms: el router está esperando
+    a que <code>perfilResolver</code> complete. El detalle aparece ya con los datos.
+  </p>
+
+</div>

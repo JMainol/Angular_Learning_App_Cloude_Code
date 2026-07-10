@@ -1,0 +1,197 @@
+<section class="doc">
+  <!-- Cabecera -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">10.1</span>
+      <span class="doc__badge">{{ 'sections.intro.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.intro.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.intro.intro' | translate }}</p>
+  </header>
+
+  <!-- 1 · TEORÍA -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.intro.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- 2 · SÍMIL -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.intro.simile' | translate }}</p>
+  </article>
+
+  <!-- 3 · EJEMPLOS DE USO COMÚN -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.intro.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- 4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS -->
+
+  <!-- ===== PASO 1 / DIAGRAMA 1: Crear y registrar el servicio ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.intro.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.intro.p1.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">TaskService (clase)</span>
+            <span class="node__cap">{{ 'sections.intro.p1.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">@Injectable&#40;&#123; providedIn: 'root' &#125;&#41;</span>
+            <span class="node__cap">{{ 'sections.intro.p1.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">Inyector raíz</span>
+            <span class="node__cap">{{ 'sections.intro.p1.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">Instancia singleton</span>
+            <span class="node__cap">{{ 'sections.intro.p1.n4' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.intro.stepWord' | translate }} 1 · {{ 'sections.intro.p1.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.intro.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeService" language="TypeScript" filename="task.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 2 / DIAGRAMA 2: Inyectar en el componente ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.intro.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.intro.p2.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">IntroSection (componente)</span>
+            <span class="node__cap">{{ 'sections.intro.p2.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">inject(TaskService)</span>
+            <span class="node__cap">{{ 'sections.intro.p2.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">Inyector raíz</span>
+            <span class="node__cap">{{ 'sections.intro.p2.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">Misma instancia para todos</span>
+            <span class="node__cap">{{ 'sections.intro.p2.n4' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.intro.stepWord' | translate }} 2 · {{ 'sections.intro.p2.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.intro.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeComponent" language="TypeScript" filename="intro-section.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 3 / DIAGRAMA 3: El árbol de inyectores ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.intro.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.intro.p3.title' | translate">
+          <div class="node node--out">
+            <span class="node__title node__title--sm">Root Injector</span>
+            <span class="node__cap">{{ 'sections.intro.p3.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">Environment Injector</span>
+            <span class="node__cap">{{ 'sections.intro.p3.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">Component Injector</span>
+            <span class="node__cap">{{ 'sections.intro.p3.n3' | translate }}</span>
+          </div>
+          <span class="diagram__sidetitle">{{ 'sections.intro.p3.n4' | translate }}</span>
+          <div class="branch">
+            <div class="node node--side">
+              <span class="node__title node__title--sm">providedIn: 'root'</span>
+              <span class="node__cap">{{ 'sections.intro.p3.n5' | translate }}</span>
+            </div>
+            <div class="node node--side">
+              <span class="node__title node__title--sm">providers: [...]</span>
+              <span class="node__cap">{{ 'sections.intro.p3.n6' | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.intro.stepWord' | translate }} 3 · {{ 'sections.intro.p3.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.intro.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeTemplate" language="HTML" filename="intro-section.html" />
+      </div>
+    </div>
+  </article>
+
+  <!-- 6 · EJERCICIO PRÁCTICO -->
+  <article class="block">
+    <div class="exercise">
+
+      <!-- Columna izquierda: enunciado + código con TODOs -->
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.intro.exercise.desc' | translate }}</p>
+        <span class="exercise__file-label">task.service.ts</span>
+        <app-code-block [code]="codeService" language="TypeScript" filename="task.service.ts" />
+        <span class="exercise__file-label">intro-section.ts</span>
+        <app-code-block [code]="codeComponent" language="TypeScript" filename="intro-section.ts" />
+        <span class="exercise__file-label">intro-section.html</span>
+        <app-code-block [code]="codeTemplate" language="HTML" filename="intro-section.html" />
+      </div>
+
+      <!-- Columna derecha: resultado en vivo -->
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <div class="result-panel">
+          <p class="result-panel__label">{{ 'sections.intro.exercise.tasksLabel' | translate }}</p>
+          <ul class="task-list">
+            @for (task of taskService.tasks(); track $index) {
+              <li class="task-item">{{ task }}</li>
+            } @empty {
+              <li class="task-empty">{{ 'sections.intro.exercise.emptyMsg' | translate }}</li>
+            }
+          </ul>
+          <form class="task-form" (submit)="onSubmit($event)">
+            <input
+              class="task-form__input"
+              type="text"
+              [value]="newTask()"
+              (input)="onNewTask($event)"
+              [placeholder]="'sections.intro.exercise.inputLabel' | translate"
+              [attr.aria-label]="'sections.intro.exercise.inputLabel' | translate"
+            />
+            <button class="task-form__btn" type="submit">
+              {{ 'sections.intro.exercise.addBtn' | translate }}
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</section>

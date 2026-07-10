@@ -1,0 +1,65 @@
+<div class="monitor">
+
+  <!-- ── Barra de estado ───────────────────────────────────────────── -->
+  <div class="monitor__header">
+    <span class="monitor__dot" [class]="'monitor__dot--' + status()"></span>
+    <span class="monitor__status">
+      {{ 'sections.sse.exercise.status.' + status() | translate }}
+    </span>
+    <div class="monitor__actions">
+      @if (status() === 'closed' || status() === 'error') {
+        <button class="monitor__btn monitor__btn--connect" (click)="connect()">
+          {{ 'sections.sse.exercise.connectBtn' | translate }}
+        </button>
+      }
+      @if (status() === 'open' || status() === 'connecting') {
+        <button class="monitor__btn monitor__btn--disconnect" (click)="disconnect()">
+          {{ 'sections.sse.exercise.disconnectBtn' | translate }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ── Lectura actual ────────────────────────────────────────────── -->
+  <div class="monitor__body">
+    @if (ultimo()) {
+      <div class="monitor__reading">
+        <div class="monitor__temp-display">
+          <span class="monitor__value">{{ ultimo()!.temperatura }}</span>
+          <span class="monitor__unit">°C</span>
+        </div>
+        <div class="monitor__secondary">
+          <span class="monitor__hum-label">{{ 'sections.sse.exercise.humidity' | translate }}</span>
+          <span class="monitor__hum-val">{{ ultimo()!.humedad }}%</span>
+        </div>
+      </div>
+    } @else {
+      <p class="monitor__empty">{{ 'sections.sse.exercise.empty' | translate }}</p>
+    }
+  </div>
+
+  <!-- ── Historial: gráfica de barras ──────────────────────────────── -->
+  @if (historial().length > 0) {
+    <div class="monitor__chart">
+      <span class="monitor__chart-label">{{ 'sections.sse.exercise.history' | translate }}</span>
+      <div class="monitor__bars">
+        @for (item of historial(); track item.ts) {
+          <div class="monitor__bar-col">
+            <span class="monitor__bar-tip">{{ item.temperatura }}</span>
+            <div
+              class="monitor__bar-fill"
+              [style.height.%]="barHeight(item.temperatura)"
+            ></div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ── Nota del servidor ─────────────────────────────────────────── -->
+  <div class="monitor__note">
+    <span class="monitor__note-icon">⚡</span>
+    <code class="monitor__note-cmd">{{ 'sections.sse.exercise.serverNote' | translate }}</code>
+  </div>
+
+</div>

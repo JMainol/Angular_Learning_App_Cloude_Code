@@ -1,0 +1,19 @@
+<app-section-shell
+  code="9.3"
+  [title]="'sections.exhaust-map.title' | translate"
+  [theory]="'sections.exhaust-map.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.exhaust-map.simile' | translate"
+  [examples]="'sections.exhaust-map.examples' | translate"
+>
+  <!-- Código con TODOs. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="exhaust-map-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-exhaust-map-exercise exercise-result />
+</app-section-shell>

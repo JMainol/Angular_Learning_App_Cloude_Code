@@ -1,0 +1,240 @@
+:host {
+  display: block;
+}
+
+.crud-panel {
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// ── Formulario de creación ────────────────────────────────────────────
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.create-form__title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 0.25rem;
+}
+
+// ── Campos ────────────────────────────────────────────────────────────
+.field {
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  background: var(--surface-code);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-strong);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  resize: vertical;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  &--textarea {
+    min-height: 3.5rem;
+  }
+}
+
+// ── Botones ────────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  &--create {
+    background: var(--accent);
+    color: #fff;
+    align-self: flex-start;
+    &:not(:disabled):hover { opacity: 0.88; }
+  }
+  &--edit {
+    background: transparent;
+    border-color: var(--border-strong);
+    color: var(--text-dim);
+    padding: 0.3rem 0.65rem;
+    &:hover { color: var(--text-strong); border-color: var(--text-dim); }
+  }
+  &--delete {
+    background: transparent;
+    border-color: rgba(248,113,113,0.3);
+    color: #f87171;
+    padding: 0.3rem 0.65rem;
+    &:not(:disabled):hover { background: rgba(248,113,113,0.1); }
+  }
+  &--save {
+    background: var(--accent);
+    color: #fff;
+    &:not(:disabled):hover { opacity: 0.88; }
+  }
+  &--cancel {
+    background: transparent;
+    border-color: var(--border-strong);
+    color: var(--text-dim);
+    &:hover { color: var(--text-strong); }
+  }
+}
+
+// Verb chip dentro de los botones
+.verb-chip {
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+
+  &--post   { background: rgba(74,222,128,0.2); color: #4ade80; }
+  &--put    { background: rgba(251,191,36,0.2); color: #fbbf24; }
+  &--delete { background: rgba(248,113,113,0.2); color: #f87171; }
+}
+
+// ── Mensajes de estado ────────────────────────────────────────────────
+.status-msg {
+  font-size: 0.82rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+
+  &--error {
+    background: rgba(224, 82, 82, 0.1);
+    border-color: rgba(224, 82, 82, 0.3);
+    color: #e05252;
+  }
+  &--success {
+    background: rgba(74, 222, 128, 0.1);
+    border-color: rgba(74, 222, 128, 0.3);
+    color: #4ade80;
+  }
+}
+
+// ── Lista de posts ────────────────────────────────────────────────────
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.post-list__empty {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding: 0.75rem;
+}
+.post-item {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.post-item__content {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.post-item__id {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.post-item__body {
+  flex: 1;
+  min-width: 0;
+}
+.post-item__title {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-strong);
+  margin: 0 0 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.post-item__desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.post-item__actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+// ── Formulario de edición inline ──────────────────────────────────────
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.edit-form__btns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+// ── Spinner ────────────────────────────────────────────────────────────
+.spinner {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Nota de la API ────────────────────────────────────────────────────
+.api-note {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin: 0;
+  text-align: center;
+}
+.api-note__link {
+  color: var(--accent);
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+}

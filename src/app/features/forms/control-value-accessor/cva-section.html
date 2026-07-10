@@ -1,0 +1,27 @@
+<app-section-shell
+  code="14.1"
+  [title]="'sections.control-value-accessor.title' | translate"
+  [theory]="'sections.control-value-accessor.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.control-value-accessor.simile' | translate"
+  [examples]="'sections.control-value-accessor.examples' | translate"
+>
+  <!-- Código del CVA con TODOs. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="tri-state-checkbox.ts"
+  />
+
+  <!-- Segundo fragmento: el formulario que consume el control (TODO 4). -->
+  <app-code-block
+    exercise-code
+    [code]="formCode"
+    language="TypeScript"
+    filename="cva-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo: filtros con checkboxes tri-estado. A la derecha. -->
+  <app-cva-exercise exercise-result />
+</app-section-shell>

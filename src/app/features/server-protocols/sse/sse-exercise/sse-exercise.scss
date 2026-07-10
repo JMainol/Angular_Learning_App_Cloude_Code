@@ -1,0 +1,234 @@
+:host {
+  display: block;
+}
+
+.monitor {
+  display: flex;
+  flex-direction: column;
+  min-height: 340px;
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+// ── Barra de estado ──────────────────────────────────────────────────
+.monitor__header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-raised);
+  flex-shrink: 0;
+}
+
+.monitor__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.2s;
+
+  &--connecting {
+    background: #fbbf24;
+    animation: sse-pulse 1s ease-in-out infinite;
+  }
+  &--open   { background: #4ade80; }
+  &--closed { background: var(--text-dim); }
+  &--error  { background: #f87171; }
+}
+
+@keyframes sse-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.25; }
+}
+
+.monitor__status {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.monitor__actions {
+  flex-shrink: 0;
+}
+
+// ── Lectura actual ───────────────────────────────────────────────────
+.monitor__body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1rem;
+}
+
+.monitor__reading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.monitor__temp-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.monitor__value {
+  font-family: var(--font-mono);
+  font-size: 3.25rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+  // Ancho fijo para evitar saltos de layout con cada nuevo valor
+  min-width: 4.5ch;
+  text-align: right;
+}
+
+.monitor__unit {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  color: var(--text-dim);
+}
+
+.monitor__secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.monitor__hum-label {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.monitor__hum-val {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-strong);
+}
+
+.monitor__empty {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  text-align: center;
+  margin: 0;
+  padding: 0 1rem;
+  line-height: 1.5;
+}
+
+// ── Gráfica de barras ────────────────────────────────────────────────
+.monitor__chart {
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 0.9rem 0.6rem;
+}
+
+.monitor__chart-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.monitor__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.35rem;
+  height: 72px;
+}
+
+.monitor__bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.2rem;
+  flex: 1;
+  height: 100%;
+}
+
+.monitor__bar-tip {
+  font-family: var(--font-mono);
+  font-size: 0.48rem;
+  color: var(--text-dim);
+  line-height: 1;
+}
+
+.monitor__bar-fill {
+  width: 100%;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+  opacity: 0.55;
+  transition: height 0.35s ease;
+  min-height: 4px;
+
+  // El bar más reciente (último) resalta con opacidad completa
+  .monitor__bar-col:last-child & {
+    opacity: 1;
+  }
+}
+
+// ── Nota del servidor requerido ──────────────────────────────────────
+.monitor__note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-raised);
+  flex-shrink: 0;
+}
+
+.monitor__note-icon {
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.monitor__note-cmd {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+}
+
+// ── Botones ──────────────────────────────────────────────────────────
+.monitor__btn {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  &--connect {
+    background: var(--accent);
+    color: var(--surface-left);
+  }
+
+  &--disconnect {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border-strong);
+
+    &:hover:not(:disabled) { color: var(--text-strong); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monitor__dot--connecting { animation: none; }
+  .monitor__bar-fill { transition: none; }
+}

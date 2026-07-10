@@ -1,0 +1,36 @@
+<!--
+  Usamos <button role="checkbox"> en vez de <input type="checkbox"> porque el
+  nativo solo modela 2 valores (checked); el estado indeterminate nativo es solo
+  visual. Un botón nos da foco de teclado y click/Enter/Espacio gratis, y con
+  role + aria-checked los lectores de pantalla lo anuncian como checkbox.
+-->
+<button
+  type="button"
+  class="tri"
+  role="checkbox"
+  [attr.aria-checked]="ariaChecked()"
+  [disabled]="deshabilitado()"
+  (click)="ciclar()"
+>
+  <span
+    class="tri__box"
+    [class.tri__box--true]="valor() === true"
+    [class.tri__box--null]="valor() === null"
+    aria-hidden="true"
+  >
+    @if (valor() === true) {
+      <!-- Check dibujado con CSS (borde en L rotado). -->
+      <span class="tri__check"></span>
+    } @else if (valor() === null) {
+      <!-- Línea horizontal: el estado "indeterminado / sin valor". -->
+      <span class="tri__dash"></span>
+    }
+  </span>
+
+  <span class="tri__label">{{ label() }}</span>
+
+  <!-- Valor crudo del control: refuerza que el modelo es boolean | null. -->
+  <code class="tri__value" [class.tri__value--null]="valor() === null">{{
+    valor() === null ? 'null' : valor()
+  }}</code>
+</button>

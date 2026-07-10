@@ -1,0 +1,19 @@
+<app-section-shell
+  code="9.5"
+  [title]="'sections.concat-map.title' | translate"
+  [theory]="'sections.concat-map.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.concat-map.simile' | translate"
+  [examples]="'sections.concat-map.examples' | translate"
+>
+  <!-- Código con TODOs. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="concat-map-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-concat-map-exercise exercise-result />
+</app-section-shell>

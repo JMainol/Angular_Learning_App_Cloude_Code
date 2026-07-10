@@ -1,0 +1,63 @@
+<div class="enfoques">
+
+  <!-- ── Panel A: Observable + async pipe (ya resuelto, de referencia) ── -->
+  <div class="enfoque">
+    <span class="enfoque__badge enfoque__badge--clasico">Observable + async pipe</span>
+
+    @if (repos$ | async; as lista) {
+      <ul class="repo-list">
+        @for (repo of lista; track repo.nombre) {
+          <li class="repo-item">
+            <span class="repo-item__nombre">{{ repo.nombre }}</span>
+            <span class="repo-item__meta">★ {{ repo.estrellas }} · {{ repo.lenguaje }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="loader">
+        <span class="loader__dot"></span>
+        <span class="loader__dot"></span>
+        <span class="loader__dot"></span>
+        <p class="loader__label">Cargando…</p>
+      </div>
+    }
+  </div>
+
+  <!-- ── Panel B: toSignal (completa los TODO del .ts y descomenta aquí) ── -->
+  <div class="enfoque enfoque--signal">
+    <span class="enfoque__badge enfoque__badge--signal">toSignal</span>
+
+    <!--
+      TODO 3: Muestra el spinner mientras carga usando el Signal `cargando`.
+      Requiere haber completado TODO 2 en el .ts.
+
+      @if (cargando()) {
+        <div class="loader">
+          <span class="loader__dot"></span>
+          <span class="loader__dot"></span>
+          <span class="loader__dot"></span>
+          <p class="loader__label">Cargando…</p>
+        </div>
+      }
+    -->
+
+    <!--
+      TODO 4: Muestra la lista con el Signal `repos()`, sin async pipe.
+      Requiere haber completado TODO 1 en el .ts.
+
+      @if (!cargando()) {
+        <ul class="repo-list">
+          @for (repo of repos(); track repo.nombre) {
+            <li class="repo-item">
+              <span class="repo-item__nombre">{{ repo.nombre }}</span>
+              <span class="repo-item__meta">★ {{ repo.estrellas }} · {{ repo.lenguaje }}</span>
+            </li>
+          }
+        </ul>
+      }
+    -->
+
+    <p class="placeholder">Completa los TODO del .ts y descomenta los bloques de aquí para ver los datos.</p>
+  </div>
+
+</div>

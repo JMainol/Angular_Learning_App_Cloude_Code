@@ -1,0 +1,127 @@
+:host {
+  display: block;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Ticker principal ─────────────────────────────────────────────── */
+.ticker {
+  padding: 1.25rem 1.5rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.ticker__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.ticker__label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.ticker__badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+}
+
+.ticker__badge--activa {
+  color: #34d399;
+}
+
+.ticker__badge--cancelada {
+  color: var(--text-dim);
+}
+
+.ticker__precio {
+  font-family: var(--font-mono);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--text-strong);
+  line-height: 1;
+  margin: 0.5rem 0;
+}
+
+.ticker__moneda {
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-dim);
+}
+
+.ticker__hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text);
+  }
+}
+
+/* ── Historial ────────────────────────────────────────────────────── */
+.historial {
+  background: var(--surface-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  min-height: 130px;
+}
+
+.historial__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+
+.historial__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.historial__entrada {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.historial__entrada--sube {
+  color: #34d399;
+}
+
+.historial__entrada--baja {
+  color: #f87171;
+}
+
+.historial__vacio {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}

@@ -48,7 +48,52 @@
             <ul class="items">
               @for (section of block.sections; track section.code) {
                 <li>
-                  @if (section.path) {
+                  @if (section.children) {
+                    <!-- Sub-grupo colapsable: no navega, agrupa secciones relacionadas. -->
+                    <button
+                      type="button"
+                      class="group__head"
+                      [class.is-open]="isGroupOpen(section.code)"
+                      (click)="toggleGroup(section.code)"
+                      [attr.aria-expanded]="isGroupOpen(section.code)"
+                    >
+                      <span class="group__title">{{ sectionTitleKey(section) | translate }}</span>
+                      <svg
+                        class="group__chevron"
+                        width="12"
+                        height="12"
+                        viewBox="0 -960 960 960"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M480-360 280-560h400L480-360Z" />
+                      </svg>
+                    </button>
+                    @if (isGroupOpen(section.code)) {
+                      <ul class="subitems">
+                        @for (child of section.children; track child.code) {
+                          <li>
+                            @if (child.path) {
+                              <a
+                                class="item item--nested"
+                                [routerLink]="child.path"
+                                routerLinkActive="is-active"
+                              >
+                                <span class="item__code">{{ child.code }}</span>
+                                <span class="item__title">{{ sectionTitleKey(child) | translate }}</span>
+                              </a>
+                            } @else {
+                              <span class="item item--nested item--soon" aria-disabled="true">
+                                <span class="item__code">{{ child.code }}</span>
+                                <span class="item__title">{{ sectionTitleKey(child) | translate }}</span>
+                                <span class="item__soon">{{ 'common.soon' | translate }}</span>
+                              </span>
+                            }
+                          </li>
+                        }
+                      </ul>
+                    }
+                  } @else if (section.path) {
                     <a
                       class="item"
                       [routerLink]="section.path"

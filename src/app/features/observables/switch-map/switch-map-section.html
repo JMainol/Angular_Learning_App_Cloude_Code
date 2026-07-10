@@ -1,0 +1,19 @@
+<app-section-shell
+  code="9.2"
+  [title]="'sections.switch-map.title' | translate"
+  [theory]="'sections.switch-map.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.switch-map.simile' | translate"
+  [examples]="'sections.switch-map.examples' | translate"
+>
+  <!-- Código con TODOs. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="switch-map-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-switch-map-exercise exercise-result />
+</app-section-shell>

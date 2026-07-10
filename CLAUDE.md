@@ -120,6 +120,18 @@ Los bloques y secciones van a ir creciendo continuamente
 |---------|--------------------------------------------------------------------------------------------|
 | 6.1     | Directiva de atributo con `@Input` setter para controlar el número de decimales permitidos en un campo numérico |
 
+### Bloque 13 — Ciclo de Vida
+
+| Sección | Concepto                                |
+|---------|-----------------------------------------|
+| 13.1    | Nuevo ciclo de vida era Signals         |
+
+### Bloque 14 — Formularios
+
+| Sección | Concepto                                                                 |
+|---------|--------------------------------------------------------------------------|
+| 14.1    | ControlValueAccessor (checkbox de 3 estados: true / false / null)        |
+
 ---
 
 ## 📋 Estructura de cada sección (template obligatorio)

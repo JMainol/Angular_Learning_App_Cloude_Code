@@ -1,0 +1,85 @@
+:host {
+  display: block;
+}
+
+.resolve-ex {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Barra de estado ── */
+.resolve-ex__status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.resolve-ex__home {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.resolve-ex__home:hover {
+  color: var(--accent);
+}
+
+.resolve-ex__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.resolve-ex__badge.is-resolving {
+  color: #fbbf24;
+  border-color: #fbbf2460;
+}
+
+/* Pulso animado durante la resolución */
+.badge__pulse {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fbbf24;
+  animation: pulse 0.9s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.35; transform: scale(0.75); }
+}
+
+/* ── Outlet ── */
+.resolve-ex__outlet {
+  min-height: 120px;
+}
+
+/* ── Hint ── */
+.resolve-ex__hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+.resolve-ex__hint code {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  background: var(--surface-code);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}

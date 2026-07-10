@@ -1,0 +1,128 @@
+<div class="crud-panel">
+
+  <!-- ── Formulario de creación ─────────────────────────────────────── -->
+  <form class="create-form" (ngSubmit)="createPost()">
+    <p class="create-form__title">{{ 'sections.http.exercise.createTitle' | translate }}</p>
+    <input
+      class="field"
+      type="text"
+      [ngModel]="newTitle()"
+      (ngModelChange)="newTitle.set($event)"
+      name="newTitle"
+      [placeholder]="'sections.http.exercise.placeholderTitle' | translate"
+      [attr.aria-label]="'sections.http.exercise.placeholderTitle' | translate"
+    />
+    <textarea
+      class="field field--textarea"
+      [ngModel]="newBody()"
+      (ngModelChange)="newBody.set($event)"
+      name="newBody"
+      rows="2"
+      [placeholder]="'sections.http.exercise.placeholderBody' | translate"
+      [attr.aria-label]="'sections.http.exercise.placeholderBody' | translate"
+    ></textarea>
+    <button class="btn btn--create" type="submit" [disabled]="loading()">
+      @if (loading()) {
+        <span class="spinner" aria-hidden="true"></span>
+      }
+      {{ 'sections.http.exercise.createBtn' | translate }}
+      <span class="verb-chip verb-chip--post">POST</span>
+    </button>
+  </form>
+
+  <!-- ── Mensajes de estado ─────────────────────────────────────────── -->
+  @if (error()) {
+    <div class="status-msg status-msg--error" role="alert">
+      ⚠ {{ error() }}
+    </div>
+  }
+  @if (success()) {
+    <div class="status-msg status-msg--success" role="status">
+      ✓ {{ success()! | translate }}
+    </div>
+  }
+
+  <!-- ── Lista de posts ─────────────────────────────────────────────── -->
+  <ul class="post-list">
+    @for (post of posts(); track post.id) {
+      <li class="post-item">
+
+        <!-- Modo lectura -->
+        @if (editingId() !== post.id) {
+          <div class="post-item__content">
+            <span class="post-item__id">#{{ post.id }}</span>
+            <div class="post-item__body">
+              <p class="post-item__title">{{ post.title }}</p>
+              <p class="post-item__desc">{{ post.body }}</p>
+            </div>
+          </div>
+          <div class="post-item__actions">
+            <button
+              class="btn btn--edit"
+              (click)="startEdit(post)"
+              [attr.aria-label]="'sections.http.exercise.editBtn' | translate"
+              [title]="'sections.http.exercise.editBtn' | translate"
+            >
+              ✎ <span class="verb-chip verb-chip--put">PUT</span>
+            </button>
+            <button
+              class="btn btn--delete"
+              (click)="removePost(post.id)"
+              [disabled]="loading()"
+              [attr.aria-label]="'sections.http.exercise.deleteBtn' | translate"
+              [title]="'sections.http.exercise.deleteBtn' | translate"
+            >
+              ✕ <span class="verb-chip verb-chip--delete">DELETE</span>
+            </button>
+          </div>
+
+        <!-- Modo edición inline -->
+        } @else {
+          <form class="edit-form" (ngSubmit)="saveEdit()">
+            <input
+              class="field"
+              type="text"
+              [ngModel]="editingTitle()"
+              (ngModelChange)="editingTitle.set($event)"
+              name="editTitle"
+              [attr.aria-label]="'sections.http.exercise.placeholderTitle' | translate"
+            />
+            <textarea
+              class="field field--textarea"
+              [ngModel]="editingBody()"
+              (ngModelChange)="editingBody.set($event)"
+              name="editBody"
+              rows="2"
+              [attr.aria-label]="'sections.http.exercise.placeholderBody' | translate"
+            ></textarea>
+            <div class="edit-form__btns">
+              <button class="btn btn--save" type="submit" [disabled]="loading()">
+                {{ 'sections.http.exercise.saveBtn' | translate }}
+              </button>
+              <button class="btn btn--cancel" type="button" (click)="cancelEdit()">
+                {{ 'sections.http.exercise.cancelBtn' | translate }}
+              </button>
+            </div>
+          </form>
+        }
+
+      </li>
+    } @empty {
+      <li class="post-list__empty">
+        <span class="spinner" aria-hidden="true"></span>
+        {{ 'sections.http.exercise.loading' | translate }}
+      </li>
+    }
+  </ul>
+
+  <!-- ── Nota sobre JSONPlaceholder ───────────────────────────────────── -->
+  <p class="api-note">
+    {{ 'sections.http.exercise.apiNote' | translate }}
+    <a
+      class="api-note__link"
+      href="https://jsonplaceholder.typicode.com"
+      target="_blank"
+      rel="noopener noreferrer"
+    >JSONPlaceholder</a>
+  </p>
+</div>

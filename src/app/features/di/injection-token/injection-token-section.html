@@ -1,0 +1,293 @@
+<section class="doc">
+  <!-- Cabecera -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">10.2</span>
+      <span class="doc__badge">{{ 'sections.injection-token.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.injection-token.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.injection-token.intro' | translate }}</p>
+  </header>
+
+  <!-- 1 · TEORÍA -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.injection-token.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- 2 · SÍMIL -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.injection-token.simile' | translate }}</p>
+  </article>
+
+  <!-- 3 · EJEMPLOS DE USO COMÚN -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.injection-token.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- 4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS -->
+
+  <!-- ===== PASO 1 / DIAGRAMA 1: El problema — acoplamiento directo ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.injection-token.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.injection-token.p1.title' | translate">
+
+          <!-- Componente -->
+          <div class="node node--bad">
+            <span class="node__badge node__badge--bad">Componente</span>
+            <span class="node__title">MiComponente</span>
+            <span class="node__cap">{{ 'sections.injection-token.p1.n1' | translate }}</span>
+          </div>
+
+          <!-- Flecha rígida con etiqueta -->
+          <div class="arrow-wrap">
+            <div class="arrow arrow--bad"></div>
+            <span class="arrow__label arrow__label--bad">inject(AdminApiService)</span>
+          </div>
+
+          <!-- Servicio concreto -->
+          <div class="node">
+            <span class="node__badge">Servicio concreto</span>
+            <span class="node__title node__title--sm">AdminApiService</span>
+            <span class="node__cap">{{ 'sections.injection-token.p1.n2' | translate }}</span>
+          </div>
+
+          <!-- Problema -->
+          <div class="callout callout--bad">
+            <span class="callout__icon" aria-hidden="true">✕</span>
+            <span>{{ 'sections.injection-token.p1.problem' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.injection-token.stepWord' | translate }} 1 ·
+          {{ 'sections.injection-token.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.injection-token.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeServicio" language="TypeScript" filename="api.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 2 / DIAGRAMA 2: La solución — token como abstracción ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.injection-token.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.injection-token.p2.title' | translate">
+
+          <!-- Componente -->
+          <div class="node node--accent">
+            <span class="node__badge node__badge--accent">Componente</span>
+            <span class="node__title">MiComponente</span>
+            <span class="node__cap">{{ 'sections.injection-token.p2.n1' | translate }}</span>
+          </div>
+
+          <!-- Flecha hacia el token -->
+          <div class="arrow-wrap">
+            <div class="arrow"></div>
+            <span class="arrow__label">inject(API_SERVICE)</span>
+          </div>
+
+          <!-- Token -->
+          <div class="node node--token">
+            <span class="node__badge node__badge--token">InjectionToken</span>
+            <span class="node__title">API_SERVICE</span>
+            <span class="node__cap">{{ 'sections.injection-token.p2.n2' | translate }}</span>
+          </div>
+
+          <!-- Bifurcación hacia 3 implementaciones -->
+          <div class="arrow-wrap">
+            <div class="arrow"></div>
+            <span class="arrow__label">{{ 'sections.injection-token.p2.resolves' | translate }}</span>
+          </div>
+
+          <div class="branch">
+            <div class="node node--impl">
+              <span class="node__title node__title--sm">AdminApiService</span>
+              <code class="node__endpoint">/admin/gestion</code>
+            </div>
+            <div class="node node--impl">
+              <span class="node__title node__title--sm">VendedorApiService</span>
+              <code class="node__endpoint">/ventas/catalogo</code>
+            </div>
+            <div class="node node--impl">
+              <span class="node__title node__title--sm">AlmacenApiService</span>
+              <code class="node__endpoint">/almacen/stock</code>
+            </div>
+          </div>
+
+          <div class="callout callout--ok">
+            <span class="callout__icon" aria-hidden="true">✓</span>
+            <span>{{ 'sections.injection-token.p2.benefit' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.injection-token.stepWord' | translate }} 2 ·
+          {{ 'sections.injection-token.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.injection-token.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeToken" language="TypeScript" filename="api.token.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 3 / DIAGRAMA 3: providers y useClass/useFactory ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.injection-token.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.injection-token.p3.title' | translate">
+
+          <!-- providers array -->
+          <div class="node node--out">
+            <span class="node__badge">@Component · providers</span>
+            <span class="node__title node__title--sm">&#123; provide: API_SERVICE,</span>
+            <span class="node__title node__title--sm">&#160;&#160;useClass: VendedorApiService &#125;</span>
+            <span class="node__cap">{{ 'sections.injection-token.p3.n1' | translate }}</span>
+          </div>
+
+          <div class="arrow-wrap">
+            <div class="arrow"></div>
+            <span class="arrow__label">{{ 'sections.injection-token.p3.overrides' | translate }}</span>
+          </div>
+
+          <!-- Inyector del componente -->
+          <div class="node">
+            <span class="node__badge node__badge--accent">Inyector del componente</span>
+            <span class="node__title node__title--sm">{{ 'sections.injection-token.p3.n2' | translate }}</span>
+          </div>
+
+          <div class="arrow-wrap">
+            <div class="arrow"></div>
+            <span class="arrow__label">inject(API_SERVICE)</span>
+          </div>
+
+          <!-- Resultado -->
+          <div class="node node--token">
+            <span class="node__badge node__badge--token">Resultado</span>
+            <span class="node__title">VendedorApiService</span>
+            <span class="node__cap">{{ 'sections.injection-token.p3.n3' | translate }}</span>
+          </div>
+
+          <div class="arrow-wrap">
+            <div class="arrow arrow--dim"></div>
+            <span class="arrow__label arrow__label--dim">{{ 'sections.injection-token.p3.otherInjectors' | translate }}</span>
+          </div>
+
+          <div class="node node--dim">
+            <span class="node__title node__title--sm">{{ 'sections.injection-token.p3.n4' | translate }}</span>
+            <span class="node__cap">{{ 'sections.injection-token.p3.n4cap' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.injection-token.stepWord' | translate }} 3 ·
+          {{ 'sections.injection-token.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.injection-token.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeComponente" language="TypeScript" filename="injection-token-section.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- 6 · EJERCICIO PRÁCTICO -->
+  <article class="block">
+    <div class="exercise">
+
+      <!-- Columna izquierda: enunciado + código con TODOs -->
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.injection-token.exercise.desc' | translate }}</p>
+
+        <span class="exercise__file-label">api.service.ts</span>
+        <app-code-block [code]="codeServicio" language="TypeScript" filename="api.service.ts" />
+
+        <span class="exercise__file-label">api.token.ts</span>
+        <app-code-block [code]="codeToken" language="TypeScript" filename="api.token.ts" />
+
+        <span class="exercise__file-label">injection-token-section.ts</span>
+        <app-code-block [code]="codeComponente" language="TypeScript" filename="injection-token-section.ts" />
+      </div>
+
+      <!-- Columna derecha: resultado en vivo -->
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+
+        <div class="result-panel">
+          <!-- Selector de rol -->
+          <p class="result-panel__label">{{ 'sections.injection-token.exercise.rolLabel' | translate }}</p>
+          <div class="rol-selector" role="group" [attr.aria-label]="'sections.injection-token.exercise.rolLabel' | translate">
+            <button
+              class="rol-btn"
+              [class.rol-btn--active]="rolActivo() === 'admin'"
+              (click)="cambiarRol('admin')"
+            >
+              {{ 'sections.injection-token.exercise.roles.admin' | translate }}
+            </button>
+            <button
+              class="rol-btn"
+              [class.rol-btn--active]="rolActivo() === 'vendedor'"
+              (click)="cambiarRol('vendedor')"
+            >
+              {{ 'sections.injection-token.exercise.roles.vendedor' | translate }}
+            </button>
+            <button
+              class="rol-btn"
+              [class.rol-btn--active]="rolActivo() === 'almacen'"
+              (click)="cambiarRol('almacen')"
+            >
+              {{ 'sections.injection-token.exercise.roles.almacen' | translate }}
+            </button>
+          </div>
+
+          <!-- Info del servicio activo -->
+          <div class="service-info">
+            <div class="service-info__row">
+              <span class="service-info__key">{{ 'sections.injection-token.exercise.serviceLabel' | translate }}</span>
+              <span class="service-info__val service-info__val--name">{{ servicioActivo().nombre }}</span>
+            </div>
+            <div class="service-info__row">
+              <span class="service-info__key">Endpoint</span>
+              <code class="service-info__val service-info__val--endpoint">{{ servicioActivo().endpoint }}</code>
+            </div>
+          </div>
+
+          <!-- Lista de productos del servicio activo -->
+          <p class="result-panel__label result-panel__label--mt">{{ 'sections.injection-token.exercise.productosLabel' | translate }}</p>
+          <ul class="producto-list">
+            @for (p of servicioActivo().getProductos(); track p.id) {
+              <li class="producto-item">
+                <div class="producto-item__head">
+                  <span class="producto-item__id">#{{ p.id }}</span>
+                  <span class="producto-item__nombre">{{ p.nombre }}</span>
+                </div>
+                <span class="producto-item__detalle">{{ p.detalle }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </article>
+</section>

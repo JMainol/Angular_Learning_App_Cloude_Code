@@ -1,0 +1,44 @@
+<div class="panel">
+  <!-- El formulario reactivo: cada checkbox tri-estado ES un control más. -->
+  <form class="filtros" [formGroup]="form">
+    <span class="filtros__title">{{ 'sections.control-value-accessor.exercise.formTitle' | translate }}</span>
+
+    <!-- formControlName funciona porque el componente registra NG_VALUE_ACCESSOR. -->
+    <app-tri-state-checkbox
+      formControlName="enStock"
+      [label]="'sections.control-value-accessor.exercise.enStock' | translate"
+    />
+    <app-tri-state-checkbox
+      formControlName="envioGratis"
+      [label]="'sections.control-value-accessor.exercise.envioGratis' | translate"
+    />
+    <app-tri-state-checkbox
+      formControlName="conDescuento"
+      [label]="'sections.control-value-accessor.exercise.conDescuento' | translate"
+    />
+
+    <p class="legend">{{ 'sections.control-value-accessor.exercise.legend' | translate }}</p>
+
+    <div class="actions">
+      <button type="button" class="btn" (click)="limpiar()">
+        {{ 'sections.control-value-accessor.exercise.resetBtn' | translate }}
+      </button>
+      <button type="button" class="btn" (click)="toggleDisabled()">
+        {{
+          (form.disabled
+            ? 'sections.control-value-accessor.exercise.enableBtn'
+            : 'sections.control-value-accessor.exercise.disableBtn'
+          ) | translate
+        }}
+      </button>
+    </div>
+  </form>
+
+  <!-- Lo que se enviaría al servidor: los null desaparecen. -->
+  <div class="payload">
+    <span class="payload__label">{{ 'sections.control-value-accessor.exercise.payloadLabel' | translate }}</span>
+    <pre class="payload__json">{{ payloadJson() }}</pre>
+  </div>
+
+  <p class="hint">{{ 'sections.control-value-accessor.exercise.hint' | translate }}</p>
+</div>

@@ -1,0 +1,19 @@
+<app-section-shell
+  code="9.4"
+  [title]="'sections.merge-map.title' | translate"
+  [theory]="'sections.merge-map.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.merge-map.simile' | translate"
+  [examples]="'sections.merge-map.examples' | translate"
+>
+  <!-- Código con TODOs. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="merge-map-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-merge-map-exercise exercise-result />
+</app-section-shell>

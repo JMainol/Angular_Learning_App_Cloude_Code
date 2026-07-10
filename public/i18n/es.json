@@ -32,45 +32,58 @@
     "template": "Template",
     "routing": "Routing",
     "i18n": "Internacionalización",
-    "attribute-directives": "Directivas de atributo"
+    "attribute-directives": "Directivas de atributo",
+    "services": "Services",
+    "observables": "Observables",
+    "di": "Inyección de Dependencias",
+    "server-protocols": "Protocolos comunicación Angular - Servidor",
+    "interceptors": "Interceptores y ResolveFn",
+    "lifecycle": "Ciclo de Vida",
+    "forms": "Formularios"
   },
   "sections": {
     "standalone": {
       "title": "Arquitectura standalone",
       "badge": "Documentación",
-      "intro": "Esta sección no tiene ejercicio: con la configuración de esta misma app, explica cómo arranca una app Angular moderna con componentes standalone y sin NgModules. Cuatro flujos, cada uno con un diagrama y el código real.",
-      "flowA": {
-        "label": "Flujo 1 · El arranque",
-        "heading": "Arrancar sin NgModules",
-        "lead": "Esta app no tiene `AppModule`. Arranca directamente desde un componente raíz más un objeto de configuración. Esta es la cadena, de la etiqueta HTML a la interfaz en marcha.",
+      "intro": "Con la configuración de esta misma app, explica cómo arranca una app Angular moderna con componentes standalone y sin NgModules. Cuatro diagramas, cada uno con sus pasos de referencia y el código real.",
+      "theory": "Los componentes standalone son la arquitectura moderna de Angular (predeterminada desde v17). Cada componente declara sus dependencias directamente en `imports` dentro del decorador `@Component`, sin necesitar un NgModule que lo registre.\nLa app arranca con `bootstrapApplication()` en lugar de un `AppModule`. Los servicios globales se configuran en `app.config.ts` con funciones `provide*` que alimentan el inyector raíz.\nEl resultado: cada pieza es autocontenida, portable y comprensible de forma aislada.",
+      "simile": "Un componente standalone es como una habitación de hotel totalmente equipada: trae su propia televisión, baño y minibar. Los NgModules eran el edificio entero al que había que registrarse en recepción para acceder a cualquier servicio; con standalone, cada habitación se apaña sola.",
+      "examples": [
+        "Crear una app nueva sin AppModule con `ng new` (standalone por defecto desde Angular 17).",
+        "Migrar progresivamente una app legacy de NgModules a componentes standalone.",
+        "Publicar una librería de componentes sin requerir importar ningún módulo en la app consumidora."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "El arranque sin NgModules",
+        "lead": "Esta app no tiene `AppModule`. Arranca directamente desde un componente raíz más un objeto de configuración. Esta es la cadena completa, de la etiqueta HTML a la interfaz en marcha.",
         "n1": "El navegador carga la página",
         "n2": "Arranca desde un componente",
         "n3": "Raíz: Sidebar + Topbar + RouterOutlet",
         "n4": "Proveedores globales (DI)",
         "n5": "App lista, sin NgModules",
         "steps": [
-          "El `index.html` solo contiene la etiqueta `<app-root>`: el punto de anclaje de la app.",
-          "`main.ts` llama a `bootstrapApplication(App, appConfig)`. No hay `platformBrowserDynamic` ni `AppModule`: se arranca directamente desde un COMPONENTE raíz.",
-          "Ese componente raíz `App` es standalone: declara en su `imports` lo que usa (`Sidebar`, `Topbar`, `RouterOutlet`).",
-          "El segundo argumento, `appConfig`, es un `ApplicationConfig` con el array `providers`: ahí viven los servicios globales (router, HttpClient, ngx-translate).",
-          "Resultado: la app se monta sin un solo NgModule. Cada pieza declara sus propias dependencias y nada más."
+          "Nodo 1 — `index.html`: el único punto de anclaje. Solo contiene `<app-root>`; Angular lo sustituye por el componente raíz al arrancar.",
+          "Nodo 2 — `main.ts`: llama a `bootstrapApplication(App, appConfig)`. Sin `AppModule` ni `platformBrowserDynamic`; el arranque parte directamente de un componente.",
+          "Nodo 3 — `App` (standalone): declara en su `imports` todo lo que usa su plantilla (`Sidebar`, `Topbar`, `RouterOutlet`). Ningún NgModule lo registra.",
+          "Nodo 4 — `appConfig`: objeto `ApplicationConfig` con el array `providers`. Aquí viven los servicios globales (Router, HttpClient, ngx-translate).",
+          "Nodo 5 — UI lista: la app funciona sin un solo NgModule. Cada pieza declara sus propias dependencias y nada más."
         ]
       },
-      "flowB": {
-        "label": "Flujo 2 · El componente",
-        "heading": "Anatomía de un componente standalone",
+      "p2": {
+        "title": "Anatomía de un componente standalone",
         "lead": "Todo componente de esta app es standalone: se basta a sí mismo. La clave está en el array `imports` del decorador, que sustituye a las `declarations` de un NgModule.",
         "cap": "El componente raíz `App` (app.ts), declarado por completo en un solo sitio",
         "steps": [
-          "Un componente standalone NO necesita declararse en un NgModule: es autónomo.",
-          "En `imports` declara los componentes, directivas y pipes que usa su plantilla. Es el equivalente directo a las `declarations` + `imports` de un NgModule, pero por componente.",
-          "Así cada pieza es autocontenida: ves de un vistazo de qué depende, y el tree-shaking elimina lo que no se usa.",
-          "Por eso cada sección de esta app importa solo lo suyo (`SectionShell`, `CodeBlock`, su ejercicio y `TranslatePipe`)."
+          "Campo `@Component`: marca la clase como componente y reúne su configuración. Sin NgModule que lo declare; el componente se registra a sí mismo (`standalone: true` es el valor por defecto desde Angular 17).",
+          "Campo `imports: [...]`: el corazón del standalone. Declara los componentes, directivas y pipes que usa la plantilla — equivale a `declarations` + `imports` del antiguo NgModule, pero por componente.",
+          "Campo `changeDetection: OnPush`: Angular solo reevalúa este componente cuando cambian sus inputs o un Signal que lee. Combinación ideal con la API de Signals.",
+          "Campos `templateUrl / styleUrl`: separan la vista y los estilos en archivos propios. El componente es autocontenido: todo lo que necesita viaja con él."
         ]
       },
-      "flowC": {
-        "label": "Flujo 3 · app.config.ts",
-        "heading": "Servicios globales con provide* (ApplicationConfig)",
+      "p3": {
+        "title": "Servicios globales con provide* (ApplicationConfig)",
         "lead": "Sin NgModules, los servicios globales se declaran en `app.config.ts`: un `ApplicationConfig` cuyo array `providers` usa funciones `provide*`. Eso alimenta el inyector raíz de la app.",
         "c1": "Lista de proveedores globales",
         "cRouter": "Enrutado",
@@ -79,26 +92,24 @@
         "c2": "Registra los servicios",
         "c3": "Disponibles en cualquier componente",
         "steps": [
-          "En vez de `NgModule.providers`, los servicios globales se registran en `appConfig.providers` con funciones `provide*`.",
-          "`provideRouter(routes, withComponentInputBinding())` configura el enrutado; `provideHttpClient()` habilita las peticiones HTTP; `provideTranslateService(...)` monta ngx-translate.",
-          "Todo eso alimenta el inyector raíz, así que cualquier componente puede pedir un servicio con `inject(...)`.",
-          "En esta app, `providers` incluye además `provideBrowserGlobalErrorListeners()`, y a `provideRouter` se le pasa `withComponentInputBinding()` para enlazar los parámetros de ruta a los `input()` del componente."
+          "Nodo 1 — `appConfig.providers`: el array que reemplaza a `NgModule.providers`. Cada función `provide*` registra un servicio global con su configuración.",
+          "Nodos 2-4 — funciones `provide*`: `provideRouter` monta el enrutado, `provideHttpClient` habilita las peticiones HTTP y `provideTranslateService` monta la i18n. Cada una encapsula la configuración de su servicio.",
+          "Nodo 5 — Inyector raíz: los proveedores alimentan el inyector raíz. Desde aquí cualquier componente puede pedir un servicio sin que nadie lo declare en un módulo.",
+          "Nodo 6 — `inject(Servicio)`: la forma moderna de pedir un servicio desde cualquier injection context (campo de clase, constructor, función factory). Sin constructor injection ni `@Inject`."
         ]
       },
-      "flowD": {
-        "label": "Flujo 4 · app.routes.ts",
-        "heading": "Las rutas con carga diferida (app.routes.ts)",
+      "p4": {
+        "title": "Las rutas con carga diferida (app.routes.ts)",
         "lead": "El enrutado se declara en `app.routes.ts`: un array `Routes` donde cada sección se carga de forma diferida. Es, además, ejemplo vivo del Bloque 05 (Routing).",
         "d1": "El usuario navega",
         "d2": "Casa la primera ruta del array",
         "d3": "Carga diferida: chunk bajo demanda",
         "d4": "Se pinta en el <router-outlet>",
         "steps": [
-          "Las rutas viven en un array `Routes`: cada entrada asocia un `path` (segmento de URL) con el componente a mostrar.",
-          "Aquí cada sección usa `loadComponent: () => import(...)`: carga diferida (lazy). El componente viaja en un chunk aparte que solo se descarga al navegar a su ruta, manteniendo pequeño el bundle inicial.",
-          "`title` fija el título del documento (la pestaña del navegador) para cada ruta.",
-          "La ruta vacía `''` redirige a la primera sección (`config/standalone`) y el comodín `'**'` captura cualquier URL desconocida y vuelve al inicio.",
-          "`provideRouter(routes, …)` (en app.config.ts) registra este array; el componente activo se renderiza en el `<router-outlet>` del layout."
+          "Nodo 1 — URL: el usuario navega a una ruta. El Router compara la URL con el array `Routes` en orden y elige la primera coincidencia.",
+          "Nodo 2 — Router: ejecuta el `loadComponent` de la ruta coincidente. Es un `import()` dinámico: el chunk del componente aún no está en memoria.",
+          "Nodo 3 — `loadComponent`: descarga el chunk solo cuando se navega a esa ruta por primera vez. En visitas posteriores el chunk ya está en caché del navegador.",
+          "Nodo 4 — `<router-outlet>`: el componente cargado se pinta aquí. Actúa como marcador de posición en el layout; su contenido cambia con cada navegación pero el layout persiste."
         ]
       }
     },
@@ -190,6 +201,16 @@
         "Poner el foco en un campo al abrir un formulario o un modal.",
         "Medir o desplazar un elemento del DOM (scroll, dimensiones).",
         "Llamar a un método público de un componente hijo (un reproductor, un mapa)."
+      ]
+    },
+    "to-signal": {
+      "title": "toSignal",
+      "theory": "`toSignal()` convierte un Observable en un Signal. Es el puente oficial entre RxJS y la API reactiva moderna de Angular, disponible en `@angular/core/rxjs-interop`.\n Se suscribe al Observable internamente y destruye la suscripción al destruirse el componente: sin `takeUntilDestroyed` ni `unsubscribe()` manual. El valor del Signal se actualiza con cada nueva emisión.\n La opción `initialValue` define qué devuelve el Signal antes de la primera emisión, lo que evita el tipo `T | undefined` y permite usar el Signal en `@for` desde el inicio sin comprobaciones extra.\n En Angular moderno, la combinación `HttpClient` + `toSignal` reemplaza al patrón Observable + `async` pipe.",
+      "simile": "Imagina que recibes el periódico en papel cada mañana (Observable): tienes que esperar la entrega y gestionar la suscripción. `toSignal` es contratar la edición digital: el contenido llega solo a tu dispositivo, siempre actualizado, y cuando cancelas la suscripción (destruyes el componente) deja de llegar por sí solo, sin que tengas que llamar a nadie.",
+      "examples": [
+        "Convertir una llamada `HttpClient.get()` en un Signal para leerla directamente en el template sin `async` pipe.",
+        "Derivar un Signal de estado de carga (`cargando`) desde el mismo Observable con `initialValue: true`.",
+        "Integrar un Observable de un servicio legacy en un componente nuevo que ya usa la API de Signals."
       ]
     },
     "events": {
@@ -346,6 +367,549 @@
         "Resaltar un elemento al pasar el ratón (clásico appHighlight).",
         "Aplicar una máscara de formato (teléfono, IBAN) mientras se escribe."
       ]
+    },
+    "flattening": {
+      "title": "Operadores de Aplanamiento RxJS"
+    },
+    "desubscribirse": {
+      "title": "Desubscribirse",
+      "theory": "Cuando te suscribes manualmente a un Observable con `.subscribe()`, la suscripción permanece activa aunque el componente se destruya, causando fugas de memoria (memory leaks).\nLa solución moderna en Angular es el operador `takeUntilDestroyed()` de `@angular/core/rxjs-interop`: recibe un `DestroyRef` (inyectado con `inject()`) y cancela la suscripción automáticamente al destruir el componente. Sin `ngOnDestroy`, sin `Subject` de cierre.\nAtajo: `async` pipe y `toSignal()` gestionan la desubscripción automáticamente; no requieren ninguna acción manual.",
+      "simile": "Una suscripción sin cancelar es como dejar el grifo abierto al salir de casa: el agua sigue corriendo aunque nadie la use (fuga de memoria). `takeUntilDestroyed` es el interruptor automático que cierra el grifo en cuanto se cierra la puerta.",
+      "examples": [
+        "Cancelar un polling de precios en tiempo real al salir de la vista.",
+        "Detener la escucha de un WebSocket al destruirse el componente.",
+        "Cancelar una búsqueda tipo autocompletar al navegar a otra pantalla."
+      ]
+    },
+    "concat-map": {
+      "title": "concatMap",
+      "theory": "concatMap es el operador de aplanamiento más conservador: convierte cada emisión del Observable fuente en un Observable interno, pero espera a que el Observable interno anterior complete antes de suscribirse al siguiente. El resultado es una cola estrictamente secuencial: las peticiones se ejecutan una tras otra, en el mismo orden en que se emitieron, sin solapamiento.\nEs ideal cuando el orden de las operaciones importa o cuando los resultados de una dependen de la anterior: garantiza que nunca habrá dos peticiones activas a la vez.",
+      "simile": "Es como una ventanilla de banco con un único cajero: cada cliente espera su turno en la cola y es atendido de forma completa antes de que entre el siguiente. No hay paralelismo, hay orden garantizado.",
+      "examples": [
+        "Enviar mensajes en orden: cada mensaje espera a que el anterior se confirme antes de enviarse.",
+        "Procesar pasos de un asistente de configuración donde cada paso depende del anterior.",
+        "Sincronizar cambios offline en orden de creación al recuperar la conexión."
+      ]
+    },
+    "merge-map": {
+      "title": "mergeMap",
+      "theory": "mergeMap es el operador de aplanamiento más permisivo: cada valor que emite el Observable fuente se convierte en un nuevo Observable interno, y todos los Observables internos se ejecutan en paralelo sin cancelarse ni ignorarse entre sí. Las respuestas llegan según el orden de finalización, no de lanzamiento.\nEsto lo hace ideal cuando las operaciones son independientes entre sí y quieres maximizar la concurrencia: todas las peticiones vuelan a la vez y cada resultado se procesa en cuanto llega, sin esperar a las demás.",
+      "simile": "Es como varios cocineros trabajando en paralelo en distintos platos: cada uno empieza a cocinar en cuanto recibe su pedido y lo sirve en cuanto termina, sin esperar a que los demás acaben. El resultado llega antes, pero el orden de los platos en la mesa depende de quién termine primero.",
+      "examples": [
+        "Cargar en paralelo los posts de varios usuarios seleccionados con checkboxes.",
+        "Subir múltiples archivos simultáneamente y mostrar el progreso de cada uno.",
+        "Enriquecer una lista de productos haciendo una petición de stock por cada uno."
+      ]
+    },
+    "exhaust-map": {
+      "title": "exhaustMap",
+      "theory": "exhaustMap también es un operador de aplanamiento de RxJS, pero con una lógica opuesta a switchMap: si llega una nueva emisión del Observable fuente mientras el Observable interno anterior aún no ha completado, esa emisión se descarta por completo. Solo cuando el Observable interno actual termina, exhaustMap vuelve a estar disponible para procesar la siguiente emisión.\nEs ideal para evitar el doble envío de formularios o acciones que no deben ejecutarse en paralelo: el primer clic dispara la petición y los clics siguientes se ignoran hasta que la primera termina.",
+      "simile": "Es como un ascensor que no abre las puertas mientras está en movimiento. Puedes pulsar el botón tantas veces como quieras durante el trayecto, pero el ascensor no reacciona hasta que llega a su destino. El primer pulso manda; los demás se descartan.",
+      "examples": [
+        "Botón de login: el primer clic envía las credenciales y los clics siguientes se ignoran hasta recibir respuesta.",
+        "Botón «Pagar»: impide lanzar dos cobros simultáneos aunque el usuario pulse varias veces.",
+        "Iniciar una exportación de datos: bloquea nuevos intentos mientras el proceso ya está en marcha."
+      ]
+    },
+    "switch-map": {
+      "title": "switchMap",
+      "theory": "switchMap es un operador de aplanamiento de RxJS: cada valor que emite el Observable fuente se convierte en un nuevo Observable interno (la petición HTTP), y si llega un nuevo valor mientras el anterior aún no ha terminado, switchMap cancela el Observable interno anterior y se suscribe al nuevo. Solo el último Observable interno está activo en todo momento.\nEs ideal para búsquedas en tiempo real: si el usuario escribe rápido, las peticiones intermedias se descartan y solo se procesa la última, evitando respuestas desordenadas y peticiones innecesarias.",
+      "simile": "Es como buscar un taxi en una app y cambiar de destino antes de que el conductor acepte el viaje: el pedido anterior se cancela automáticamente y solo el nuevo sigue adelante. No se acumulan taxis en camino, solo el último pedido importa.",
+      "examples": [
+        "Autocompletar un buscador: cada nueva letra cancela la petición de la letra anterior.",
+        "Recargar el perfil de usuario al seleccionar uno distinto de una lista.",
+        "Consultar la previsión meteorológica al cambiar de ciudad."
+      ]
+    },
+    "intro": {
+      "title": "Introducción",
+      "badge": "Documentación",
+      "intro": "La Inyección de Dependencias es el corazón de Angular: entiende cómo el inyector crea, comparte y entrega servicios para que tus componentes no tengan que hacerlo ellos mismos.",
+      "theory": "La Inyección de Dependencias (DI) es el mecanismo central por el que Angular crea los objetos que tus componentes necesitan y los entrega de forma automática. No es necesario hacer `new Servicio()` manualmente: describes qué necesitas y el inyector lo crea y lo pone a tu disposición.\nEl sistema gira en torno a tres conceptos: el token (qué pedir), el proveedor (cómo crearlo) y el inyector (quién lo gestiona). Angular tiene un inyector raíz para servicios globales y puede crear inyectores secundarios a nivel de componente o ruta para aislar el ciclo de vida del servicio.\nLa forma moderna de pedir un servicio es con la función `inject()`, usable en cualquier injection context: campo de clase, constructor, functional guard, factory...",
+      "simile": "Imagina un restaurante. Los cocineros (componentes) no van al mercado a comprar ingredientes: le dicen al maitre qué necesitan (el token) y el servicio de aprovisionamiento (el inyector) lo trae. Si ya hay stock de ese ingrediente (singleton), se reutiliza; si no, se crea en ese momento. Nunca hay dos stocks del mismo ingrediente en el mismo inyector.",
+      "examples": [
+        "Inyectar `HttpClient` para hacer peticiones HTTP sin construirlo ni configurarlo manualmente.",
+        "Compartir el usuario autenticado entre la barra de navegación, el sidebar y cada pantalla con un `AuthService` singleton.",
+        "Obtener un `LoggerService` reutilizable en múltiples componentes sin duplicar instancias."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "Crear y registrar el servicio",
+        "lead": "Decorar la clase con `@Injectable({ providedIn: 'root' })` es todo lo que necesitas para registrarla en el inyector raíz. Angular crea una única instancia (singleton) y la reutiliza en toda la app: si diez componentes piden el servicio, todos reciben la misma instancia.",
+        "n1": "Clase del servicio",
+        "n2": "@Injectable registra el token en el inyector raíz",
+        "n3": "Inyector raíz gestiona el ciclo de vida",
+        "n4": "Instancia singleton disponible en toda la app"
+      },
+      "p2": {
+        "title": "Inyectar el servicio en el componente",
+        "lead": "`inject(TaskService)` le pide al inyector la instancia del servicio. Angular busca el token en el árbol de inyectores, lo encuentra en el raíz y devuelve la misma instancia a todos los que la soliciten. Sin `new`, sin gestión manual del ciclo de vida.",
+        "n1": "El componente necesita TaskService",
+        "n2": "inject() solicita el token al inyector",
+        "n3": "El inyector raíz lo resuelve",
+        "n4": "Misma instancia compartida por todos los consumidores"
+      },
+      "p3": {
+        "title": "El árbol de inyectores",
+        "lead": "Angular no tiene un único inyector: los organiza en árbol jerárquico. El inyector raíz sirve a toda la app; los inyectores de entorno (rutas lazy) o de componente pueden sobreescribir proveedores localmente, aislando el servicio en ese subárbol sin afectar al resto.",
+        "n1": "Inyector raíz — singleton global, vive toda la app",
+        "n2": "Environment Injector — ruta lazy o providedIn: 'platform'",
+        "n3": "Component Injector — providers: [] en el decorador del componente",
+        "n4": "Resolución del token: sube por el árbol hasta encontrarlo",
+        "n5": "providedIn: 'root' → registra en el inyector raíz",
+        "n6": "providers: [...] → registra solo en ese nodo del árbol"
+      },
+      "exercise": {
+        "title": "Ejercicio: TaskService con Signals",
+        "desc": "Crea un `TaskService` que almacene una lista de tareas en un Signal y completa el componente que lo inyecta con `inject()` para mostrarlas y añadir nuevas.",
+        "inputLabel": "Nueva tarea",
+        "addBtn": "Añadir",
+        "emptyMsg": "Aún no hay tareas. ¡Añade la primera!",
+        "tasksLabel": "Tareas pendientes"
+      }
+    },
+    "subject-vs-signal": {
+      "title": "Subject vs Signal",
+      "theory": "Un servicio Angular es una clase singleton inyectable que centraliza lógica y estado compartido entre componentes. Con el patrón tradicional de RxJS se usaba `BehaviorSubject` para emitir valores: los componentes se suscribían con `.subscribe()` y debían cancelar la suscripción en `ngOnDestroy` para evitar fugas de memoria.\nCon Signals, el servicio expone un `signal()` privado y lo comparte como `asReadonly()`: los componentes leen el valor directamente en la plantilla, Angular rastrea la dependencia y actualiza solo lo que ha cambiado. Sin `subscribe`, sin `OnDestroy`, sin `async` pipe.\nEl resultado es el mismo —comunicación reactiva entre componentes— con menos código, menos responsabilidades y menos riesgo de errores.",
+      "simile": "Imagina que el servicio es la pizarra central de una oficina. Con Subject, cada empleado (componente) tiene que apuntarse en una lista de avisos y acordarse de borrarse cuando se va (OnDestroy). Con Signal, la pizarra tiene una pantalla digital que todos ven directamente: nadie se apunta a nada, nadie se olvida de borrarse, y la información siempre está actualizada.",
+      "examples": [
+        "Compartir el usuario autenticado entre el topbar, el sidebar y cada pantalla de la app.",
+        "Propagar el estado de un carrito de compra a través de múltiples secciones.",
+        "Sincronizar el tema visual (claro/oscuro) seleccionado por el usuario en toda la interfaz."
+      ]
+    },
+    "injection-token": {
+      "title": "InjectionToken",
+      "badge": "DI Avanzada",
+      "intro": "Tres servicios, tres microservicios, un solo punto de inyección. Aprende a usar InjectionToken para desacoplar el componente de la implementación concreta y cambiar de servicio sin tocar el código que lo consume.",
+      "theory": "Un InjectionToken es una clave tipada que actúa de identificador en el sistema DI de Angular. A diferencia de inyectar una clase directamente, el token es solo una referencia: el inyector resuelve qué implementación entregar en tiempo de ejecución según los providers configurados.\nSe crea con `new InjectionToken<T>('descripcion', { factory })`. La factory define la implementación por defecto. Para cambiar la implementación en un componente o ruta basta con añadir `providers: [{ provide: TOKEN, useClass: OtraImpl }]` sin modificar quien lo consume.\nEsto es el principio de Inversión de Dependencias aplicado a Angular: el consumidor depende de la abstracción (el token), no de ninguna clase concreta.",
+      "simile": "Un InjectionToken es como un enchufe estándar. Tu electrodoméstico (el componente) solo sabe que necesita 230 V por ese enchufe (el token). Que la corriente venga de la red eléctrica, un generador o un panel solar (las implementaciones) es cosa del instalador (los providers), no del electrodoméstico. Puedes cambiar la fuente sin tocar el aparato.",
+      "examples": [
+        "Inyectar configuración de entorno (API_URL, FEATURE_FLAGS) sin hardcodear valores en el componente.",
+        "Seleccionar entre múltiples implementaciones de un servicio según el rol del usuario o el entorno.",
+        "Sustituir una dependencia por un mock en tests sin cambiar el componente bajo prueba."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "El problema: acoplamiento directo a la clase concreta",
+        "lead": "Sin InjectionToken, el componente importa y solicita la clase concreta directamente. Si el mañana cambiamos de AdminApiService a VendedorApiService, hay que editar el componente. Y si hay tres equipos con tres servicios distintos, el componente acaba conociendo a todos.",
+        "n1": "Conoce y depende de AdminApiService",
+        "n2": "Clase concreta que apunta a /admin",
+        "problem": "Cambiar de servicio obliga a editar el componente"
+      },
+      "p2": {
+        "title": "La solución: el token como capa de abstracción",
+        "lead": "Con InjectionToken el componente solo conoce el token (la abstracción). El inyector de Angular resuelve en tiempo de ejecución qué implementación concreta entregar según los providers configurados. El componente funciona igual con cualquiera de las tres.",
+        "n1": "Solo conoce el token API_SERVICE",
+        "n2": "Clave tipada con ApiService. La factory define el default.",
+        "resolves": "resuelve →",
+        "benefit": "Cambiar de servicio es solo cambiar providers, el componente no cambia"
+      },
+      "p3": {
+        "title": "providers y useClass: sobrescribir el token por componente",
+        "lead": "La clave de InjectionToken está en los providers. Añadirlos al decorador @Component crea un inyector de ámbito componente que sobrescribe la factory del token solo para ese componente y sus hijos. El resto de la app sigue usando el default.",
+        "n1": "Declara qué implementación usar en este árbol de componentes",
+        "n2": "Busca el token en su ámbito → lo encuentra → entrega VendedorApiService",
+        "n3": "La implementación entregada a inject(API_SERVICE)",
+        "n4": "Resto de inyectores",
+        "n4cap": "Siguen usando la factory default (AdminApiService)",
+        "overrides": "sobrescribe →",
+        "otherInjectors": "otros ámbitos sin cambios →"
+      },
+      "exercise": {
+        "desc": "Completa los 6 TODOs: define la clase abstracta, las tres implementaciones, el InjectionToken con su factory y el componente que los consume. Cambia de rol en el panel derecho para ver cómo el computed selecciona el servicio correcto.",
+        "rolLabel": "Selecciona un rol",
+        "serviceLabel": "Servicio activo",
+        "productosLabel": "Datos del microservicio",
+        "roles": {
+          "admin": "Admin",
+          "vendedor": "Vendedor",
+          "almacen": "Almacén"
+        }
+      }
+    },
+    "websockets": {
+      "title": "WebSockets (WS / WSS)",
+      "badge": "WS · Tiempo real",
+      "intro": "Más allá del request-response: aprende a abrir un canal bidireccional persistente entre Angular y el servidor para recibir datos en tiempo real sin necesidad de hacer nuevas peticiones.",
+      "theory": "`WebSocket` es un protocolo de comunicación full-duplex sobre TCP. A diferencia de HTTP, que sigue el modelo petición-respuesta (el cliente pide, el servidor responde y la conexión termina), WebSocket mantiene un canal abierto indefinidamente: tanto el cliente como el servidor pueden enviar datos en cualquier momento sin esperar al otro.\nEl protocolo arranca con un handshake HTTP especial: el cliente envía `Upgrade: websocket` en la cabecera y el servidor responde con `101 Switching Protocols`. A partir de ahí, la conexión ya no es HTTP, sino un canal WS puro y eficiente.\nAngular no tiene un servicio integrado para WebSockets. Se usa la API nativa del navegador (`new WebSocket(url)`) envuelta en un servicio que expone Observables con `fromEvent()` para integrarla con el sistema reactivo.",
+      "simile": "HTTP es como enviar cartas: tú escribes una, la echas al buzón y esperas la respuesta. WebSocket es como una llamada de teléfono: la línea se abre una sola vez, y a partir de ahí ambas partes pueden hablar cuando quieran sin marcar de nuevo.",
+      "examples": [
+        "Chat en tiempo real entre usuarios de una misma sala.",
+        "Tablero financiero que muestra precios de acciones o criptomonedas actualizándose en vivo.",
+        "Colaboración en documentos compartidos: los cambios de un usuario aparecen al instante en el resto."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "El Handshake — de HTTP a WebSocket",
+        "lead": "La conexión WebSocket empieza siendo una petición HTTP ordinaria. El cliente incluye `Upgrade: websocket` en la cabecera y el servidor responde con `101 Switching Protocols`. A partir de ese momento, la conexión deja de ser HTTP y se convierte en un canal WS bidireccional y persistente. Angular realiza este proceso automáticamente al instanciar `new WebSocket(url)` — no es necesario escribir ninguna cabecera manualmente.",
+        "n1": "Angular Client — abre la conexión",
+        "n2": "GET /chat · Upgrade: websocket",
+        "n3": "101 Switching Protocols",
+        "n4": "Canal WS bidireccional persistente"
+      },
+      "p2": {
+        "title": "Estado de la conexión con Signals",
+        "lead": "`WebSocket.readyState` es un número entero (0–3) que indica el estado de la conexión. En Angular lo mapeamos a un Signal de tipo string para que el template pueda reaccionar automáticamente a cada cambio de estado. Cada evento del WebSocket (`open`, `close`, `error`) dispara un `status.set()` que propaga el cambio a todos los puntos del template que lo lean.",
+        "s0": "CONNECTING (0)",
+        "s1": "OPEN (1)",
+        "s2": "CLOSING (2)",
+        "s3": "CLOSED (3)",
+        "sub0": "Handshake en curso",
+        "sub1": "Canal abierto, mensajes activos",
+        "sub2": "Cerrando (close() llamado)",
+        "sub3": "Conexión finalizada"
+      },
+      "p3": {
+        "title": "Mensajes bidireccionales con fromEvent()",
+        "lead": "Para RECIBIR mensajes, RxJS ofrece `fromEvent()`: convierte cualquier `EventTarget` —incluido un WebSocket— en un Observable tipado. Se aplica `map()` para deserializar el JSON y `takeUntilDestroyed()` para cancelar la suscripción al destruirse el componente. Para ENVIAR se llama directamente a `ws.send()` — sin Observable ni RxJS — porque es una acción imperativa instantánea.",
+        "n1": "Angular Component",
+        "n2": "ws.send(data) →",
+        "n3": "← fromEvent(ws, 'message')",
+        "n4": "Servidor WebSocket"
+      },
+      "p4": {
+        "title": "Ciclo de vida y cleanup",
+        "lead": "`takeUntilDestroyed()` cancela la suscripción RxJS cuando el componente se destruye, pero no cierra la conexión WebSocket en el servidor. Para eso se usa `DestroyRef.onDestroy()`: registra un callback que se ejecuta cuando Angular destruye el componente y que llama a `ws.close(1000)`. El código 1000 es el estándar WebSocket (RFC 6455) para cierre normal; el servidor lo recibe y puede liberar recursos.",
+        "n1": "Componente se destruye",
+        "n2": "Observable cancelado",
+        "n3": "WebSocket cerrado",
+        "n4": "Servidor libera el socket"
+      },
+      "exercise": {
+        "desc": "Completa los 4 TODOs para implementar un chat en tiempo real con WebSocket. El resultado usa un mock local que simula el protocolo WS real: observa cómo el servidor envía un mensaje de bienvenida al conectar y devuelve eco a cada mensaje que envíes.",
+        "connectBtn": "Conectar",
+        "disconnectBtn": "Desconectar",
+        "sendBtn": "Enviar",
+        "placeholder": "Escribe un mensaje... (Enter para enviar)",
+        "empty": "Conéctate al servidor para empezar.",
+        "status": {
+          "connecting": "Conectando...",
+          "open": "Conectado · wss://demo.local/chat",
+          "closed": "Desconectado",
+          "error": "Error de conexión"
+        }
+      }
+    },
+    "http": {
+      "title": "HTTP (REST API)",
+      "badge": "REST · HttpClient",
+      "intro": "Del GET al DELETE: aprende a conectar Angular con cualquier backend REST usando HttpClient de forma profesional — tipado, reactivo y con manejo de errores centralizado.",
+      "theory": "`HttpClient` es el servicio oficial de Angular para comunicarse con APIs REST. Se registra globalmente con `provideHttpClient(withFetch())` en `app.config.ts` y se inyecta con `inject()` donde se necesite.\nDevuelve Observables: flujos que emiten la respuesta cuando llega. Estos Observables se pueden convertir a Signals con `toSignal()` para leer el resultado directamente en el template, o consumirse con `.subscribe()` cuando se necesita reaccionar a la respuesta con lógica adicional.\nEl servicio que encapsula las llamadas HTTP (separación Service/Component) es la forma profesional: el componente solo llama métodos semánticos (`getAll`, `create`, `remove`) y no sabe nada de URLs ni verbos HTTP. El manejo de errores se centraliza con el operador `catchError` de RxJS.",
+      "simile": "Piensa en HttpClient como el servicio de mensajería de tu empresa: tú preparas el paquete (el payload), le dices adónde va (la URL y el verbo HTTP) y él se encarga del transporte. Si algo sale mal (la dirección no existe, el destinatario rechaza el paquete), te devuelve un albarán de error — sin que tú tengas que saber cómo funcionan las rutas de reparto.",
+      "examples": [
+        "Cargar un listado de productos desde una API y renderizarlo en una tabla.",
+        "Enviar un formulario de registro con POST y redirigir al usuario tras la respuesta exitosa.",
+        "Implementar un panel de administración con CRUD completo sobre un recurso de una API REST."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "Registrar HttpClient con withFetch()",
+        "lead": "`provideHttpClient(withFetch())` registra el servicio en el inyector raíz. `withFetch()` le indica que use la Fetch API nativa del navegador en lugar de XHR. Esto aporta mejor rendimiento, compatibilidad con Angular SSR y alineación con el estándar web. Solo hay que añadirlo una vez en `app.config.ts`; desde ahí, cualquier clase puede inyectar `HttpClient` con `inject()`.",
+        "n1": "Punto de configuración global",
+        "n2": "Registra HttpClient con Fetch API nativa",
+        "n3": "Inyector raíz gestiona el singleton",
+        "n4": "Disponible en cualquier servicio o componente"
+      },
+      "p2": {
+        "title": "Definir el modelo de datos",
+        "lead": "Antes de hacer ninguna llamada HTTP conviene definir la interfaz TypeScript que describe la respuesta esperada. Tipando el método `http.get<Post[]>()` Angular infiere el tipo en todo el flujo: del Observable al Signal, del Signal al template. `PostPayload` usa `Omit<Post, 'id'>` para el payload de creación/actualización: el backend asigna el `id`, no el cliente.",
+        "note": "Omit<Post, 'id'> — el servidor asigna el id"
+      },
+      "p3": {
+        "title": "Crear el servicio con los 4 métodos CRUD",
+        "lead": "El servicio encapsula toda la comunicación HTTP. El componente solo llama métodos semánticos (`getAll`, `create`, `update`, `remove`) y recibe Observables tipados. Si la URL o los verbos HTTP cambian, se modifica un único lugar. `catchError` intercepta cualquier error HTTP y lo transforma en un `Error` con mensaje legible, antes de que llegue al componente.",
+        "n1": "Llama métodos semánticos",
+        "n2": "Encapsula URLs, verbos y errores",
+        "n3": "Transforma la petición en Observable",
+        "n4": "Respuesta tipada — el componente solo ve datos"
+      },
+      "p4": {
+        "title": "Consumir en el componente con Signals",
+        "lead": "`toSignal()` es el puente oficial entre Observables (HttpClient) y Signals (Angular moderno). Convierte el Observable del GET inicial en un Signal sincronizable en el template, gestiona la suscripción automáticamente y la cancela cuando el componente se destruye. Para las mutaciones (POST, PUT, DELETE) se usa `.subscribe()` con los callbacks `next`, `error` y `complete`, actualizando manualmente los signals de estado.",
+        "n1": "Puente Observable → Signal, auto-unsuscribe",
+        "n2": "Signal leíble directamente en el template"
+      },
+      "p5": {
+        "title": "Manejo de errores con catchError",
+        "lead": "`catchError` intercepta el error en el servicio antes de que llegue al componente. Distingue entre error de red (status 0: sin conexión, CORS, servidor caído) y error HTTP (status 404, 500…). En ambos casos, `throwError(() => new Error(msg))` re-emite el error para que el callback `error` del `.subscribe()` en el componente lo capture y actualice el signal de error en la UI.",
+        "n1": "Intercepta errores de red y HTTP",
+        "n2": "Sin error: datos llegan al componente",
+        "n3": "Con error: Error con mensaje legible al componente",
+        "n4": "Componente actualiza signal de error → UI muestra el mensaje"
+      },
+      "exercise": {
+        "desc": "Completa los 4 TODOs del componente para implementar el CRUD completo. El resultado en vivo hace peticiones reales a JSONPlaceholder: verás los datos en red, y las operaciones POST/PUT/DELETE devuelven respuestas reales (aunque los datos no persisten entre sesiones).",
+        "createTitle": "Crear nuevo post",
+        "placeholderTitle": "Título del post",
+        "placeholderBody": "Contenido del post",
+        "createBtn": "Crear",
+        "editBtn": "Editar",
+        "saveBtn": "Guardar",
+        "cancelBtn": "Cancelar",
+        "deleteBtn": "Eliminar",
+        "loading": "Cargando posts desde la API...",
+        "successCreate": "Post creado correctamente (simulado por JSONPlaceholder)",
+        "successUpdate": "Post actualizado correctamente (simulado por JSONPlaceholder)",
+        "successDelete": "Post eliminado correctamente (simulado por JSONPlaceholder)",
+        "apiNote": "Los datos son de"
+      }
+    },
+    "sse": {
+      "title": "Server-Sent Events (SSE)",
+      "badge": "SSE · Push unidireccional",
+      "intro": "Del polling al push real: aprende a recibir un flujo continuo de datos desde el servidor usando solo HTTP estándar, con reconexión automática del navegador y sin abrir un socket bidireccional.",
+      "theory": "`EventSource` es la API nativa del navegador para Server-Sent Events: un protocolo unidireccional (servidor → cliente) basado en HTTP estándar. A diferencia de WebSocket, que necesita un protocolo propio (ws://), SSE viaja sobre HTTP/HTTPS ordinario: el cliente envía un GET y el servidor mantiene la respuesta abierta, enviando datos en formato texto plano cuando quiere.\nEl navegador gestiona automáticamente la reconexión: si la conexión cae, reintenta sin que el código del cliente haga nada. Angular consume SSE igual que WebSocket —con `fromEvent()` de RxJS— porque `EventSource` es un `EventTarget` estándar.\nCuándo elegir SSE sobre WebSocket: cuando los datos solo fluyen del servidor al cliente (notificaciones, métricas, logs en vivo). Para comunicación bidireccional, WebSocket sigue siendo la opción correcta.",
+      "simile": "SSE es como una radio FM: la emisora (servidor) emite en continuo y tú (cliente) sintonizas y escuchas. No puedes responder por el mismo canal —eso sería un teléfono (WebSocket)— pero para recibir información en tiempo real, la radio es más sencilla, eficiente y no necesita infraestructura especial.",
+      "examples": [
+        "Dashboard de métricas del servidor (CPU, memoria, temperatura) actualizándose en vivo sin polling.",
+        "Feed de notificaciones push: el backend avisa al cliente cuando hay novedades sin que el cliente pregunte.",
+        "Log de progreso en tiempo real de un proceso largo en el servidor (importación de datos, build, deploy)."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "Abrir la conexión con EventSource",
+        "lead": "`new EventSource(url)` abre la conexión inmediatamente: el navegador envía un GET con `Accept: text/event-stream` y el servidor responde con HTTP 200 manteniendo la conexión viva. A partir de ahí, el servidor puede enviar datos cuando quiera. Solo hay una petición HTTP inicial — muy diferente del polling, donde el cliente pregunta repetidamente.",
+        "n1": "Angular Client",
+        "n2": "GET /eventos · Accept: text/event-stream",
+        "n3": "HTTP 200 · Content-Type: text/event-stream",
+        "n4": "Stream de datos unidireccional (servidor → cliente)",
+        "server": "SSE Server"
+      },
+      "p2": {
+        "title": "Integrar EventSource con Angular Signals",
+        "lead": "`EventSource` implementa `EventTarget`, la misma interfaz que `WebSocket`. Por eso `fromEvent()` funciona exactamente igual: convierte los eventos del stream en un Observable tipado. `onopen` y `onerror` son callbacks propios de `EventSource` (no se usan con `addEventListener`) y actualizan el Signal de estado para que el template reaccione.",
+        "n1": "EventSource",
+        "n2": "fromEvent<MessageEvent>(sse, 'message')",
+        "n3": "map(e => JSON.parse(e.data))",
+        "n4": "takeUntilDestroyed(destroyRef)",
+        "n5": "Signal",
+        "n6": "Template"
+      },
+      "p3": {
+        "title": "Formato del protocolo SSE",
+        "lead": "SSE es texto plano con un formato muy simple: cada campo en su propia línea (`campo: valor`), separados por una línea en blanco que marca el fin del evento. Solo `data:` es obligatorio; `event:`, `id:` y `retry:` son opcionales. El campo `id:` es especialmente útil para la reconexión: el navegador lo recuerda y lo envía como `Last-Event-ID` al reconectar, permitiendo al servidor continuar desde donde lo dejó.",
+        "f1": "campo obligatorio — el contenido del evento",
+        "f2": "tipo de evento (filtra con addEventListener)",
+        "f3": "cursor de reconexión (enviado en Last-Event-ID)",
+        "f4": "intervalo de reintento en milisegundos",
+        "f5": "línea vacía — marca el fin del evento"
+      },
+      "p4": {
+        "title": "Reconexión automática y cleanup",
+        "lead": "La reconexión automática es la principal ventaja de SSE sobre WebSocket: si la conexión cae, el navegador vuelve a intentarlo sin que el código haga nada. `EventSource` no emite evento `close` cuando se cierra desde el cliente —solo desde el servidor—, así que al desconectar manualmente hay que actualizar el Signal de estado de forma explícita. El cleanup usa el mismo patrón que WebSocket: `DestroyRef.onDestroy()` garantiza que el stream se cierra cuando Angular destruye el componente.",
+        "n1": "Componente se destruye",
+        "n2": "Observable cancelado",
+        "n3": "sse.close() — stream cerrado",
+        "n4": "Reconexión automática del browser",
+        "s0": "CONNECTING (0)",
+        "s1": "OPEN (1)",
+        "s2": "CLOSED (2)",
+        "sub0": "Handshake en curso",
+        "sub1": "Stream activo, datos fluyendo",
+        "sub2": "Cerrado (close() o error sin retry)"
+      },
+      "exercise": {
+        "desc": "Completa los 4 TODOs para implementar un monitor de temperatura en tiempo real. Antes de probar, arranca el servidor en una terminal separada: node sse-server.js",
+        "serverNote": "Servidor SSE local requerido: node sse-server.js",
+        "connectBtn": "Conectar",
+        "disconnectBtn": "Desconectar",
+        "humidity": "Humedad",
+        "history": "Historial (últimos 8 valores)",
+        "empty": "Conecta al servidor SSE para ver los datos en tiempo real.",
+        "status": {
+          "connecting": "Conectando a http://localhost:3001...",
+          "open": "Conectado · http://localhost:3001",
+          "closed": "Desconectado",
+          "error": "Error — servidor no disponible en localhost:3001"
+        }
+      }
+    },
+    "auth-token": {
+      "title": "Interceptores HTTP",
+      "badge": "Documentación",
+      "intro": "Cómo usar HttpInterceptorFn (API funcional de Angular 15+) para inyectar automáticamente un token de autenticación en cada petición HTTP y manejar errores 401 de forma centralizada.",
+      "theory": "Los interceptores HTTP son funciones que Angular ejecuta automáticamente antes de enviar cada petición y al recibir la respuesta. Permiten centralizar lógica transversal: añadir cabeceras de autenticación, registrar tiempos de respuesta, transformar errores o renovar tokens caducados, sin modificar cada servicio individualmente.\nDesde Angular 15, la API funcional es la forma recomendada: defines una `HttpInterceptorFn` y la registras con `withInterceptors([miInterceptor])` dentro de `provideHttpClient()` en `app.config.ts`. Sin clases, sin NgModules.",
+      "simile": "Un interceptor es como el control de seguridad de un aeropuerto: todas las personas (peticiones HTTP) pasan por él antes de embarcar (llegar al servidor) y al aterrizar (recibir la respuesta). El agente puede dejarlas pasar, añadirles equipaje extra (cabeceras de autorización) o redirigirlas si algo falla.",
+      "examples": [
+        "Añadir automáticamente el token JWT de sesión a todas las peticiones de la API privada.",
+        "Registrar en consola la URL y el tiempo de respuesta de cada petición para depuración.",
+        "Interceptar respuestas 401 para redirigir al login o renovar el token con refresh token."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "Sin interceptor vs con interceptor",
+        "lead": "Sin interceptor, cada servicio gestiona sus propias cabeceras. Con interceptor, la lógica se centraliza y todas las peticiones pasan automáticamente por él.",
+        "left": "Sin interceptor",
+        "right": "Con interceptor",
+        "n1": "Angular",
+        "n2": "Servidor",
+        "n3": "Angular",
+        "n4": "Interceptor",
+        "n5": "Servidor",
+        "req": "GET /api/data",
+        "reqAuth": "GET /api/data + Authorization: Bearer …"
+      },
+      "p2": {
+        "title": "Registrar el interceptor en app.config.ts",
+        "lead": "El interceptor se pasa como función al array de `withInterceptors()`. Angular lo encadena automáticamente con todos los interceptores registrados y los ejecuta en orden.",
+        "n1": "bootstrapApplication(App, appConfig)",
+        "n2": "provideHttpClient(withInterceptors([...]))",
+        "n3": "authInterceptor",
+        "n4": "logInterceptor",
+        "n5": "HttpClient",
+        "n6": "Servidor",
+        "note": "Los interceptores se ejecutan en el orden en que se declaran en el array"
+      },
+      "p3": {
+        "title": "Clonar la request y añadir el header",
+        "lead": "Las peticiones HTTP son inmutables en Angular. Para modificarlas hay que clonarlas con `req.clone()` y pasar el nuevo objeto al `next()` handler.",
+        "original": "Request original",
+        "cloned": "Request clonada",
+        "url": "GET /api/usuarios",
+        "noHeader": "sin Authorization",
+        "withHeader": "Authorization: Bearer eyJ…",
+        "immutable": "inmutable",
+        "clone": "req.clone(\\{ setHeaders: \\{ … \\} \\})"
+      },
+      "p4": {
+        "title": "Manejar errores 401 con catchError",
+        "lead": "Con `catchError` en el pipe de RxJS, el interceptor captura las respuestas de error antes de que lleguen al servicio. Ideal para redirigir al login cuando caduca la sesión.",
+        "n1": "Respuesta del servidor",
+        "n2": "¿Status 401?",
+        "n3": "Limpiar token",
+        "n4": "Redirigir a /login",
+        "n5": "Propagar error",
+        "yes": "Sí",
+        "no": "No"
+      },
+      "exercise": {
+        "desc": "Completa los 3 TODOs para implementar el interceptor de autenticación con inyección de token y manejo de 401.",
+        "tokenLabel": "Token actual",
+        "noToken": "Sin token",
+        "setToken": "Establecer token",
+        "clearToken": "Limpiar token",
+        "makeRequest": "Simular petición",
+        "simulate401": "Forzar respuesta 401",
+        "requestLabel": "Petición enviada",
+        "responseLabel": "Respuesta recibida",
+        "noAuthHeader": "Sin cabecera Authorization",
+        "interceptorBadge": "interceptor activo",
+        "statusOk": "200 OK — datos recibidos",
+        "status401": "401 Unauthorized",
+        "tokenCleared": "→ Interceptor: token limpiado",
+        "redirected": "→ Interceptor: redirigido a /login",
+        "idle": "Pulsa «Simular petición» para ver el interceptor en acción.",
+        "hint": "Sin token la petición sale sin Authorization. Con 401, el interceptor limpia el token y simula la redirección."
+      }
+    },
+    "resolve": {
+      "title": "ResolveFn",
+      "theory": "ResolveFn es una función que el router ejecuta antes de activar una ruta. Recibe el snapshot de la ruta (parámetros, query params, datos estáticos) y devuelve un valor, una Promise o un Observable. El router espera a que el Observable complete antes de renderizar el componente destino; el dato resuelto queda disponible en `route.snapshot.data['clave']` sin que el componente gestione ningún estado de carga.\nDesde Angular 15, `ResolveFn` reemplaza la interfaz de clase `Resolve<T>`: es una función pura sin boilerplate, compatible con `inject()` directamente en el cuerpo de la función.\nEl caso de uso canónico es precargar los datos de un recurso (perfil, artículo, producto) antes de mostrar la vista de detalle, garantizando que el componente se crea con todos sus datos disponibles.",
+      "simile": "Un ResolveFn es como el maitre que comprueba la reserva antes de acompañarte a la mesa: no entras al restaurante (el componente) hasta que sabe que tu mesa (los datos) ya está preparada. Si la reserva no existe, te redirige a otra sala sin que hayas llegado a sentarte.",
+      "examples": [
+        "Precargar el perfil de usuario antes de renderizar la vista de detalle.",
+        "Resolver los datos de un artículo antes de activar la ruta del editor.",
+        "Obtener los permisos de rol antes de mostrar la pantalla de administración."
+      ]
+    },
+    "signals-era": {
+      "title": "Nuevo ciclo de vida era Signals",
+      "theory": "Antes de Signals, el ciclo de vida del componente era el único mecanismo para reaccionar a cambios: `ngOnChanges` detectaba mutaciones en `@Input`, `ngAfterViewInit` indicaba que el DOM estaba listo, y `ngOnDestroy` limpiaba recursos.\nCon Signals, la reactividad es declarativa y automática: `input()` ya ES un Signal y notifica cada cambio sin ningún hook; `viewChild()` devuelve un Signal que se actualiza cuando el elemento aparece en el DOM; `DestroyRef` reemplaza `ngOnDestroy` con un callback más flexible e inyectable en cualquier contexto.\nEl resultado es menos boilerplate, menos hooks que recordar y una reactividad más predecible: el dato siempre es consistente porque el framework lo rastrea, no el programador.",
+      "simile": "El ciclo de vida clásico era como vivir con alarmas manuales: ponías el despertador para `ngOnInit`, otro para `ngOnChanges`, otro para `ngOnDestroy`... y tenías que acordarte de cancelarlos todos antes de salir. Con Signals, es como una casa domótica: las luces se encienden y apagan solas al detectar movimiento. No hay alarmas que gestionar; el sistema reacciona.",
+      "examples": [
+        "Recalcular un precio final automáticamente cada vez que cambia el descuento, sin ngOnChanges.",
+        "Registrar en consola un cambio de configuración reactivamente con effect(), sin ngOnInit.",
+        "Cancelar un timer interno cuando el componente se destruye con DestroyRef, sin ngOnDestroy."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "ngOnChanges → input() Signal + computed() / effect()",
+        "lead": "`ngOnChanges` se disparaba cuando un `@Input` decorado cambiaba de valor. Con `input()`, el valor ya ES un Signal desde el primer momento: puedes derivar con `computed()` o reaccionar con `effect()`. No necesitas implementar ninguna interfaz ni comparar `SimpleChanges`; la reactividad es automática en cuanto el padre cambia el binding.",
+        "before": "Antes — ngOnChanges",
+        "after": "Después — input() Signal",
+        "n1": "Padre cambia el @Input",
+        "n2": "Angular detecta el cambio",
+        "n3": "ngOnChanges({ precio: SimpleChange })",
+        "n4": "Lógica manual + comparación",
+        "n1b": "Padre cambia el binding",
+        "n2b": "input() Signal se actualiza",
+        "n3b": "computed() / effect() reaccionan solos",
+        "n4b": "Sin hook, sin SimpleChanges"
+      },
+      "p2": {
+        "title": "ngOnInit → constructor + inject() + afterNextRender()",
+        "lead": "`ngOnInit` era el lugar seguro de inicialización porque `@Input` no estaba disponible en el constructor. Con `input()` Signal y `inject()`, los servicios y los inputs se declaran como campos de clase y están disponibles desde la construcción. Para código que necesita el DOM real, `afterNextRender()` —nuevo en Angular 17— es más preciso que `ngOnInit`: se ejecuta exactamente una vez tras el primer render real.",
+        "n1": "Constructor — inject() disponible, input() Signal listo",
+        "n2": "ngOnInit (primera detección de cambios completa)",
+        "n3": "afterNextRender() — primer render real en el DOM"
+      },
+      "p3": {
+        "title": "ngOnDestroy → DestroyRef.onDestroy()",
+        "lead": "`ngOnDestroy` requería implementar la interfaz `OnDestroy` en la clase. `DestroyRef` —inyectado con `inject(DestroyRef)`— permite registrar callbacks de cleanup en cualquier injection context: dentro de la clase, en una función utilitaria, en un servicio. Sin interfaces, sin boilerplate. El resultado es idéntico: el callback se ejecuta cuando Angular destruye el componente.",
+        "n1": "Componente se destruye",
+        "n2": "Angular ejecuta los callbacks registrados en DestroyRef",
+        "n3": "Recursos liberados (timers, subscripciones, referencias externas)"
+      },
+      "p4": {
+        "title": "ngAfterViewInit → viewChild() Signal + afterNextRender()",
+        "lead": "`ngAfterViewInit` garantizaba que los elementos del template existían en el DOM. Con `viewChild()`, la referencia al elemento es un Signal: `undefined` antes del primer render, el `ElementRef` real después. Para ejecutar código que requiere el DOM (focus, librerías externas, mediciones), `afterNextRender()` es el reemplazo directo y más explícito.",
+        "n1": "Primer render completado",
+        "n2": "viewChild() Signal pasa de undefined → ElementRef",
+        "n3": "afterNextRender() se ejecuta una sola vez",
+        "n4": "DOM disponible — focus, librerías externas, mediciones"
+      },
+      "compareTitle": "Tabla comparativa: hooks clásicos vs era Signals",
+      "compare": {
+        "hookCol": "Hook clásico",
+        "modernCol": "Equivalente era Signals",
+        "statusCol": "Estado",
+        "obsolete": "Obsoleto en práctica",
+        "reduced": "Reducido",
+        "replaced": "Suplantado"
+      },
+      "exercise": {
+        "title": "Ejercicio: PrecioDisplay sin ngOnChanges",
+        "desc": "Completa los 4 TODOs para que el componente hijo reaccione a cambios de precio y descuento usando el paradigma Signals, sin implementar ningún hook del ciclo de vida.",
+        "precioLabel": "Precio base (€)",
+        "descuentoLabel": "Descuento (%)",
+        "precioFinalLabel": "Precio final",
+        "ahorroLabel": "Ahorro",
+        "logLabel": "Log de cambios (effect)",
+        "logEmpty": "Ningún cambio aún. Modifica el precio o el descuento.",
+        "destroyBtn": "Simular destrucción del componente",
+        "destroyLog": "→ DestroyRef: componente destruido, timer cancelado.",
+        "hint": "Observa cómo el precio final se recalcula solo con computed(), el effect() registra cada cambio y DestroyRef limpia sin ngOnDestroy."
+      }
+    },
+    "control-value-accessor": {
+      "title": "ControlValueAccessor",
+      "theory": "ControlValueAccessor (CVA) es el contrato que conecta un FormControl con un componente de UI personalizado. Implementando sus 4 métodos —writeValue, registerOnChange, registerOnTouched y setDisabledState— tu componente se enlaza con formControlName o ngModel exactamente igual que un <input> nativo. El FormControl no sabe (ni necesita saber) cómo se pinta el control: el CVA traduce en ambas direcciones, del form a la UI y de la UI al form.",
+      "simile": "Un CVA es como un adaptador de enchufe universal: la red eléctrica (el FormControl) entrega siempre la corriente de la misma forma, pero cada aparato (tu componente) tiene clavijas distintas. El adaptador traduce en los dos sentidos —la corriente entra al aparato (writeValue) y el aparato devuelve señal a la red (onChange)— sin que ninguno tenga que conocer al otro.",
+      "examples": [
+        "Un checkbox de 3 estados (true / false / null) para filtros de búsqueda.",
+        "Un selector de valoración con estrellas integrado en un formulario reactivo.",
+        "Un input de teléfono con máscara y prefijo de país que expone un único valor limpio."
+      ],
+      "exercise": {
+        "formTitle": "Filtros de búsqueda",
+        "enStock": "Solo productos en stock",
+        "envioGratis": "Con envío gratis",
+        "conDescuento": "Con descuento",
+        "legend": "Haz clic en cada checkbox para ciclar: null (—) → true (✓) → false (vacío).",
+        "resetBtn": "Limpiar filtros",
+        "disableBtn": "Deshabilitar form",
+        "enableBtn": "Habilitar form",
+        "payloadLabel": "Payload que se enviaría",
+        "hint": "Los filtros a null se omiten del payload: ese estado significa \"indiferente, no filtrar por este campo\". Prueba también Limpiar (reset → writeValue) y Deshabilitar (setDisabledState)."
+      }
     }
   },
   "demo": {

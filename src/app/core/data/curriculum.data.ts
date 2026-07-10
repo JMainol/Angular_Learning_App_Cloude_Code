@@ -36,6 +36,7 @@ export const CURRICULUM: Block[] = [
       { code: '3.4', title: 'Computed', path: 'signals/computed' },
       { code: '3.5', title: 'Effect', path: 'signals/effect' },
       { code: '3.6', title: 'ViewChild', path: 'signals/viewchild' },
+      { code: '3.7', title: 'toSignal', path: 'signals/to-signal' },
     ],
   },
   {
@@ -71,5 +72,73 @@ export const CURRICULUM: Block[] = [
     code: '07',
     title: 'Directivas de atributo',
     sections: [{ code: '7.1', title: 'Control de decimales', path: 'attribute-directives/decimales' }],
+  },
+  {
+    id: 'services',
+    code: '08',
+    title: 'Services',
+    sections: [{ code: '8.1', title: 'Subject vs Signal', path: 'services/subject-vs-signal' }],
+  },
+  {
+    id: 'observables',
+    code: '09',
+    title: 'Observables',
+    sections: [
+      { code: '9.1', title: 'Desubscribirse', path: 'observables/desubscribirse' },
+      {
+        code: 'flattening',
+        title: 'Operadores de Aplanamiento RxJS',
+        children: [
+          { code: '9.2', title: 'switchMap', path: 'observables/switch-map' },
+          { code: '9.3', title: 'exhaustMap', path: 'observables/exhaust-map' },
+          { code: '9.4', title: 'mergeMap', path: 'observables/merge-map' },
+          { code: '9.5', title: 'concatMap', path: 'observables/concat-map' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'di',
+    code: '10',
+    title: 'Inyección de Dependencias',
+    sections: [
+      { code: '10.1', title: 'Introducción', path: 'di/intro' },
+      { code: '10.2', title: 'InjectionToken', path: 'di/injection-token' },
+    ],
+  },
+  {
+    id: 'server-protocols',
+    code: '11',
+    title: 'Protocolos comunicación Angular - Servidor',
+    sections: [
+      { code: '11.1', title: 'HTTP (REST API)', path: 'server-protocols/http' },
+      { code: '11.2', title: 'WebSockets (WS / WSS)', path: 'server-protocols/websockets' },
+      { code: '11.3', title: 'Server-Sent Events (SSE)', path: 'server-protocols/sse' },
+    ],
+  },
+  {
+    id: 'interceptors',
+    code: '12',
+    title: 'Interceptores y ResolveFn',
+    sections: [
+      { code: '12.1', title: 'Interceptores', path: 'interceptors/auth-token' },
+      { code: '12.2', title: 'ResolveFn', path: 'interceptors/resolve' },
+    ],
+  },
+  {
+    id: 'lifecycle',
+    code: '13',
+    title: 'Ciclo de Vida',
+    sections: [
+      { code: '13.1', title: 'Nuevo ciclo de vida era Signals', path: 'lifecycle/signals-era' },
+    ],
+  },
+  {
+    id: 'forms',
+    code: '14',
+    title: 'Formularios',
+    sections: [
+      { code: '14.1', title: 'ControlValueAccessor', path: 'forms/control-value-accessor' },
+    ],
   },
 ];

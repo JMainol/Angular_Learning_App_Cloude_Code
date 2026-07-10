@@ -9,183 +9,207 @@
     <app-doc-link [href]="docUrl" />
   </header>
 
-  <!-- ===================== FLUJO 1 · EL ARRANQUE ===================== -->
-  <article class="flow">
-    <span class="flow__label">{{ 'sections.standalone.flowA.label' | translate }}</span>
-    <h2 class="flow__heading">{{ 'sections.standalone.flowA.heading' | translate }}</h2>
-    <p class="flow__lead">{{ 'sections.standalone.flowA.lead' | translate }}</p>
-
-    <div class="diagram" role="img"
-         [attr.aria-label]="'sections.standalone.flowA.heading' | translate">
-      <div class="node">
-        <span class="node__title">index.html · &lt;app-root&gt;</span>
-        <span class="node__cap">{{ 'sections.standalone.flowA.n1' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node node--accent">
-        <span class="node__title node__title--sm">main.ts · bootstrapApplication(App, appConfig)</span>
-        <span class="node__cap">{{ 'sections.standalone.flowA.n2' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node">
-        <span class="node__title">App · componente standalone</span>
-        <span class="node__cap">{{ 'sections.standalone.flowA.n3' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node">
-        <span class="node__title">appConfig · ApplicationConfig</span>
-        <span class="node__cap">{{ 'sections.standalone.flowA.n4' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node node--out">
-        <span class="node__title">UI</span>
-        <span class="node__cap">{{ 'sections.standalone.flowA.n5' | translate }}</span>
-      </div>
-    </div>
-
-    <ol class="steps">
-      @for (s of ('sections.standalone.flowA.steps' | translate); track $index) {
-        <li class="steps__item">
-          <span class="steps__num">{{ $index + 1 }}</span>
-          <span>{{ s }}</span>
-        </li>
-      }
-    </ol>
-
-    <app-code-block [code]="codeMain" language="TypeScript" filename="main.ts" />
+  <!-- 1 · TEORÍA -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.standalone.theory' | translate }}</p>
   </article>
 
-  <!-- ===================== FLUJO 2 · EL COMPONENTE ===================== -->
-  <article class="flow">
-    <span class="flow__label">{{ 'sections.standalone.flowB.label' | translate }}</span>
-    <h2 class="flow__heading">{{ 'sections.standalone.flowB.heading' | translate }}</h2>
-    <p class="flow__lead">{{ 'sections.standalone.flowB.lead' | translate }}</p>
-
-    <!-- Diagrama "anatomía": una sola tarjeta con los campos del decorador.
-         No usamos flechas porque no es una secuencia, sino las partes de un todo. -->
-    <div class="diagram">
-      <div class="node node--accent node--card">
-        <span class="node__title">{{ nodeDecorator }}</span>
-        <span class="node__line">selector: 'app-root'</span>
-        <span class="node__line node__line--hot">imports: [RouterOutlet, Sidebar, Topbar]</span>
-        <span class="node__line">changeDetection: OnPush</span>
-        <span class="node__line">templateUrl / styleUrl</span>
-      </div>
-      <span class="diagram__cap">{{ 'sections.standalone.flowB.cap' | translate }}</span>
-    </div>
-
-    <ol class="steps">
-      @for (s of ('sections.standalone.flowB.steps' | translate); track $index) {
-        <li class="steps__item">
-          <span class="steps__num">{{ $index + 1 }}</span>
-          <span>{{ s }}</span>
-        </li>
-      }
-    </ol>
-
-    <app-code-block [code]="codeApp" language="TypeScript" filename="app.ts" />
+  <!-- 2 · SÍMIL -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.standalone.simile' | translate }}</p>
   </article>
 
-  <!-- ===================== FLUJO 3 · LOS PROVEEDORES ===================== -->
-  <article class="flow">
-    <span class="flow__label">{{ 'sections.standalone.flowC.label' | translate }}</span>
-    <h2 class="flow__heading">{{ 'sections.standalone.flowC.heading' | translate }}</h2>
-    <p class="flow__lead">{{ 'sections.standalone.flowC.lead' | translate }}</p>
-
-    <div class="diagram" role="img"
-         [attr.aria-label]="'sections.standalone.flowC.heading' | translate">
-      <div class="node node--accent">
-        <span class="node__title node__title--sm">appConfig.providers: [...]</span>
-        <span class="node__cap">{{ 'sections.standalone.flowC.c1' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <!-- Las tres funciones provide* que usa esta app -->
-      <div class="branch branch--three">
-        <div class="node">
-          <span class="node__title node__title--sm">provideRouter()</span>
-          <span class="node__cap">{{ 'sections.standalone.flowC.cRouter' | translate }}</span>
-        </div>
-        <div class="node">
-          <span class="node__title node__title--sm">provideHttpClient()</span>
-          <span class="node__cap">{{ 'sections.standalone.flowC.cHttp' | translate }}</span>
-        </div>
-        <div class="node">
-          <span class="node__title node__title--sm">provideTranslateService()</span>
-          <span class="node__cap">{{ 'sections.standalone.flowC.cI18n' | translate }}</span>
-        </div>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node">
-        <span class="node__title">Inyector raíz</span>
-        <span class="node__cap">{{ 'sections.standalone.flowC.c2' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node node--out">
-        <span class="node__title">inject(Servicio)</span>
-        <span class="node__cap">{{ 'sections.standalone.flowC.c3' | translate }}</span>
-      </div>
-    </div>
-
-    <ol class="steps">
-      @for (s of ('sections.standalone.flowC.steps' | translate); track $index) {
-        <li class="steps__item">
-          <span class="steps__num">{{ $index + 1 }}</span>
-          <span>{{ s }}</span>
+  <!-- 3 · EJEMPLOS DE USO COMÚN -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.standalone.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
         </li>
       }
     </ol>
-
-    <app-code-block [code]="codeConfig" language="TypeScript" filename="app.config.ts" />
   </article>
 
-  <!-- ===================== FLUJO 4 · LAS RUTAS ===================== -->
-  <article class="flow">
-    <span class="flow__label">{{ 'sections.standalone.flowD.label' | translate }}</span>
-    <h2 class="flow__heading">{{ 'sections.standalone.flowD.heading' | translate }}</h2>
-    <p class="flow__lead">{{ 'sections.standalone.flowD.lead' | translate }}</p>
-
-    <div class="diagram" role="img"
-         [attr.aria-label]="'sections.standalone.flowD.heading' | translate">
-      <div class="node node--accent">
-        <span class="node__title node__title--sm">URL · /config/standalone</span>
-        <span class="node__cap">{{ 'sections.standalone.flowD.d1' | translate }}</span>
+  <!-- ===== DIAGRAMA 1 / PASO 1 · El arranque sin NgModules ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.standalone.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img"
+             [attr.aria-label]="'sections.standalone.p1.title' | translate">
+          <div class="node">
+            <span class="node__title">index.html · &lt;app-root&gt;</span>
+            <span class="node__cap">{{ 'sections.standalone.p1.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">main.ts · bootstrapApplication(App, appConfig)</span>
+            <span class="node__cap">{{ 'sections.standalone.p1.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title">App · componente standalone</span>
+            <span class="node__cap">{{ 'sections.standalone.p1.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title">appConfig · ApplicationConfig</span>
+            <span class="node__cap">{{ 'sections.standalone.p1.n4' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title">UI</span>
+            <span class="node__cap">{{ 'sections.standalone.p1.n5' | translate }}</span>
+          </div>
+        </div>
       </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node">
-        <span class="node__title">Router</span>
-        <span class="node__cap">{{ 'sections.standalone.flowD.d2' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node">
-        <span class="node__title node__title--sm">loadComponent: () =&gt; import(…)</span>
-        <span class="node__cap">{{ 'sections.standalone.flowD.d3' | translate }}</span>
-      </div>
-      <div class="arrow" aria-hidden="true"></div>
-
-      <div class="node node--out">
-        <span class="node__title">&lt;router-outlet&gt;</span>
-        <span class="node__cap">{{ 'sections.standalone.flowD.d4' | translate }}</span>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.standalone.stepWord' | translate }} 1 · {{ 'sections.standalone.p1.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.standalone.p1.lead' | translate }}</p>
+        <ol class="steps">
+          @for (s of ('sections.standalone.p1.steps' | translate); track $index) {
+            <li class="steps__item">
+              <span class="steps__num">{{ $index + 1 }}</span>
+              <span>{{ s }}</span>
+            </li>
+          }
+        </ol>
+        <app-code-block [code]="codeMain" language="TypeScript" filename="main.ts" />
       </div>
     </div>
+  </article>
 
-    <ol class="steps">
-      @for (s of ('sections.standalone.flowD.steps' | translate); track $index) {
-        <li class="steps__item">
-          <span class="steps__num">{{ $index + 1 }}</span>
-          <span>{{ s }}</span>
-        </li>
-      }
-    </ol>
+  <!-- ===== DIAGRAMA 2 / PASO 2 · Anatomía de un componente standalone ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.standalone.diagramWord' | translate }} 2</span>
+        <div class="diagram">
+          <div class="node node--accent node--card">
+            <span class="node__title">{{ nodeDecorator }}</span>
+            <span class="node__line">selector: 'app-root'</span>
+            <span class="node__line node__line--hot">imports: [RouterOutlet, Sidebar, Topbar]</span>
+            <span class="node__line">changeDetection: OnPush</span>
+            <span class="node__line">templateUrl / styleUrl</span>
+          </div>
+          <span class="diagram__cap">{{ 'sections.standalone.p2.cap' | translate }}</span>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.standalone.stepWord' | translate }} 2 · {{ 'sections.standalone.p2.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.standalone.p2.lead' | translate }}</p>
+        <ol class="steps">
+          @for (s of ('sections.standalone.p2.steps' | translate); track $index) {
+            <li class="steps__item">
+              <span class="steps__num">{{ $index + 1 }}</span>
+              <span>{{ s }}</span>
+            </li>
+          }
+        </ol>
+        <app-code-block [code]="codeApp" language="TypeScript" filename="app.ts" />
+      </div>
+    </div>
+  </article>
 
-    <app-code-block [code]="codeRoutes" language="TypeScript" filename="app.routes.ts" />
+  <!-- ===== DIAGRAMA 3 / PASO 3 · Servicios globales con provide* ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.standalone.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img"
+             [attr.aria-label]="'sections.standalone.p3.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">appConfig.providers: [...]</span>
+            <span class="node__cap">{{ 'sections.standalone.p3.c1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="branch branch--three">
+            <div class="node">
+              <span class="node__title node__title--sm">provideRouter()</span>
+              <span class="node__cap">{{ 'sections.standalone.p3.cRouter' | translate }}</span>
+            </div>
+            <div class="node">
+              <span class="node__title node__title--sm">provideHttpClient()</span>
+              <span class="node__cap">{{ 'sections.standalone.p3.cHttp' | translate }}</span>
+            </div>
+            <div class="node">
+              <span class="node__title node__title--sm">provideTranslateService()</span>
+              <span class="node__cap">{{ 'sections.standalone.p3.cI18n' | translate }}</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title">Inyector raíz</span>
+            <span class="node__cap">{{ 'sections.standalone.p3.c2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title">inject(Servicio)</span>
+            <span class="node__cap">{{ 'sections.standalone.p3.c3' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.standalone.stepWord' | translate }} 3 · {{ 'sections.standalone.p3.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.standalone.p3.lead' | translate }}</p>
+        <ol class="steps">
+          @for (s of ('sections.standalone.p3.steps' | translate); track $index) {
+            <li class="steps__item">
+              <span class="steps__num">{{ $index + 1 }}</span>
+              <span>{{ s }}</span>
+            </li>
+          }
+        </ol>
+        <app-code-block [code]="codeConfig" language="TypeScript" filename="app.config.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== DIAGRAMA 4 / PASO 4 · Las rutas con carga diferida ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.standalone.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img"
+             [attr.aria-label]="'sections.standalone.p4.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">URL · /config/standalone</span>
+            <span class="node__cap">{{ 'sections.standalone.p4.d1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title">Router</span>
+            <span class="node__cap">{{ 'sections.standalone.p4.d2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">loadComponent: () =&gt; import(…)</span>
+            <span class="node__cap">{{ 'sections.standalone.p4.d3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title">&lt;router-outlet&gt;</span>
+            <span class="node__cap">{{ 'sections.standalone.p4.d4' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.standalone.stepWord' | translate }} 4 · {{ 'sections.standalone.p4.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.standalone.p4.lead' | translate }}</p>
+        <ol class="steps">
+          @for (s of ('sections.standalone.p4.steps' | translate); track $index) {
+            <li class="steps__item">
+              <span class="steps__num">{{ $index + 1 }}</span>
+              <span>{{ s }}</span>
+            </li>
+          }
+        </ol>
+        <app-code-block [code]="codeRoutes" language="TypeScript" filename="app.routes.ts" />
+      </div>
+    </div>
   </article>
 </section>

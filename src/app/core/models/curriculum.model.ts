@@ -18,6 +18,11 @@ export interface Section {
    * `undefined` => la sección aún no está implementada (se muestra como "próximamente").
    */
   path?: string;
+  /**
+   * Secciones hijas. Cuando existe (y `path` es undefined), este ítem actúa como
+   * sub-grupo colapsable dentro del bloque, sin navegar a ninguna ruta propia.
+   */
+  children?: Section[];
 }
 
 /** Un bloque temático que agrupa varias secciones (comportamiento acordeón). */

@@ -1,6 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -17,8 +17,9 @@ export const appConfig: ApplicationConfig = {
     // Es aditivo: no afecta a las rutas que no declaran inputs con esos nombres.
     provideRouter(routes, withComponentInputBinding()),
 
-    // HttpClient: necesario para que el loader de ngx-translate pida los JSON.
-    provideHttpClient(),
+    // HttpClient con withFetch(): usa la Fetch API nativa en lugar de XHR.
+    // Más eficiente, compatible con Angular SSR y con el estándar web futuro.
+    provideHttpClient(withFetch()),
 
     // ngx-translate (sección 5.1):
     // - provideTranslateHttpLoader carga los textos desde archivos JSON. Con

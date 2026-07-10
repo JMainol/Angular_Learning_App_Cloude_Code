@@ -1,0 +1,19 @@
+<app-section-shell
+  code="12.2"
+  [title]="'sections.resolve.title' | translate"
+  [theory]="'sections.resolve.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.resolve.simile' | translate"
+  [examples]="'sections.resolve.examples' | translate"
+>
+  <!-- Código del ejercicio con los 3 TODOs. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="perfil.resolver.ts"
+  />
+
+  <!-- Ejercicio en vivo: directorio de perfiles con detalle pre-cargado. -->
+  <app-resolve-exercise exercise-result />
+</app-section-shell>

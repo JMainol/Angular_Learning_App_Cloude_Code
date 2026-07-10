@@ -1,0 +1,77 @@
+<div class="panel">
+
+  <!-- Botones para añadir a la cola -->
+  <div class="botones">
+    <span class="botones__label">Añadir userId a la cola:</span>
+    <div class="botones__fila">
+      @for (id of userIdsDisponibles; track id) {
+        <button class="btn-anadir" (click)="onAnadirACola(id)">
+          + Usuario #{{ id }}
+        </button>
+      }
+      @if (procesados().length > 0 || cola().length > 0) {
+        <button class="btn-reset" (click)="onReset()">Reiniciar</button>
+      }
+    </div>
+  </div>
+
+  <!-- Cola visual -->
+  @if (cola().length > 0 || procesando() !== null) {
+    <div class="cola">
+      <span class="cola__label">Cola de peticiones</span>
+      <div class="cola__items">
+        @if (procesando() !== null) {
+          <div class="cola__item cola__item--activo">
+            <span class="cola__spinner"></span>
+            Usuario #{{ procesando() }}
+            <span class="cola__tag">procesando</span>
+          </div>
+        }
+        @for (userId of cola(); track $index) {
+          <div class="cola__item cola__item--espera">
+            Usuario #{{ userId }}
+            <span class="cola__tag">en espera</span>
+          </div>
+        }
+      </div>
+      @if (cola().length > 0) {
+        <p class="cola__hint">
+          Resuelve el TODO 2 para que concatMap procese la cola de forma secuencial.
+        </p>
+      }
+    </div>
+  }
+
+  <!-- Resultados procesados en orden -->
+  @if (procesados().length > 0) {
+    <div class="procesados">
+      <span class="procesados__label">
+        Procesados en orden · {{ procesados().length }} completados
+      </span>
+      @for (res of procesados(); track res.userId; let i = $index) {
+        <div class="resultado-card">
+          <div class="resultado-card__header">
+            <span class="resultado-card__orden">#{{ i + 1 }}</span>
+            <span class="resultado-card__usuario">Usuario #{{ res.userId }}</span>
+            <span class="resultado-card__count">{{ res.posts.length }} posts</span>
+          </div>
+          <ul class="resultado-card__posts">
+            @for (post of res.posts; track post.id) {
+              <li class="resultado-card__post">
+                <span class="resultado-card__id">#{{ post.id }}</span>
+                {{ post.title }}
+              </li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  } @else if (cola().length === 0 && procesando() === null) {
+    <div class="vacio">
+      <p>Añade userIds a la cola con los botones de arriba.<br />
+        <span>concatMap los procesará uno a uno, en orden de inserción.</span>
+      </p>
+    </div>
+  }
+
+</div>
