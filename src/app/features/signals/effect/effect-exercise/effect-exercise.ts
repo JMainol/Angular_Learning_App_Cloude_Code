@@ -37,8 +37,12 @@ export class EffectExercise {
       // Ejemplo resuelto: efecto secundario hacia la consola del navegador.
       console.log('[effect] contador =', valor);
 
+      this.registro.update((lineas) => [`contador → ${valor}`, ...lineas])
+
       // TODO 1: añade una línea al registro visible. Pista:
       //   this.registro.update((lineas) => [`contador → ${valor}`, ...lineas]);
+
+      localStorage.setItem('contador', String(valor));
 
       // TODO 2: persiste el valor en localStorage. Pista:
       //   localStorage.setItem('contador', String(valor));
