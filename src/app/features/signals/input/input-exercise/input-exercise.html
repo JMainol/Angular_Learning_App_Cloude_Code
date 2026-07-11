@@ -3,7 +3,9 @@
        [nombre]; los TODO te piden enlazar también rol y online. -->
   <app-profile-card
     [nombre]="usuario().nombre"
-  />
+    [rol]="usuario().rol"
+    [online]="usuario().online"
+  ></app-profile-card>
   <!--
     TODO: añade los enlaces que faltan (después de declarar los inputs en
     profile-card.ts):

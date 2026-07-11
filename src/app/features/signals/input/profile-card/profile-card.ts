@@ -23,11 +23,15 @@ export class ProfileCard {
   /** Ejemplo resuelto: input obligatorio. El padre tiene que enlazar [nombre]. */
   readonly nombre = input.required<string>();
 
+  readonly rol = input('invitado');
+
   /**
    * TODO 1: declara un input OPCIONAL `rol` con valor por defecto 'invitado'.
    *   readonly rol = input('invitado');
    * Luego muéstralo en profile-card.html.
    */
+
+  readonly online = input(false);
 
   /**
    * TODO 2: declara un input OPCIONAL `online` de tipo boolean (por defecto false).

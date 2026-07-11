@@ -4,9 +4,13 @@
   <div class="card__body">
     <h3 class="card__name">{{ nombre() }}</h3>
 
+    <span class="card__role">{{ rol() }}</span>
     <!-- TODO 1: muestra el rol aquí, p. ej.:
          <span class="card__role">{{ rol() }}</span> -->
 
+    @if (online()) {
+      <span class="card__status" [class.is-online]="online()">Online</span>
+    }
     <!-- TODO 2: muestra el estado de conexión usando @if (online()):
          <span class="card__status" [class.is-online]="online()">…</span> -->
   </div>
