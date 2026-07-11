@@ -23,11 +23,32 @@
         </div>
       }
 
+      @case ('enviado') {
+        <div class="status status--enviado">
+          <span class="status__icon">🚚</span>
+          <p class="status__text">Tu pedido ha sido enviado.</p>
+        </div>
+      }
+
       <!-- TODO 1: añade un @case ('enviado') que muestre que el pedido va en camino
            (usa la clase .status--enviado y el icono que prefieras, p. ej. 🚚). -->
+      
+      @case ('entregado') {
+        <div class="status status--entregado">
+          <span class="status__icon">✅</span>
+          <p class="status__text">Tu pedido ha sido entregado.</p>
+        </div>
+      }
 
       <!-- TODO 2: añade un @case ('entregado') con un mensaje de éxito
            (clase .status--entregado, icono ✅). -->
+
+      @default {
+        <div class="status status--default">
+          <span class="status__icon">❌</span>
+          <p class="status__text">Tu pedido ha sido cancelado.</p>
+        </div>
+      }
 
       <!-- TODO 3: añade un @default que cubra cualquier otro caso (p. ej.
            'cancelado'): un mensaje neutro con la clase .status--default. -->
