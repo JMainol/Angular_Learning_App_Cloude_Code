@@ -22,11 +22,21 @@
       <strong>{{ subtotal() }} €</strong>
     </div>
 
+    <div class="cart__row">
+      <span>IVA (21%)</span>
+      <strong>{{ iva() }} €</strong>
+    </div>
+
     <!-- TODO 1: muestra el IVA (21%) usando el computed `iva`:
          <div class="cart__row">
            <span>IVA (21%)</span>
            <strong>{{ iva() }} €</strong>
          </div> -->
+
+    <div class="cart__row" cart__row--total>
+      <span>Total</span>
+      <strong>{{ total() }} €</strong>
+    </div>
 
     <!-- TODO 2: muestra el total usando el computed `total` (resáltalo):
          <div class="cart__row cart__row--total">

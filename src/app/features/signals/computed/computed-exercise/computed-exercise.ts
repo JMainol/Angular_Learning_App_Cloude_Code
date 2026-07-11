@@ -34,11 +34,15 @@ export class ComputedExercise {
    */
   protected readonly subtotal = computed(() => this.precioUnitario() * this.cantidad());
 
+  protected readonly iva = computed(() => this.subtotal() * this.IVA);
+
   /**
    * TODO 1: define `iva` como un computed que sea el subtotal por this.IVA.
    *   protected readonly iva = computed(() => this.subtotal() * this.IVA);
    * Fíjate en que un computed puede depender de OTRO computed (subtotal).
    */
+
+  protected readonly total = computed(() => this.subtotal() + this.iva());
 
   /**
    * TODO 2: define `total` como un computed que sume subtotal + iva.
