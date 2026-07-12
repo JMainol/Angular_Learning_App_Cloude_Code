@@ -1,0 +1,27 @@
+<app-section-shell
+  code="16.2"
+  [title]="'sections.ng-content.title' | translate"
+  [theory]="'sections.ng-content.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.ng-content.simile' | translate"
+  [examples]="'sections.ng-content.examples' | translate"
+>
+  <!-- Código 1: la tarjeta define sus 4 slots (TODOs 1-4). -->
+  <app-code-block
+    exercise-code
+    [code]="codeTarjeta"
+    language="HTML"
+    filename="tarjeta-perfil.html"
+  />
+
+  <!-- Código 2: el padre proyecta — ngProjectAs y fallback (TODO 5). -->
+  <app-code-block
+    exercise-code
+    [code]="codeUso"
+    language="HTML"
+    filename="projection-exercise.html"
+  />
+
+  <!-- Ejercicio en vivo: las tres tarjetas, en la mitad derecha. -->
+  <app-projection-exercise exercise-result />
+</app-section-shell>

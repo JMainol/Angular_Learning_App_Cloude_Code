@@ -39,7 +39,9 @@
     "server-protocols": "Protocolos comunicación Angular - Servidor",
     "interceptors": "Interceptores y ResolveFn",
     "lifecycle": "Ciclo de Vida",
-    "forms": "Formularios"
+    "forms": "Formularios",
+    "utils": "Funciones útiles",
+    "dom-control": "Control avanzado del DOM"
   },
   "sections": {
     "standalone": {
@@ -909,6 +911,168 @@
         "enableBtn": "Habilitar form",
         "payloadLabel": "Payload que se enviaría",
         "hint": "Los filtros a null se omiten del payload: ese estado significa \"indiferente, no filtrar por este campo\". Prueba también Limpiar (reset → writeValue) y Deshabilitar (setDisabledState)."
+      }
+    },
+    "reactive": {
+      "title": "Formularios Reactivos",
+      "theory": "En un formulario reactivo el modelo vive en la clase TypeScript, no en la plantilla: creas un FormGroup tipado (con NonNullableFormBuilder ningún control acaba en null tras un reset) y la plantilla solo se enlaza a él con formControlName. Como cada control expone valueChanges como Observable, el formulario se convierte en un flujo de datos: con toSignal lo conviertes en Signal y con computed derivas estado (una tabla filtrada, un payload…) sin subscribe manual. Y al ser el modelo programático, puedes orquestar controles entre sí: deshabilitar uno según el valor de otro o forzar valores en cascada.",
+      "simile": "Un formulario reactivo es como la mesa de mezclas de un estudio de grabación: cada campo es un canal con su propio fader, pero quien manda es el técnico desde la mesa (tu clase TS), no los músicos (la plantilla). La mesa puede silenciar un canal cuando otro se activa (disable) o ajustar automáticamente un fader al mover otro (setValue), y el máster de salida (toSignal + computed) mezcla todos los canales en una única señal final.",
+      "examples": [
+        "Filtros de búsqueda de una tabla o listado, con estado sincronizable con la URL.",
+        "Formularios dinámicos generados desde configuración del backend (FormArray).",
+        "Wizards multi-paso con validación cruzada y campos dependientes entre pasos."
+      ],
+      "exercise": {
+        "formTitle": "Filtros de la tabla",
+        "busquedaLabel": "Buscar por nombre",
+        "busquedaPlaceholder": "mín. 2 caracteres…",
+        "busquedaError": "Escribe al menos 2 caracteres para buscar.",
+        "precioMaxLabel": "Precio máximo (€/año)",
+        "precioMaxError": "El precio debe estar entre 0 y 500.",
+        "precioMaxDisabledHint": "Deshabilitado: solo se muestran gratuitas.",
+        "categoriaLabel": "Categoría",
+        "categorias": {
+          "todas": "Todas",
+          "ui": "UI",
+          "estado": "Estado",
+          "testing": "Testing",
+          "utilidades": "Utilidades"
+        },
+        "ordenarPorLabel": "Ordenar por",
+        "orden": {
+          "nombre": "Nombre",
+          "descargas": "Descargas",
+          "precio": "Precio"
+        },
+        "soloGratuitasLabel": "Solo librerías gratuitas",
+        "resetBtn": "Limpiar filtros",
+        "resultadosLabel": "{{count}} resultados",
+        "colNombre": "Librería",
+        "colCategoria": "Categoría",
+        "colDescargas": "Descargas/sem",
+        "colPrecio": "Precio",
+        "gratis": "Gratis",
+        "sinResultados": "Ningún resultado con estos filtros.",
+        "hint": "Prueba las dos interacciones: marca \"Solo librerías gratuitas\" y verás cómo el precio máximo se deshabilita (y desaparece de form.value); cambia la categoría y verás cómo fuerza la ordenación a Descargas. El buscador solo filtra a partir de 2 caracteres y con un debounce de 250 ms."
+      }
+    },
+    "custom-validators": {
+      "title": "Custom Validators (función factoría)",
+      "theory": "Un Validator en Angular es solo una función que recibe un AbstractControl y devuelve un objeto de errores o null. Cuando el validator necesita parámetros (un límite, una lista, otro campo con el que compararse) no puede ser esa función directamente: se envuelve en una función factoría que recibe la configuración y devuelve la ValidatorFn con esos parámetros capturados en su closure. Es exactamente el patrón de los validators de serie: Validators.minLength(2) es una factoría a la que pasas el 2. Además, el objeto de error puede llevar metadata (valores máximos, cifras actuales…) que la plantilla interpola para construir mensajes ricos, y un validator puede aplicarse a nivel de FormGroup para validar varios campos a la vez.",
+      "simile": "Una factoría de validators es como una troqueladora de moldes: la troqueladora no valida ninguna pieza por sí misma; le das las medidas (los parámetros) y te fabrica un molde concreto (la ValidatorFn) que luego se aplica pieza a pieza (control a control). Validators.minLength es una troqueladora que Angular trae de serie; escribir la tuya es fabricar tus propios moldes con las medidas de tu negocio.",
+      "examples": [
+        "Rechazar valores reservados o ya ocupados a partir de una lista configurable (usernames, slugs, nombres de paquete).",
+        "Límites numéricos según reglas de negocio: número de cifras, rangos por perfil de usuario, importes máximos por divisa.",
+        "Validación cruzada entre campos a nivel de FormGroup: contraseña y confirmación, fecha de inicio anterior a la de fin."
+      ],
+      "exercise": {
+        "formTitle": "Publicar librería en el registro",
+        "nombreLabel": "Nombre del paquete",
+        "nombrePlaceholder": "prueba con \"angular\" o \"rxjs\"…",
+        "requeridoError": "Este campo es obligatorio.",
+        "nombreReservadoError": "\"{{nombre}}\" ya está reservado en el registro.",
+        "descargasLabel": "Descargas semanales estimadas",
+        "descargasMinError": "Debe ser al menos 1.",
+        "maxCifrasError": "Máximo {{max}} cifras permitidas (has escrito {{actual}}).",
+        "emailLabel": "Email del mantenedor",
+        "emailError": "Introduce un email válido.",
+        "confirmarEmailLabel": "Confirmar email",
+        "noCoincidenError": "Los dos emails no coinciden.",
+        "publicarBtn": "Publicar paquete",
+        "estadoValido": "form.valid = true",
+        "estadoInvalido": "form.valid = false",
+        "publicadoTitle": "Paquete publicado (payload)",
+        "hint": "Prueba los tres validators: escribe \"angular\" como nombre (nombreDisponible), pon más de 4 cifras en las descargas y fíjate en cómo el mensaje interpola la metadata del error (maxCifras), y escribe dos emails distintos: ese error vive en form.errors, no en ningún control (coinciden)."
+      }
+    },
+    "modulo-ciclico": {
+      "title": "Convertir array en carrusel cíclico - %",
+      "theory": "El operador módulo (`%`) devuelve el resto de una división: `7 % 5` es `2`. Su superpoder en la práctica: `indice % lista.length` siempre cae en el rango `[0, length - 1]`, haga lo grande que haga el índice.\nEso convierte cualquier array en un carrusel: dejas que un contador crezca sin parar y el módulo lo \"pliega\" para que dé la vuelta al llegar al final, sin ifs ni resets.\nÚnico matiz: en JavaScript el módulo de un negativo es negativo (`-1 % 5 === -1`), así que para retroceder se suma la longitud antes de aplicar el módulo.",
+      "simile": "El módulo es la esfera de un reloj: las horas crecen sin parar (13h, 14h… 27h), pero la aguja siempre marca entre 1 y 12 porque al completar la vuelta vuelve a empezar. `% 12` es exactamente esa vuelta automática.",
+      "examples": [
+        "Rotar en bucle sobre un catálogo de plantillas al añadir elementos (como en el ejercicio 2.2 de @for).",
+        "Carrusel de imágenes o testimonios en el que \"siguiente\" tras la última vuelve a la primera.",
+        "Alternar estilos por posición (filas cebra, paleta de colores que se repite cada N elementos)."
+      ]
+    },
+    "clamp": {
+      "title": "Tope incremento numérico - Math.min o Math.max",
+      "theory": "`Math.min` y `Math.max` con dos argumentos devuelven el menor o el mayor de ambos. Usados contra una constante se convierten en límites: `Math.min(x, MAX)` es un techo (nunca devuelve más de MAX) y `Math.max(x, MIN)` es un suelo (nunca menos de MIN).\nOjo al cruce de nombres: `min` pone el límite SUPERIOR y `max` el INFERIOR. La forma de no liarse es leerlo como \"quédate con el menor/mayor de los dos\".\nEncadenados, `Math.min(Math.max(x, MIN), MAX)`, forman un \"clamp\": encajan cualquier valor dentro de un rango sin un solo if.",
+      "simile": "Son los topes de una ventana corredera: puedes empujarla con la fuerza que quieras, pero el carril tiene un tope al final (Math.min) y otro al principio (Math.max). La ventana se queda siempre entre ambos, empujes lo que empujes.",
+      "examples": [
+        "Contadores con límite: aforo de una sala, cantidad de unidades en un carrito (como en el ejercicio 3.1 de Signal).",
+        "Controles de zoom, volumen o brillo que se mueven dentro de un rango fijo.",
+        "Sanear valores que llegan de fuera (input del usuario, query params) antes de usarlos en la UI."
+      ]
+    },
+    "ng-container-template": {
+      "title": "ng-container y ng-template",
+      "badge": "DOM · Plantillas",
+      "intro": "Dos herramientas para controlar qué llega al DOM y qué no: plantillas que solo existen como molde hasta que las instancias, y agrupadores que desaparecen sin dejar rastro.",
+      "theory": "`<ng-template>` declara un fragmento de vista que Angular NO renderiza donde se escribe: lo guarda como un `TemplateRef` (un molde) y solo aparece en pantalla cuando algo lo instancia, por ejemplo la directiva `[ngTemplateOutlet]`.\n`<ng-container>` es un agrupador lógico que no genera ningún elemento en el DOM renderizado: agrupa contenido o aloja directivas sin añadir el típico `<div>` envoltorio.\nJuntos permiten el patrón más potente: declarar una plantilla UNA vez y reutilizarla en varios sitios pasándole datos distintos mediante `[ngTemplateOutletContext]`.",
+      "simile": "ng-template es el molde de galletas del cajón de la cocina: tenerlo no produce ninguna galleta; solo cuando lo aplicas a la masa (ngTemplateOutlet) sale una, y con cada masa distinta (el contexto) sale una galleta diferente del MISMO molde. ng-container es el papel de horno: te sirve para agrupar y manejar las galletas mientras cocinas, pero no forma parte del resultado — nadie se come el papel.",
+      "examples": [
+        "Reutilizar una misma tarjeta/fila en varias zonas de la vista (destacados + listado) sin duplicar HTML.",
+        "Agrupar filas de una tabla bajo un @if sin romper la estructura (un <div> dentro de <table> es HTML inválido).",
+        "Componentes configurables que aceptan una plantilla personalizada desde fuera (columnas de tabla, item de lista, opción de select)."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "ng-template: declarar un molde que no se pinta",
+        "lead": "Todo lo que envuelvas en `<ng-template>` queda declarado pero invisible: Angular lo compila a un `TemplateRef` y lo mantiene en memoria como un molde. No aparece en el DOM hasta que algo lo instancia. Este es el mismo mecanismo que usan internamente `@if` o `@for`: sus contenidos son plantillas que Angular estampa solo cuando toca.",
+        "n1": "Declara vista, no la renderiza",
+        "n2": "Angular guarda el molde en memoria",
+        "n3": "Solo entra al DOM cuando algo lo estampa"
+      },
+      "p2": {
+        "title": "ng-container: agrupar sin ensuciar el DOM",
+        "lead": "Un `<div>` envoltorio crea un nodo real, y eso a veces sobra: rompe layouts de grid/flex pensados para hijos directos y genera HTML inválido dentro de `<table>` o `<ul>`. `<ng-container>` agrupa contenido y aloja directivas exactamente igual, pero se esfuma al renderizar: en el DOM final solo quedan sus hijos.",
+        "note": "El DOM final es idéntico… pero sin el envoltorio"
+      },
+      "p3": {
+        "title": "Instanciar el molde con ngTemplateOutlet",
+        "lead": "La variable de referencia `#miembroTpl` captura el `TemplateRef` del molde. La directiva `[ngTemplateOutlet]` lo estampa justo donde ella vive. Usarla sobre un `<ng-container>` es el combo perfecto: la plantilla se renderiza en ese punto sin que el anfitrión añada ningún elemento extra al DOM.",
+        "n1": "Variable de referencia: captura el TemplateRef",
+        "n2": "Estampa el molde justo aquí",
+        "n3": "El contenido del molde, ya en el DOM"
+      },
+      "p4": {
+        "title": "Pasar datos con el contexto y reutilizar",
+        "lead": "`[ngTemplateOutletContext]` recibe un objeto con los datos para esa instancia. La clave especial `$implicit` es el dato \"por defecto\": cualquier `let-loQueSea` sin asignación la recibe. Las demás claves se enlazan por nombre (`let-rol=\"rol\"`). Aquí está la potencia del patrón: la MISMA plantilla estampada N veces, cada una con datos distintos — cero HTML duplicado.",
+        "n1": "Objeto con los datos de ESTA instancia"
+      },
+      "exercise": {
+        "desc": "Completa los 4 TODOs: declara la plantilla de miembro con su contexto ($implicit + rol), instánciala para el destacado, reutilízala dentro del @for con ng-container y añade la plantilla del estado vacío. Añade y elimina miembros para ver el MISMO molde estamparse con distinto contexto.",
+        "addTitle": "Añadir miembro al equipo",
+        "namePlaceholder": "Nombre",
+        "addBtn": "Añadir",
+        "featured": "Destacado",
+        "empty": "El equipo está vacío. Añade el primer miembro para instanciar la plantilla.",
+        "clearBtn": "Vaciar equipo",
+        "members": "miembros"
+      }
+    },
+    "ng-content": {
+      "title": "Content projection con ng-content",
+      "theory": "`<ng-content>` marca el punto exacto donde un componente inserta el contenido que su padre escribe entre sus etiquetas: es el mecanismo de content projection.\nCon `select` se abren varios slots que filtran por selector CSS — de elemento (`select=\"h4\"`), de atributo (`select=\"[tarjeta-icono]\"`) o de clase (`select=\".acciones\"`) — y el `<ng-content>` sin `select` actúa de comodín: recoge todo lo que ningún otro slot haya capturado.\nSi un nodo no casa con ningún selector, `ngProjectAs` lo redirige al slot que quieras (muy útil sobre `<ng-container>`, que no añade nodos al DOM). Y desde Angular 18, lo escrito DENTRO de `<ng-content>` es contenido de reserva (fallback): se pinta solo si el padre no proyecta nada en ese slot.\nClave: el contenido proyectado pertenece al PADRE — sus bindings, handlers y estilos se resuelven en el contexto del padre; `ng-content` solo lo coloca, no lo crea ni lo destruye.",
+      "simile": "Un componente con ng-content es como un marco de fotos con huecos troquelados (passe-partout): el marco decide cuántos huecos hay, su forma y dónde van (los slots con select), pero tú eliges qué foto pones en cada hueco — y las fotos siguen siendo tuyas (el contenido pertenece al padre). Si una foto no tiene el formato del hueco, le pones un adaptador para que encaje (ngProjectAs). Y si dejas un hueco vacío, se ve la lámina de muestra que el marco trae de fábrica (el fallback).",
+      "examples": [
+        "Componentes contenedor de UI (Card, Modal, Acordeón) que aportan el marco y los estilos y dejan que cada consumidor rellene cabecera, cuerpo y pie.",
+        "Layouts con zonas nombradas: una toolbar con slots de inicio/centro/fin, o un panel lateral con cabecera fija y contenido libre.",
+        "Wrappers de campo de formulario que proyectan label, control y mensajes de error dentro de la misma estructura accesible."
+      ],
+      "exercise": {
+        "desc": "Completa los 5 TODOs: declara en la tarjeta los slots por atributo, elemento y clase, el catch-all del cuerpo y el fallback del pie; después usa ngProjectAs para proyectar un ng-container al slot de acciones. Pulsa los botones: sus (click) viven en el PADRE aunque se pinten dentro de la tarjeta.",
+        "cardABody": "Construye la interfaz de la guía. Componentes standalone, Signals y mucho CSS artesano.",
+        "cardBBody": "Mantiene la API y los pipelines de despliegue. Le gustan los logs limpios.",
+        "cardCBody": "Cuenta automatizada: publica el resultado de cada build. Nadie le escribe (todavía).",
+        "follow": "Seguir",
+        "message": "Mensaje",
+        "promote": "Ascender",
+        "noActions": "Sin acciones · perfil de solo lectura",
+        "lastAction": "Última acción",
+        "none": "todavía ninguna"
       }
     }
   },

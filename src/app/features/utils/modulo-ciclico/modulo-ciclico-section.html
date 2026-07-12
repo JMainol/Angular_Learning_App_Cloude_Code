@@ -1,0 +1,19 @@
+<app-section-shell
+  code="15.1"
+  [title]="'sections.modulo-ciclico.title' | translate"
+  [theory]="'sections.modulo-ciclico.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.modulo-ciclico.simile' | translate"
+  [examples]="'sections.modulo-ciclico.examples' | translate"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="modulo-ciclico-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-modulo-ciclico-exercise exercise-result />
+</app-section-shell>

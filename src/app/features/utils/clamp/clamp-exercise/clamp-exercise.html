@@ -1,0 +1,37 @@
+<div class="panel">
+  <!-- Nivel de zoom actual: el valor siempre debería vivir en [50, 200]. -->
+  <div class="gauge">
+    <span class="gauge__value">{{ zoom() }}%</span>
+    <span class="gauge__range">rango {{ ZOOM_MIN }}–{{ ZOOM_MAX }}</span>
+  </div>
+
+  <!-- Vista previa: la caja escala con el zoom. Si el clamp falla, se dispara. -->
+  <div class="preview">
+    <div class="preview__caja" [style.transform]="'scale(' + zoom() / 100 + ')'">Aa</div>
+  </div>
+
+  <!-- Barra de rango: posición del zoom dentro de [MIN, MAX]. -->
+  <div class="bar" role="presentation">
+    <div
+      class="bar__fill"
+      [style.width.%]="((zoom() - ZOOM_MIN) / (ZOOM_MAX - ZOOM_MIN)) * 100"
+    ></div>
+  </div>
+
+  <div class="controls">
+    <button type="button" class="controls__btn" (click)="alejar()">− Alejar</button>
+    <button type="button" class="controls__btn" (click)="acercar()">+ Acercar</button>
+  </div>
+
+  <!-- Input libre: cualquier número pasa por clamp() antes de aplicarse (TODO 2). -->
+  <div class="libre">
+    <input
+      class="libre__input"
+      type="number"
+      #campoZoom
+      placeholder="Prueba 500 o -20…"
+      (keydown.enter)="aplicar(campoZoom)"
+    />
+    <button type="button" class="controls__btn" (click)="aplicar(campoZoom)">Aplicar</button>
+  </div>
+</div>

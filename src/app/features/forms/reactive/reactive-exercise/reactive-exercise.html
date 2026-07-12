@@ -1,0 +1,107 @@
+<div class="panel">
+  <!-- [formGroup] enlaza el modelo tipado; cada campo usa formControlName. -->
+  <form class="filtros" [formGroup]="form">
+    <span class="filtros__title">{{ 'sections.reactive.exercise.formTitle' | translate }}</span>
+
+    <div class="filtros__grid">
+      <!-- Input de texto con validación minLength -->
+      <label class="campo">
+        <span class="campo__label">{{ 'sections.reactive.exercise.busquedaLabel' | translate }}</span>
+        <input
+          type="text"
+          formControlName="busqueda"
+          [placeholder]="'sections.reactive.exercise.busquedaPlaceholder' | translate"
+        />
+        @if (form.controls.busqueda.errors?.['minlength']) {
+          <span class="campo__error">{{ 'sections.reactive.exercise.busquedaError' | translate }}</span>
+        }
+      </label>
+
+      <!-- Input numérico: queda disabled cuando soloGratuitas = true -->
+      <label class="campo">
+        <span class="campo__label">{{ 'sections.reactive.exercise.precioMaxLabel' | translate }}</span>
+        <input type="number" formControlName="precioMax" min="0" max="500" />
+        @if (form.controls.precioMax.disabled) {
+          <span class="campo__hint">{{ 'sections.reactive.exercise.precioMaxDisabledHint' | translate }}</span>
+        } @else if (form.controls.precioMax.errors) {
+          <span class="campo__error">{{ 'sections.reactive.exercise.precioMaxError' | translate }}</span>
+        }
+      </label>
+
+      <!-- Select de categoría: al cambiar, FUERZA el valor de ordenarPor -->
+      <label class="campo">
+        <span class="campo__label">{{ 'sections.reactive.exercise.categoriaLabel' | translate }}</span>
+        <select formControlName="categoria">
+          <option value="todas">{{ 'sections.reactive.exercise.categorias.todas' | translate }}</option>
+          <option value="ui">{{ 'sections.reactive.exercise.categorias.ui' | translate }}</option>
+          <option value="estado">{{ 'sections.reactive.exercise.categorias.estado' | translate }}</option>
+          <option value="testing">{{ 'sections.reactive.exercise.categorias.testing' | translate }}</option>
+          <option value="utilidades">{{ 'sections.reactive.exercise.categorias.utilidades' | translate }}</option>
+        </select>
+      </label>
+
+      <!-- Select de ordenación: su valor lo puede imponer el select anterior -->
+      <label class="campo">
+        <span class="campo__label">{{ 'sections.reactive.exercise.ordenarPorLabel' | translate }}</span>
+        <select formControlName="ordenarPor">
+          <option value="nombre">{{ 'sections.reactive.exercise.orden.nombre' | translate }}</option>
+          <option value="descargas">{{ 'sections.reactive.exercise.orden.descargas' | translate }}</option>
+          <option value="precio">{{ 'sections.reactive.exercise.orden.precio' | translate }}</option>
+        </select>
+      </label>
+    </div>
+
+    <!-- Checkbox: al activarlo, BLOQUEA (disable) el control precioMax -->
+    <label class="check">
+      <input type="checkbox" formControlName="soloGratuitas" />
+      <span>{{ 'sections.reactive.exercise.soloGratuitasLabel' | translate }}</span>
+    </label>
+
+    <div class="actions">
+      <button type="button" class="btn" (click)="limpiar()">
+        {{ 'sections.reactive.exercise.resetBtn' | translate }}
+      </button>
+      <span class="contador">
+        {{ 'sections.reactive.exercise.resultadosLabel' | translate: { count: resultados().length } }}
+      </span>
+    </div>
+  </form>
+
+  <!-- La tabla es estado derivado: se repinta sola al cambiar los filtros. -->
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>{{ 'sections.reactive.exercise.colNombre' | translate }}</th>
+        <th>{{ 'sections.reactive.exercise.colCategoria' | translate }}</th>
+        <th class="num">{{ 'sections.reactive.exercise.colDescargas' | translate }}</th>
+        <th class="num">{{ 'sections.reactive.exercise.colPrecio' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (lib of resultados(); track lib.nombre) {
+        <tr>
+          <td>{{ lib.nombre }}</td>
+          <td>
+            <span class="chip chip--{{ lib.categoria }}">
+              {{ 'sections.reactive.exercise.categorias.' + lib.categoria | translate }}
+            </span>
+          </td>
+          <td class="num">{{ lib.descargas | number }}k</td>
+          <td class="num">
+            @if (lib.precio === 0) {
+              <span class="gratis">{{ 'sections.reactive.exercise.gratis' | translate }}</span>
+            } @else {
+              {{ lib.precio }} €
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td class="vacio" colspan="4">{{ 'sections.reactive.exercise.sinResultados' | translate }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <p class="hint">{{ 'sections.reactive.exercise.hint' | translate }}</p>
+</div>

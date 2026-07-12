@@ -1,0 +1,35 @@
+<article class="tarjeta">
+  <header class="tarjeta__cabecera">
+    <!-- ════════════════════════════════════════════════════════════════
+         TODO 1 — Slot por SELECTOR DE ATRIBUTO.
+         Solo se proyecta aquí lo que el padre marque con el atributo
+         `tarjeta-icono` (p. ej. <span tarjeta-icono>👩‍💻</span>).
+    ═════════════════════════════════════════════════════════════════════ -->
+    <span class="tarjeta__icono" aria-hidden="true">
+      <ng-content select="[tarjeta-icono]" />
+    </span>
+
+    <!-- TODO 2 — Slot por SELECTOR DE ELEMENTO.
+         Captura el <h4> que el padre escriba entre las etiquetas. -->
+    <ng-content select="h4" />
+  </header>
+
+  <div class="tarjeta__cuerpo">
+    <!-- TODO 3 — Slot CATCH-ALL.
+         Un <ng-content> SIN select recoge todo lo proyectado que ningún
+         otro slot haya capturado (aquí, el <p> del cuerpo). -->
+    <ng-content />
+  </div>
+
+  <footer class="tarjeta__pie">
+    <!-- TODO 4 — Slot por SELECTOR DE CLASE + FALLBACK.
+         Lo escrito DENTRO de <ng-content> es contenido de reserva
+         (Angular 18+): solo se pinta si el padre no proyecta nada que
+         case con `.tarjeta-acciones`. -->
+    <ng-content select=".tarjeta-acciones">
+      <span class="tarjeta__sin-acciones">
+        {{ 'sections.ng-content.exercise.noActions' | translate }}
+      </span>
+    </ng-content>
+  </footer>
+</article>

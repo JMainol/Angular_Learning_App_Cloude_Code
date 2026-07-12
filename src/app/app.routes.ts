@@ -275,6 +275,54 @@ export const routes: Routes = [
     title: '14.1 ControlValueAccessor · Guía Angular',
   },
 
+  {
+    path: 'forms/reactive',
+    loadComponent: () =>
+      import('./features/forms/reactive/reactive-section').then((m) => m.ReactiveSection),
+    title: '14.2 Formularios Reactivos · Guía Angular',
+  },
+
+  {
+    path: 'forms/custom-validators',
+    loadComponent: () =>
+      import('./features/forms/custom-validators/custom-validators-section').then(
+        (m) => m.CustomValidatorsSection
+      ),
+    title: '14.3 Custom Validators · Guía Angular',
+  },
+
+  {
+    path: 'utils/modulo-ciclico',
+    loadComponent: () =>
+      import('./features/utils/modulo-ciclico/modulo-ciclico-section').then(
+        (m) => m.ModuloCiclicoSection
+      ),
+    title: '15.1 Convertir array en carrusel cíclico - % · Guía Angular',
+  },
+  {
+    path: 'utils/clamp',
+    loadComponent: () =>
+      import('./features/utils/clamp/clamp-section').then((m) => m.ClampSection),
+    title: '15.2 Tope incremento numérico - Math.min o Math.max · Guía Angular',
+  },
+
+  {
+    path: 'dom-control/ng-container-template',
+    loadComponent: () =>
+      import('./features/dom-control/ng-container-template/ng-container-template-section').then(
+        (m) => m.NgContainerTemplateSection
+      ),
+    title: '16.1 ng-container y ng-template · Guía Angular',
+  },
+  {
+    path: 'dom-control/ng-content',
+    loadComponent: () =>
+      import('./features/dom-control/ng-content/ng-content-section').then(
+        (m) => m.NgContentSection
+      ),
+    title: '16.2 Content projection con ng-content · Guía Angular',
+  },
+
   // Ruta por defecto: arrancamos en la primera sección del temario.
   { path: '', pathMatch: 'full', redirectTo: 'config/standalone' },
 

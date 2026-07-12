@@ -139,6 +139,34 @@ export const CURRICULUM: Block[] = [
     title: 'Formularios',
     sections: [
       { code: '14.1', title: 'ControlValueAccessor', path: 'forms/control-value-accessor' },
+      { code: '14.2', title: 'Reactivos', path: 'forms/reactive' },
+      { code: '14.3', title: 'Custom Validators', path: 'forms/custom-validators' },
+    ],
+  },
+  {
+    id: 'utils',
+    code: '15',
+    title: 'Funciones útiles',
+    sections: [
+      { code: '15.1', title: 'Convertir array en carrusel cíclico - %', path: 'utils/modulo-ciclico' },
+      { code: '15.2', title: 'Tope incremento numérico - Math.min o Math.max', path: 'utils/clamp' },
+    ],
+  },
+  {
+    id: 'dom-control',
+    code: '16',
+    title: 'Control avanzado del DOM',
+    sections: [
+      {
+        code: '16.1',
+        title: 'ng-container y ng-template',
+        path: 'dom-control/ng-container-template',
+      },
+      {
+        code: '16.2',
+        title: 'Content projection con ng-content',
+        path: 'dom-control/ng-content',
+      },
     ],
   },
 ];

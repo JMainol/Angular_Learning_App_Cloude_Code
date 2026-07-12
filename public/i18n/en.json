@@ -39,7 +39,9 @@
     "server-protocols": "Angular - Server Communication Protocols",
     "interceptors": "Interceptors and ResolveFn",
     "lifecycle": "Lifecycle",
-    "forms": "Forms"
+    "forms": "Forms",
+    "utils": "Useful functions",
+    "dom-control": "Advanced DOM control"
   },
   "sections": {
     "standalone": {
@@ -909,6 +911,168 @@
         "enableBtn": "Enable form",
         "payloadLabel": "Payload that would be sent",
         "hint": "Filters set to null are omitted from the payload: that state means \"no preference, don't filter by this field\". Also try Clear (reset → writeValue) and Disable (setDisabledState)."
+      }
+    },
+    "reactive": {
+      "title": "Reactive Forms",
+      "theory": "In a reactive form the model lives in the TypeScript class, not in the template: you create a typed FormGroup (with NonNullableFormBuilder no control ends up null after a reset) and the template only binds to it via formControlName. Since every control exposes valueChanges as an Observable, the form becomes a data stream: with toSignal you turn it into a Signal and with computed you derive state (a filtered table, a payload…) without manual subscribes. And because the model is programmatic, you can orchestrate controls against each other: disable one based on another's value or force cascading values.",
+      "simile": "A reactive form is like a recording studio mixing console: every field is a channel with its own fader, but the sound engineer at the console (your TS class) is in charge, not the musicians (the template). The console can mute one channel when another kicks in (disable) or automatically adjust one fader when you move another (setValue), and the master output (toSignal + computed) mixes every channel into a single final signal.",
+      "examples": [
+        "Search filters for a table or listing, with state that can sync to the URL.",
+        "Dynamic forms generated from backend configuration (FormArray).",
+        "Multi-step wizards with cross-validation and dependent fields between steps."
+      ],
+      "exercise": {
+        "formTitle": "Table filters",
+        "busquedaLabel": "Search by name",
+        "busquedaPlaceholder": "min. 2 characters…",
+        "busquedaError": "Type at least 2 characters to search.",
+        "precioMaxLabel": "Max price (€/year)",
+        "precioMaxError": "Price must be between 0 and 500.",
+        "precioMaxDisabledHint": "Disabled: only free libraries are shown.",
+        "categoriaLabel": "Category",
+        "categorias": {
+          "todas": "All",
+          "ui": "UI",
+          "estado": "State",
+          "testing": "Testing",
+          "utilidades": "Utilities"
+        },
+        "ordenarPorLabel": "Sort by",
+        "orden": {
+          "nombre": "Name",
+          "descargas": "Downloads",
+          "precio": "Price"
+        },
+        "soloGratuitasLabel": "Free libraries only",
+        "resetBtn": "Clear filters",
+        "resultadosLabel": "{{count}} results",
+        "colNombre": "Library",
+        "colCategoria": "Category",
+        "colDescargas": "Downloads/wk",
+        "colPrecio": "Price",
+        "gratis": "Free",
+        "sinResultados": "No results with these filters.",
+        "hint": "Try both interactions: check \"Free libraries only\" and watch the max price get disabled (and vanish from form.value); change the category and watch it force the sort order to Downloads. The search box only filters from 2 characters on, with a 250 ms debounce."
+      }
+    },
+    "custom-validators": {
+      "title": "Custom Validators (factory function)",
+      "theory": "A Validator in Angular is just a function that takes an AbstractControl and returns an errors object or null. When the validator needs parameters (a limit, a list, another field to compare against) it cannot be that function directly: you wrap it in a factory function that receives the configuration and returns the ValidatorFn with those parameters captured in its closure. It is exactly the pattern of the built-in validators: Validators.minLength(2) is a factory you pass the 2 to. On top of that, the error object can carry metadata (max values, current digits…) that the template interpolates to build rich messages, and a validator can be applied at FormGroup level to validate several fields at once.",
+      "simile": "A validator factory is like a die-cutting machine for molds: the machine doesn't validate any part by itself; you give it the measurements (the parameters) and it manufactures a specific mold (the ValidatorFn) that is then applied part by part (control by control). Validators.minLength is a die-cutter Angular ships out of the box; writing your own means manufacturing your own molds with your business's measurements.",
+      "examples": [
+        "Rejecting reserved or already-taken values from a configurable list (usernames, slugs, package names).",
+        "Numeric limits driven by business rules: number of digits, ranges per user profile, max amounts per currency.",
+        "Cross-field validation at FormGroup level: password and confirmation, start date before end date."
+      ],
+      "exercise": {
+        "formTitle": "Publish library to the registry",
+        "nombreLabel": "Package name",
+        "nombrePlaceholder": "try \"angular\" or \"rxjs\"…",
+        "requeridoError": "This field is required.",
+        "nombreReservadoError": "\"{{nombre}}\" is already reserved in the registry.",
+        "descargasLabel": "Estimated weekly downloads",
+        "descargasMinError": "Must be at least 1.",
+        "maxCifrasError": "Maximum {{max}} digits allowed (you typed {{actual}}).",
+        "emailLabel": "Maintainer email",
+        "emailError": "Enter a valid email.",
+        "confirmarEmailLabel": "Confirm email",
+        "noCoincidenError": "The two emails don't match.",
+        "publicarBtn": "Publish package",
+        "estadoValido": "form.valid = true",
+        "estadoInvalido": "form.valid = false",
+        "publicadoTitle": "Package published (payload)",
+        "hint": "Try all three validators: type \"angular\" as the name (nombreDisponible), enter more than 4 digits in downloads and notice how the message interpolates the error metadata (maxCifras), and type two different emails: that error lives in form.errors, not in any control (coinciden)."
+      }
+    },
+    "modulo-ciclico": {
+      "title": "Turn an array into a cyclic carousel - %",
+      "theory": "The modulo operator (`%`) returns the remainder of a division: `7 % 5` is `2`. Its practical superpower: `index % list.length` always lands in the range `[0, length - 1]`, no matter how large the index grows.\nThat turns any array into a carousel: you let a counter grow forever and the modulo \"folds\" it so it wraps around when it reaches the end, with no ifs and no resets.\nOne caveat: in JavaScript the modulo of a negative number is negative (`-1 % 5 === -1`), so to step backwards you add the length before applying the modulo.",
+      "simile": "Modulo is the face of a clock: the hours keep growing (1pm, 2pm… 3am the next day), but the hand always points between 1 and 12 because completing a lap starts over. `% 12` is exactly that automatic wrap-around.",
+      "examples": [
+        "Looping over a catalog of templates when adding items (as in exercise 2.2 for @for).",
+        "An image or testimonial carousel where \"next\" after the last item returns to the first.",
+        "Alternating styles by position (zebra rows, a color palette that repeats every N items)."
+      ]
+    },
+    "clamp": {
+      "title": "Numeric increment cap - Math.min or Math.max",
+      "theory": "`Math.min` and `Math.max` with two arguments return the smaller or the larger of the pair. Used against a constant they become limits: `Math.min(x, MAX)` is a ceiling (never returns more than MAX) and `Math.max(x, MIN)` is a floor (never less than MIN).\nMind the naming twist: `min` sets the UPPER limit and `max` the LOWER one. The way to keep it straight is to read it as \"keep the smaller/larger of the two\".\nChained together, `Math.min(Math.max(x, MIN), MAX)` forms a \"clamp\": it fits any value inside a range without a single if.",
+      "simile": "They are the stops on a sliding window: you can push it as hard as you like, but the rail has a stop at the end (Math.min) and another at the start (Math.max). The window always stays between them, no matter how hard you push.",
+      "examples": [
+        "Bounded counters: room capacity, item quantity in a cart (as in exercise 3.1 for Signal).",
+        "Zoom, volume or brightness controls that move within a fixed range.",
+        "Sanitizing values coming from outside (user input, query params) before using them in the UI."
+      ]
+    },
+    "ng-container-template": {
+      "title": "ng-container and ng-template",
+      "badge": "DOM · Templates",
+      "intro": "Two tools to control what reaches the DOM and what doesn't: templates that only exist as a mold until you instantiate them, and groupers that vanish without a trace.",
+      "theory": "`<ng-template>` declares a view fragment that Angular does NOT render where it is written: it stores it as a `TemplateRef` (a mold) and it only shows up on screen when something instantiates it, for example the `[ngTemplateOutlet]` directive.\n`<ng-container>` is a logical grouper that produces no element in the rendered DOM: it groups content or hosts directives without adding the typical wrapper `<div>`.\nTogether they enable the most powerful pattern: declare a template ONCE and reuse it in several places, feeding it different data through `[ngTemplateOutletContext]`.",
+      "simile": "ng-template is the cookie cutter in the kitchen drawer: owning it produces no cookies; only when you press it into the dough (ngTemplateOutlet) does one come out, and with each different dough (the context) a different cookie comes out of the SAME cutter. ng-container is the baking paper: it helps you group and handle the cookies while you bake, but it is not part of the result — nobody eats the paper.",
+      "examples": [
+        "Reusing the same card/row in several areas of the view (featured + list) without duplicating HTML.",
+        "Grouping table rows under an @if without breaking the structure (a <div> inside <table> is invalid HTML).",
+        "Configurable components that accept a custom template from outside (table columns, list item, select option)."
+      ],
+      "diagramWord": "Diagram",
+      "stepWord": "Step",
+      "p1": {
+        "title": "ng-template: declaring a mold that isn't painted",
+        "lead": "Everything you wrap in `<ng-template>` is declared but invisible: Angular compiles it into a `TemplateRef` and keeps it in memory as a mold. It doesn't enter the DOM until something instantiates it. This is the same mechanism `@if` or `@for` use internally: their contents are templates Angular stamps only when needed.",
+        "n1": "Declares view, doesn't render it",
+        "n2": "Angular keeps the mold in memory",
+        "n3": "Only enters the DOM when something stamps it"
+      },
+      "p2": {
+        "title": "ng-container: grouping without polluting the DOM",
+        "lead": "A wrapper `<div>` creates a real node, and sometimes that's harmful: it breaks grid/flex layouts designed for direct children and produces invalid HTML inside <table> or <ul>. `<ng-container>` groups content and hosts directives just the same, but vanishes at render time: the final DOM only contains its children.",
+        "note": "The final DOM is identical… minus the wrapper"
+      },
+      "p3": {
+        "title": "Instantiating the mold with ngTemplateOutlet",
+        "lead": "The reference variable `#miembroTpl` captures the mold's `TemplateRef`. The `[ngTemplateOutlet]` directive stamps it right where it lives. Using it on an `<ng-container>` is the perfect combo: the template renders at that spot without the host adding any extra element to the DOM.",
+        "n1": "Reference variable: captures the TemplateRef",
+        "n2": "Stamps the mold right here",
+        "n3": "The mold's content, now in the DOM"
+      },
+      "p4": {
+        "title": "Passing data with the context and reusing",
+        "lead": "`[ngTemplateOutletContext]` takes an object with the data for that instance. The special `$implicit` key is the \"default\" datum: any `let-whatever` without an assignment receives it. The remaining keys bind by name (`let-rol=\"rol\"`). Here lies the power of the pattern: the SAME template stamped N times, each with different data — zero duplicated HTML.",
+        "n1": "Object with the data for THIS instance"
+      },
+      "exercise": {
+        "desc": "Complete the 4 TODOs: declare the member template with its context ($implicit + rol), instantiate it for the featured member, reuse it inside the @for with ng-container and add the empty-state template. Add and remove members to watch the SAME mold get stamped with different context.",
+        "addTitle": "Add team member",
+        "namePlaceholder": "Name",
+        "addBtn": "Add",
+        "featured": "Featured",
+        "empty": "The team is empty. Add the first member to instantiate the template.",
+        "clearBtn": "Clear team",
+        "members": "members"
+      }
+    },
+    "ng-content": {
+      "title": "Content projection with ng-content",
+      "theory": "`<ng-content>` marks the exact spot where a component inserts the content its parent writes between its tags: this is the content projection mechanism.\nWith `select` you open multiple slots that filter by CSS selector — element (`select=\"h4\"`), attribute (`select=\"[tarjeta-icono]\"`) or class (`select=\".acciones\"`) — while a `<ng-content>` without `select` acts as the wildcard: it collects everything no other slot captured.\nIf a node doesn't match any selector, `ngProjectAs` redirects it to the slot you choose (very handy on `<ng-container>`, which adds no nodes to the DOM). And since Angular 18, whatever you write INSIDE `<ng-content>` is fallback content: it renders only when the parent projects nothing into that slot.\nKey point: projected content belongs to the PARENT — its bindings, handlers and styles resolve in the parent's context; `ng-content` only places it, it never creates or destroys it.",
+      "simile": "A component with ng-content is like a photo frame with die-cut openings (passe-partout): the frame decides how many openings there are, their shape and where they go (the slots with select), but you choose which photo goes in each opening — and the photos are still yours (the content belongs to the parent). If a photo doesn't fit an opening's format, you add an adapter so it fits (ngProjectAs). And if you leave an opening empty, you see the sample picture the frame ships with (the fallback).",
+      "examples": [
+        "UI container components (Card, Modal, Accordion) that provide the frame and styling while each consumer fills in header, body and footer.",
+        "Layouts with named zones: a toolbar with start/center/end slots, or a side panel with a fixed header and free-form content.",
+        "Form-field wrappers that project the label, the control and the error messages into the same accessible structure."
+      ],
+      "exercise": {
+        "desc": "Complete the 5 TODOs: declare the card's slots by attribute, element and class, the body catch-all and the footer fallback; then use ngProjectAs to project an ng-container into the actions slot. Click the buttons: their (click) handlers live in the PARENT even though they render inside the card.",
+        "cardABody": "Builds the guide's interface. Standalone components, Signals and plenty of handcrafted CSS.",
+        "cardBBody": "Maintains the API and the deployment pipelines. Fond of clean logs.",
+        "cardCBody": "Automated account: it posts the result of every build. Nobody messages it (yet).",
+        "follow": "Follow",
+        "message": "Message",
+        "promote": "Promote",
+        "noActions": "No actions · read-only profile",
+        "lastAction": "Last action",
+        "none": "none yet"
       }
     }
   },

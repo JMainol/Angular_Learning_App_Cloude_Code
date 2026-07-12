@@ -1,0 +1,19 @@
+<app-section-shell
+  code="15.2"
+  [title]="'sections.clamp.title' | translate"
+  [theory]="'sections.clamp.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.clamp.simile' | translate"
+  [examples]="'sections.clamp.examples' | translate"
+>
+  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="clamp-exercise.ts"
+  />
+
+  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <app-clamp-exercise exercise-result />
+</app-section-shell>

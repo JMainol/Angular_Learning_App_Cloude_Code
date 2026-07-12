@@ -132,6 +132,20 @@ Los bloques y secciones van a ir creciendo continuamente
 |---------|--------------------------------------------------------------------------|
 | 14.1    | ControlValueAccessor (checkbox de 3 estados: true / false / null)        |
 
+### Bloque 15 — Funciones útiles
+
+| Sección | Concepto                                                    |
+|---------|-------------------------------------------------------------|
+| 15.1    | Convertir array en carrusel cíclico - %                     |
+| 15.2    | Tope incremento numérico - Math.min o Math.max               |
+
+### Bloque 16 — Control avanzado del DOM
+
+| Sección | Concepto                                                  |
+|---------|-----------------------------------------------------------|
+| 16.1    | ng-container y ng-template                                |
+| 16.2    | Content projection con ng-content                         |
+
 ---
 
 ## 📋 Estructura de cada sección (template obligatorio)

@@ -1,0 +1,38 @@
+<div class="panel">
+  <!-- La persona de guardia: deriva del índice vía computed (TODO 1). -->
+  <div class="gauge">
+    <span class="gauge__value">{{ personaActual() }}</span>
+    <span class="gauge__label">de guardia esta semana</span>
+  </div>
+
+  <!-- La rueda: se resalta la posición que el módulo selecciona ahora mismo. -->
+  <ul class="rueda" role="presentation">
+    @for (persona of equipo; track persona; let i = $index) {
+      <li class="rueda__item" [class.rueda__item--activa]="persona === personaActual()">
+        <span class="rueda__pos">{{ i }}</span>
+        {{ persona }}
+      </li>
+    }
+  </ul>
+
+  <!-- El estado interno a la vista: índice bruto vs. índice plegado. -->
+  <dl class="estado">
+    <div class="estado__par">
+      <dt>indice</dt>
+      <dd>{{ indice() }}</dd>
+    </div>
+    <div class="estado__par">
+      <dt>indice % {{ equipo.length }}</dt>
+      <dd>{{ indice() % equipo.length }}</dd>
+    </div>
+    <div class="estado__par">
+      <dt>vueltas completas</dt>
+      <dd>{{ vueltas() }}</dd>
+    </div>
+  </dl>
+
+  <div class="controls">
+    <button type="button" class="controls__btn" (click)="anterior()">← Anterior</button>
+    <button type="button" class="controls__btn" (click)="siguiente()">Siguiente →</button>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+:host {
+  display: block;
+}
+
+.perfiles {
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+// El contenido PROYECTADO se estiliza aquí (su dueño es este componente):
+// la encapsulación de Angular etiqueta estos nodos con el scope del padre,
+// no con el de <app-tarjeta-perfil>.
+h4 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.perfil-bio {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.tarjeta-acciones {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.accion {
+  padding: 0.35rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover { color: var(--text-strong); border-color: var(--text-dim); }
+  &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  &--primaria {
+    background: var(--accent);
+    border-color: transparent;
+    color: #fff;
+    &:hover { color: #fff; opacity: 0.88; }
+  }
+}
+
+// ── Estado (última acción registrada por el padre) ──────────────────────
+.estado {
+  margin: 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.estado__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.estado__valor {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.estado__valor--vacio {
+  color: var(--text-dim);
+  font-weight: 400;
+  font-style: italic;
+}

@@ -1,0 +1,85 @@
+<div class="panel">
+  <form class="alta" [formGroup]="form" (ngSubmit)="publicar()">
+    <span class="alta__title">{{ 'sections.custom-validators.exercise.formTitle' | translate }}</span>
+
+    <!-- Campo con validator de factoría: nombreDisponible(reservados) -->
+    <label class="campo">
+      <span class="campo__label">{{ 'sections.custom-validators.exercise.nombreLabel' | translate }}</span>
+      <input
+        type="text"
+        formControlName="nombre"
+        [placeholder]="'sections.custom-validators.exercise.nombrePlaceholder' | translate"
+      />
+      @if (form.controls.nombre.touched) {
+        @if (form.controls.nombre.errors?.['required']) {
+          <span class="campo__error">{{ 'sections.custom-validators.exercise.requeridoError' | translate }}</span>
+        } @else if (form.controls.nombre.errors?.['nombreReservado']; as err) {
+          <!-- La metadata del error (el nombre rechazado) se interpola en el mensaje -->
+          <span class="campo__error">
+            {{ 'sections.custom-validators.exercise.nombreReservadoError' | translate: { nombre: err.nombre } }}
+          </span>
+        }
+      }
+    </label>
+
+    <!-- Campo numérico con maxCifras(4): el error trae metadata max/actual -->
+    <label class="campo">
+      <span class="campo__label">{{ 'sections.custom-validators.exercise.descargasLabel' | translate }}</span>
+      <input type="number" formControlName="descargasEstimadas" min="1" />
+      @if (form.controls.descargasEstimadas.touched) {
+        @if (form.controls.descargasEstimadas.errors?.['required']) {
+          <span class="campo__error">{{ 'sections.custom-validators.exercise.requeridoError' | translate }}</span>
+        } @else if (form.controls.descargasEstimadas.errors?.['min']) {
+          <span class="campo__error">{{ 'sections.custom-validators.exercise.descargasMinError' | translate }}</span>
+        } @else if (errorCifras; as err) {
+          <span class="campo__error">
+            {{ 'sections.custom-validators.exercise.maxCifrasError' | translate: { max: err.max, actual: err.actual } }}
+          </span>
+        }
+      }
+    </label>
+
+    <div class="campos-email">
+      <label class="campo">
+        <span class="campo__label">{{ 'sections.custom-validators.exercise.emailLabel' | translate }}</span>
+        <input type="email" formControlName="email" />
+        @if (form.controls.email.touched && form.controls.email.errors) {
+          <span class="campo__error">{{ 'sections.custom-validators.exercise.emailError' | translate }}</span>
+        }
+      </label>
+
+      <label class="campo">
+        <span class="campo__label">{{ 'sections.custom-validators.exercise.confirmarEmailLabel' | translate }}</span>
+        <input type="email" formControlName="confirmarEmail" />
+      </label>
+    </div>
+
+    <!-- Error de NIVEL GRUPO: se lee en form.errors, no en un control -->
+    @if (form.errors?.['noCoinciden'] && form.controls.confirmarEmail.touched) {
+      <span class="campo__error campo__error--grupo">
+        {{ 'sections.custom-validators.exercise.noCoincidenError' | translate }}
+      </span>
+    }
+
+    <div class="actions">
+      <button type="submit" class="btn btn--primary">
+        {{ 'sections.custom-validators.exercise.publicarBtn' | translate }}
+      </button>
+      <span class="estado" [class.estado--valido]="form.valid">
+        {{ (form.valid
+          ? 'sections.custom-validators.exercise.estadoValido'
+          : 'sections.custom-validators.exercise.estadoInvalido') | translate }}
+      </span>
+    </div>
+  </form>
+
+  <!-- Resultado del último envío válido -->
+  @if (publicado(); as payload) {
+    <div class="resultado">
+      <span class="resultado__title">{{ 'sections.custom-validators.exercise.publicadoTitle' | translate }}</span>
+      <pre class="resultado__payload">{{ payload | json }}</pre>
+    </div>
+  }
+
+  <p class="hint">{{ 'sections.custom-validators.exercise.hint' | translate }}</p>
+</div>

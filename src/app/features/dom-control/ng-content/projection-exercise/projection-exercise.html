@@ -1,0 +1,70 @@
+<div class="perfiles">
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       TARJETA A — cada pieza casa con su slot de forma natural:
+         <span tarjeta-icono>  → select="[tarjeta-icono]"  (atributo)
+         <h4>                  → select="h4"               (elemento)
+         <p>                   → catch-all (sin select)
+         <div class="tarjeta-acciones"> → select=".tarjeta-acciones" (clase)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <app-tarjeta-perfil>
+    <span tarjeta-icono>👩‍💻</span>
+    <h4>Marta · Frontend</h4>
+    <p class="perfil-bio">{{ 'sections.ng-content.exercise.cardABody' | translate }}</p>
+    <div class="tarjeta-acciones">
+      <!-- El (click) vive en el PADRE: la tarjeta solo coloca el botón. -->
+      <button class="accion accion--primaria" type="button" (click)="registrar('follow', 'Marta')">
+        {{ 'sections.ng-content.exercise.follow' | translate }}
+      </button>
+      <button class="accion" type="button" (click)="registrar('message', 'Marta')">
+        {{ 'sections.ng-content.exercise.message' | translate }}
+      </button>
+    </div>
+  </app-tarjeta-perfil>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       TARJETA B — TODO 5: ngProjectAs.
+       Un <ng-container> NO casa con el selector .tarjeta-acciones;
+       ngProjectAs lo redirige a ese slot "haciéndose pasar" por él,
+       y como es ng-container, no añade ningún nodo real al DOM.
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <app-tarjeta-perfil>
+    <span tarjeta-icono>🛠️</span>
+    <h4>Diego · Backend</h4>
+    <p class="perfil-bio">{{ 'sections.ng-content.exercise.cardBBody' | translate }}</p>
+    <ng-container ngProjectAs=".tarjeta-acciones">
+      <button class="accion accion--primaria" type="button" (click)="registrar('follow', 'Diego')">
+        {{ 'sections.ng-content.exercise.follow' | translate }}
+      </button>
+      <button class="accion" type="button" (click)="registrar('promote', 'Diego')">
+        {{ 'sections.ng-content.exercise.promote' | translate }}
+      </button>
+    </ng-container>
+  </app-tarjeta-perfil>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       TARJETA C — nadie proyecta acciones: el slot .tarjeta-acciones
+       queda vacío y se pinta su contenido de FALLBACK (Angular 18+).
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <app-tarjeta-perfil>
+    <span tarjeta-icono>🤖</span>
+    <h4>Bot de CI</h4>
+    <p class="perfil-bio">{{ 'sections.ng-content.exercise.cardCBody' | translate }}</p>
+  </app-tarjeta-perfil>
+
+  <!-- Estado: prueba en vivo de que el contenido proyectado pertenece al
+       padre — los clicks de los botones se registran en ESTE componente. -->
+  <p class="estado">
+    <span class="estado__label">{{ 'sections.ng-content.exercise.lastAction' | translate }}:</span>
+    @if (ultimaAccion(); as accion) {
+      <span class="estado__valor">
+        {{ 'sections.ng-content.exercise.' + accion.tipo | translate }} · {{ accion.nombre }}
+      </span>
+    } @else {
+      <span class="estado__valor estado__valor--vacio">
+        {{ 'sections.ng-content.exercise.none' | translate }}
+      </span>
+    }
+  </p>
+
+</div>

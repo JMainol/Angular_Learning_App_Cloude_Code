@@ -1,0 +1,90 @@
+<div class="team-panel">
+  <!-- Mini-formulario: al añadir, la MISMA plantilla se instancia de nuevo en vivo. -->
+  <form class="add-form" (ngSubmit)="anadir()">
+    <span class="add-form__title">{{ 'sections.ng-container-template.exercise.addTitle' | translate }}</span>
+    <div class="add-form__row">
+      <input
+        class="field"
+        name="nombre"
+        [(ngModel)]="nuevoNombre"
+        [placeholder]="'sections.ng-container-template.exercise.namePlaceholder' | translate"
+        autocomplete="off"
+      />
+      <select class="field field--select" name="rol" [(ngModel)]="nuevoRol">
+        @for (rol of roles; track rol) {
+          <option [value]="rol">{{ rol }}</option>
+        }
+      </select>
+      <button class="btn btn--add" type="submit" [disabled]="!nuevoNombre.trim()">
+        {{ 'sections.ng-container-template.exercise.addBtn' | translate }}
+      </button>
+    </div>
+  </form>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       TODO 1 — PLANTILLA REUTILIZABLE.
+       Un <ng-template> NO se pinta donde se declara: es un "molde".
+       Recibe sus datos por contexto con let-*:
+         · let-persona   → toma la clave especial $implicit del contexto
+         · let-rol="rol" → toma la propiedad nombrada "rol" del contexto
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <ng-template #miembroTpl let-persona let-rol="rol">
+    <div class="member">
+      <span class="member__avatar" [attr.data-rol]="rol">{{ inicial(persona.nombre) }}</span>
+      <div class="member__info">
+        <span class="member__name">{{ persona.nombre }}</span>
+        <span class="member__role" [attr.data-rol]="rol">{{ rol }}</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- TODO 4 — Plantilla del estado vacío. Esta NO necesita contexto:
+       es solo un fragmento de vista guardado como molde. -->
+  <ng-template #vacioTpl>
+    <p class="empty">{{ 'sections.ng-container-template.exercise.empty' | translate }}</p>
+  </ng-template>
+
+  @if (miembros().length > 0) {
+    <!-- TODO 2 — Miembro DESTACADO: se instancia la plantilla con
+         [ngTemplateOutlet] y se le pasa el contexto con [ngTemplateOutletContext].
+         $implicit viaja a let-persona; rol viaja a let-rol="rol". -->
+    <div class="featured">
+      <span class="featured__label">{{ 'sections.ng-container-template.exercise.featured' | translate }}</span>
+      <ng-container
+        [ngTemplateOutlet]="miembroTpl"
+        [ngTemplateOutletContext]="{ $implicit: destacado(), rol: destacado().rol }"
+      />
+    </div>
+
+    <ul class="member-list">
+      @for (m of resto(); track m.nombre) {
+        <li class="member-list__item">
+          <!-- TODO 3 — Se reutiliza la MISMA plantilla en cada vuelta del @for.
+               <ng-container> aloja el outlet sin añadir un <div> extra al DOM
+               (el <li> ya es el único elemento real de cada fila). -->
+          <ng-container
+            [ngTemplateOutlet]="miembroTpl"
+            [ngTemplateOutletContext]="{ $implicit: m, rol: m.rol }"
+          />
+        </li>
+      }
+    </ul>
+  } @else {
+    <!-- Estado vacío: se pinta la plantilla #vacioTpl (sin contexto). -->
+    <ng-container [ngTemplateOutlet]="vacioTpl" />
+  }
+
+  <div class="panel-footer">
+    <button
+      class="btn btn--ghost"
+      type="button"
+      (click)="vaciar()"
+      [disabled]="miembros().length === 0"
+    >
+      {{ 'sections.ng-container-template.exercise.clearBtn' | translate }}
+    </button>
+    <span class="count">
+      {{ miembros().length }} {{ 'sections.ng-container-template.exercise.members' | translate }}
+    </span>
+  </div>
+</div>
