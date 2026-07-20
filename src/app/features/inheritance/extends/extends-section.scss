@@ -1,0 +1,339 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.doc {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--surface-left);
+  padding: 2.25rem 2.25rem 5rem;
+}
+
+.doc__head {
+  max-width: 70ch;
+  margin: 0 auto;
+}
+.doc__tags {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.doc__code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.doc__badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+}
+.doc__title {
+  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-bottom: 0.9rem;
+}
+.doc__intro {
+  color: var(--text-dim);
+  margin: 0;
+}
+
+// ===================== TEORÍA / SÍMIL / EJEMPLOS =====================
+.part {
+  max-width: 70ch;
+  margin: 2.25rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.part__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.part__text {
+  margin: 0 0 0.75rem;
+  white-space: pre-line;
+}
+.part__text--simile {
+  color: var(--text-strong);
+  border-left: 2px solid var(--accent);
+  padding-left: 0.9rem;
+}
+.examples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.examples__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.examples__num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============ BLOQUES NUMERADOS · Paso N ↔ Diagrama N ============
+.block {
+  max-width: 980px;
+  margin: 2.5rem auto 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.block__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+.block__tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+.flow__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.flow__lead {
+  margin: 0 0 1.25rem;
+}
+
+// ============================ DIAGRAMA BASE ============================
+.diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0.9rem;
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  gap: 0;
+}
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.node__title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-strong);
+}
+.node__title--sm {
+  font-size: 0.72rem;
+}
+.node__cap {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.node--accent {
+  border-color: var(--accent);
+  .node__title { color: var(--accent); }
+}
+.node--out {
+  background: var(--accent-soft);
+}
+
+.arrow {
+  width: 1px;
+  height: 24px;
+  background: var(--border-strong);
+  position: relative;
+  flex-shrink: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid var(--border-strong);
+  }
+}
+
+// Badges (@Directive() sin selector, noImplicitOverride…)
+.tag-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.node__badge {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+
+  &--dim {
+    border-color: var(--border-strong);
+    color: var(--text-dim);
+  }
+}
+
+// Split de miembros de la base (diagrama 1): pills bajo el nodo madre.
+.arrow-split {
+  width: 1px;
+  height: 20px;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+.signal-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+}
+.signal-pill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.4rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  min-width: 0;
+}
+.signal-pill__name {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-strong);
+}
+.signal-pill__type {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: var(--text-dim);
+}
+
+// Comparativas (diagramas 2 y 4): lo que se hereda (caja sólida) frente a
+// lo que no / lo clásico (caja fantasma discontinua).
+.herencia-compare {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.herencia-compare__col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.dom-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+.dom-box--ghost {
+  // Lo que NO viaja con extends se dibuja discontinuo: existe en la base
+  // o en el pasado (constructor clásico), pero no llega al hijo moderno.
+  border-style: dashed;
+  background: transparent;
+}
+.dom-box__leaf {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--accent);
+  text-align: center;
+  padding: 0.2rem;
+  background: var(--accent-soft);
+  border-radius: 3px;
+}
+.dom-box__leaf--ghost {
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+}
+.dom-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-align: center;
+  font-family: var(--font-mono);
+}
+
+// ===================== EJERCICIO (dos columnas) =====================
+.exercise {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+.exercise__code {
+  min-width: 0;
+}
+.exercise__desc {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+}
+.exercise__result {
+  position: sticky;
+  top: 1.5rem;
+}
+
+// --- Responsive ---
+@media (max-width: 900px) {
+  .doc {
+    overflow-y: visible;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+  .block__grid {
+    grid-template-columns: 1fr;
+  }
+  .exercise {
+    grid-template-columns: 1fr;
+  }
+  .exercise__result {
+    position: static;
+  }
+}

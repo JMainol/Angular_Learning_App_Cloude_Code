@@ -27,11 +27,18 @@ export class ForSection {
   /** Código del ejercicio (con TODOs) que se muestra en el bloque copiable. */
   protected readonly exerciseCode = `<ul class="list">
   @for (tarea of tareas(); track $index) {
+    <!-- TODO 5b: marca la última fila con [class.row--ultima]="$last".
+         TODO 6: alterna el fondo con [class.row--par]="$even". -->
     <li class="row">
-      <!-- TODO 2: muestra la posición con $index (empieza en 0). -->
+      <!-- TODO 2: muestra la posición con $index (empieza en 0).
+           TODO 4: añade el total con $count para leer "1/5", "2/5"… -->
       <span class="row__num">·</span>
 
       <span class="row__text">{{ tarea.texto }}</span>
+
+      <!-- TODO 5a: envuelve este badge en @if ($first) { … }. -->
+      <span class="row__badge">siguiente</span>
+
       <span class="row__tag">{{ tarea.prioridad }}</span>
     </li>
   }

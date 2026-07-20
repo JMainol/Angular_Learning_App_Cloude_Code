@@ -1,0 +1,241 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">19.1</span>
+      <span class="doc__badge">{{ 'sections.dev-remote.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.dev-remote.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.dev-remote.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.dev-remote.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.dev-remote.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.dev-remote.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: el archivo de proxy ─────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.dev-remote.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.dev-remote.p1.title' | translate">
+          <div class="ctx-row" aria-hidden="true">
+            <div class="node node--accent">
+              <span class="node__title node__title--sm">context: /api</span>
+              <span class="node__cap">HTTP</span>
+            </div>
+            <div class="node node--accent">
+              <span class="node__title node__title--sm">context: /ws</span>
+              <span class="node__cap">WebSocket · ws:true</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="inject-pill">+ Cookie · Origin · Referer · Host</div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">target: entorno remoto</span>
+            <span class="node__cap">{{ 'sections.dev-remote.p1.n1' | translate }}</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge node__badge--dim">changeOrigin · secure:false · agent</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.dev-remote.stepWord' | translate }} 1 · {{ 'sections.dev-remote.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.dev-remote.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeProxy" language="JavaScript" filename="proxy-dev.config.js" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: environment con rutas relativas ─────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.dev-remote.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.dev-remote.p2.title' | translate">
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">✘ {{ 'sections.dev-remote.p2.absolute' | translate }}</span>
+              <div class="url-box url-box--ghost">
+                <span class="url-box__leaf url-box__leaf--ghost">https://localhost:8080/api</span>
+              </div>
+              <span class="node__badge node__badge--dim">{{ 'sections.dev-remote.p2.cross' | translate }}</span>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">✔ {{ 'sections.dev-remote.p2.relative' | translate }}</span>
+              <div class="url-box">
+                <span class="url-box__leaf">/api</span>
+                <span class="url-box__leaf">/ws</span>
+              </div>
+              <span class="node__badge">{{ 'sections.dev-remote.p2.same' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.dev-remote.p2.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.dev-remote.stepWord' | translate }} 2 · {{ 'sections.dev-remote.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.dev-remote.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeEnv" language="TypeScript" filename="environment.proxy.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: angular.json (build + serve) ────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.dev-remote.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.dev-remote.p3.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">build : dev-proxy</span>
+            <span class="node__cap">fileReplacements</span>
+          </div>
+          <div class="node__badge node__badge--dim node__badge--stack">environment.ts → environment.proxy.ts</div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">serve : dev-proxy</span>
+            <span class="node__cap">{{ 'sections.dev-remote.p3.n1' | translate }}</span>
+          </div>
+          <div class="tag-row tag-row--wrap" aria-hidden="true">
+            <span class="node__badge">buildTarget</span>
+            <span class="node__badge">proxyConfig</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.dev-remote.stepWord' | translate }} 3 · {{ 'sections.dev-remote.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.dev-remote.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeAngular" language="JSON" filename="angular.json" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: el flujo completo con start:proxy ───────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.dev-remote.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.dev-remote.p4.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">🌐 {{ 'sections.dev-remote.p4.browser' | translate }}</span>
+            <span class="node__cap">GET /api/…</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">⚙️ dev-server</span>
+            <span class="node__cap">localhost:4200 · {{ 'sections.dev-remote.p4.intercept' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">🔀 proxy</span>
+            <span class="node__cap">{{ 'sections.dev-remote.p4.inject' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">☁️ {{ 'sections.dev-remote.p4.remote' | translate }}</span>
+            <span class="node__cap">200 · {{ 'sections.dev-remote.p4.realData' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.dev-remote.stepWord' | translate }} 4 · {{ 'sections.dev-remote.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.dev-remote.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeScript" language="JSON" filename="package.json" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 5 / DIAGRAMA 5: mantenimiento de la cookie ──────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.dev-remote.diagramWord' | translate }} 5</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.dev-remote.p5.title' | translate">
+          <div class="node node--out">
+            <span class="node__title node__title--sm">🍪 {{ 'sections.dev-remote.p5.fresh' | translate }}</span>
+            <span class="node__cap">200 · {{ 'sections.dev-remote.p5.realData' | translate }}</span>
+          </div>
+          <div class="arrow arrow--time" aria-hidden="true">
+            <span class="arrow__label">{{ 'sections.dev-remote.p5.time' | translate }}</span>
+          </div>
+          <div class="node node--dead">
+            <span class="node__title node__title--sm">🍪 {{ 'sections.dev-remote.p5.expired' | translate }}</span>
+            <span class="node__cap">401 · {{ 'sections.dev-remote.p5.login' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">DevTools → Cookies</span>
+            <span class="node__cap">{{ 'sections.dev-remote.p5.recopy' | translate }}</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge node__badge--danger">{{ 'sections.dev-remote.p5.sensitive' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.dev-remote.stepWord' | translate }} 5 · {{ 'sections.dev-remote.p5.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.dev-remote.p5.lead' | translate }}</p>
+        <app-code-block [code]="codeMaint" language="Bash" filename=".gitignore" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.dev-remote.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="proxy-simulator.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-proxy-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

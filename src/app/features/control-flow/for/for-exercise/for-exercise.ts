@@ -10,9 +10,10 @@ interface Tarea {
 /**
  * EJERCICIO 1.2 — `@for`
  * ----------------------------------------------------------------------------
- * Objetivo: renderizar una lista de tareas con `@for`, aprovechando `track`,
- * las variables contextuales (`$index`, `$count`, `$first`, `$last`…) y el
- * bloque `@empty`.
+ * Objetivo: renderizar una lista de tareas con `@for`, aprovechando `track`, el
+ * bloque `@empty` y las variables contextuales que Angular expone en cada
+ * iteración sin declararlas: `$index` (posición), `$count` (total), `$first` /
+ * `$last` (extremos) y `$even` / `$odd` (paridad).
  *
  * La lista es un `signal` de array: al añadir o quitar tareas, la plantilla se
  * vuelve a evaluar sola. Usa los botones para modificar la lista y ver cómo

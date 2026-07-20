@@ -1,0 +1,279 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">11.3</span>
+      <span class="doc__badge">{{ 'sections.sockjs-stomp.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.sockjs-stomp.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.sockjs-stomp.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.sockjs-stomp.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.sockjs-stomp.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.sockjs-stomp.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: La pila SockJS + STOMP ─────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sockjs-stomp.diagramWord' | translate }} 1</span>
+        <div class="diagram diagram--stack" role="img" [attr.aria-label]="'sections.sockjs-stomp.p1.title' | translate">
+          <div class="stack">
+            <div class="stack__layer stack__layer--stomp">
+              <span class="stack__name">STOMP · @stomp/stompjs</span>
+              <span class="stack__cap">{{ 'sections.sockjs-stomp.p1.l1' | translate }}</span>
+            </div>
+            <div class="stack__joint">↕</div>
+            <div class="stack__layer stack__layer--sockjs">
+              <span class="stack__name">SockJS · sockjs-client</span>
+              <span class="stack__cap">{{ 'sections.sockjs-stomp.p1.l2' | translate }}</span>
+            </div>
+            <div class="stack__joint">↕</div>
+            <div class="stack__layer stack__layer--transport">
+              <span class="stack__name">WebSocket / HTTP</span>
+              <span class="stack__cap">{{ 'sections.sockjs-stomp.p1.l3' | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sockjs-stomp.stepWord' | translate }} 1 · {{ 'sections.sockjs-stomp.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sockjs-stomp.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeStack" language="TypeScript" filename="socket-client.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: Estados + suscripción perezosa ─────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sockjs-stomp.diagramWord' | translate }} 2</span>
+        <div class="diagram diagram--states" role="img" [attr.aria-label]="'sections.sockjs-stomp.p2.title' | translate">
+          <div class="state-list">
+            <div class="state">
+              <span class="state__dot state__dot--closed"></span>
+              <div class="state__info">
+                <span class="state__name">UNINITIALIZED</span>
+                <span class="state__sub">{{ 'sections.sockjs-stomp.p2.sub0' | translate }}</span>
+              </div>
+            </div>
+            <div class="state-arrow">
+              <span class="state-arrow__glyph">↓</span>
+              <span class="state-arrow__note">{{ 'sections.sockjs-stomp.p2.t0' | translate }}</span>
+            </div>
+            <div class="state state--connecting-b">
+              <span class="state__dot state__dot--connecting"></span>
+              <div class="state__info">
+                <span class="state__name">CONNECTING</span>
+                <span class="state__sub">{{ 'sections.sockjs-stomp.p2.sub1' | translate }}</span>
+              </div>
+            </div>
+            <div class="state-arrow">
+              <span class="state-arrow__glyph">↓</span>
+              <span class="state-arrow__note">{{ 'sections.sockjs-stomp.p2.t1' | translate }}</span>
+            </div>
+            <div class="state state--open">
+              <span class="state__dot state__dot--open"></span>
+              <div class="state__info">
+                <span class="state__name">CONNECTED</span>
+                <span class="state__sub">{{ 'sections.sockjs-stomp.p2.sub2' | translate }}</span>
+              </div>
+              <span class="state__badge">push ↓</span>
+            </div>
+            <div class="state-arrow">
+              <span class="state-arrow__glyph">⟲</span>
+              <span class="state-arrow__note">{{ 'sections.sockjs-stomp.p2.t2' | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sockjs-stomp.stepWord' | translate }} 2 · {{ 'sections.sockjs-stomp.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sockjs-stomp.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeStates" language="TypeScript" filename="socket-client.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: Handshake CIAM vs token ─────────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sockjs-stomp.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.sockjs-stomp.p3.title' | translate">
+
+          <!-- Dos ramas de autenticación que convergen -->
+          <div class="auth-branches">
+            <div class="node node--accent auth-branches__item">
+              <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p3.n1' | translate }}</span>
+              <span class="node__cap">cookie SSO</span>
+            </div>
+            <div class="node node--warn auth-branches__item">
+              <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p3.n2' | translate }}</span>
+              <span class="node__cap">?access_token=…</span>
+            </div>
+          </div>
+          <div class="merge-fork" aria-hidden="true">
+            <span class="merge-fork__line merge-fork__line--left"></span>
+            <span class="merge-fork__line merge-fork__line--right"></span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p3.n3' | translate }}</span>
+            <span class="node__cap">GET /ws/info · SockJS</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--closed">
+            <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p3.n4' | translate }}</span>
+            <span class="node__cap">frame CONNECT · STOMP</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sockjs-stomp.stepWord' | translate }} 3 · {{ 'sections.sockjs-stomp.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sockjs-stomp.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeHandshake" language="TypeScript" filename="socket-client.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: Fan-out de topics por rol ───────────────── -->
+  <article class="block block--wide">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sockjs-stomp.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.sockjs-stomp.p4.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">CONNECTED</span>
+            <span class="node__cap">SUBSCRIBE × topic</span>
+          </div>
+          <div class="fan" aria-hidden="true">
+            <span class="fan__line"></span>
+          </div>
+          <div class="fanout">
+            <div class="topic topic--admin">
+              <span class="topic__role">{{ 'sections.sockjs-stomp.p4.r1' | translate }}</span>
+              <span class="topic__path">/topic/notifications/admin</span>
+            </div>
+            <div class="topic topic--client">
+              <span class="topic__role">{{ 'sections.sockjs-stomp.p4.r2' | translate }}</span>
+              <span class="topic__path">/topic/notifications/{{ '{clientId}' }}</span>
+            </div>
+            <div class="topic topic--clients">
+              <span class="topic__role">{{ 'sections.sockjs-stomp.p4.r3' | translate }}</span>
+              <span class="topic__path">/topic/notifications/clients</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sockjs-stomp.stepWord' | translate }} 4 · {{ 'sections.sockjs-stomp.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sockjs-stomp.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeFanout" language="TypeScript" filename="notification.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 5 / DIAGRAMA 5: Notificación push end-to-end ────────────── -->
+  <article class="block">
+    <div class="block__grid">
+
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.sockjs-stomp.diagramWord' | translate }} 5</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.sockjs-stomp.p5.title' | translate">
+          <div class="node node--server">
+            <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p5.n1' | translate }}</span>
+            <span class="node__cap">&#123; type, body &#125;</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p5.n2' | translate }}</span>
+            <span class="node__cap">jsonHandler</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--warn">
+            <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p5.n3' | translate }}</span>
+            <span class="node__cap">filter by type</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">{{ 'sections.sockjs-stomp.p5.n4' | translate }}</span>
+            <span class="node__cap">toast + refresh grid</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.sockjs-stomp.stepWord' | translate }} 5 · {{ 'sections.sockjs-stomp.p5.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.sockjs-stomp.p5.lead' | translate }}</p>
+        <app-code-block [code]="codePush" language="TypeScript" filename="notification.service.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.sockjs-stomp.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="stomp-exercise.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-stomp-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

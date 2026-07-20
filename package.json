@@ -3,8 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ng serve Angular_Learning_App_Cloude_Code",
+    "build": "ng build Angular_Learning_App_Cloude_Code",
+    "build:wc-lib": "ng build wc-lib",
+    "serve:wc-lib": "ng serve wc-lib --port 4301",
+    "start:demo": "npm run build:wc-lib && ng serve wc-demo --port 4300",
+    "pack:wc-lib": "npm run build:wc-lib && node -e \"require('fs').cpSync('projects/wc-lib/npm/package.json','dist/wc-lib/browser/package.json')\" && npm pack ./dist/wc-lib/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -14,6 +18,7 @@
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
     "@angular/core": "^22.0.0",
+    "@angular/elements": "^22.0.1",
     "@angular/forms": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",

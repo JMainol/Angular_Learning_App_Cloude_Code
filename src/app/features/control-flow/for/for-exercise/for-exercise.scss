@@ -51,13 +51,42 @@
   border-radius: var(--radius-sm);
 }
 
+/* Clase auxiliar para tu $even (TODO 6): zebra striping.
+   El fondo alterno se deriva del mismo token de superficie (un punto más claro)
+   en vez de introducir un color nuevo: la alternancia se lee sin romper la paleta. */
+.row--par {
+  background: color-mix(in srgb, var(--surface-raised) 92%, #ffffff);
+}
+
+/* Clase auxiliar para tu $last (TODO 5b): la última tarea de la cola se muestra
+   atenuada y con borde discontinuo, marcando el final visualmente. */
+.row--ultima {
+  border-style: dashed;
+  opacity: 0.72;
+}
+
 .row__num {
   flex-shrink: 0;
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--text-dim);
-  min-width: 1.2rem;
+  /* Ancho fijo para que "1/5" y "10/12" no descoloquen el texto de al lado. */
+  min-width: 2.6rem;
   text-align: right;
+}
+
+/* Badge de la primera fila (TODO 5a), con $first. Único punto donde el ejercicio
+   usa el acento: marca "lo siguiente que toca", que es la acción, no decoración. */
+.row__badge {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .row__text {

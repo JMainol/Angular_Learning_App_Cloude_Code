@@ -11,14 +11,40 @@
     <!--
       La base usa `track $index`, que compila pero NO es lo ideal: si la lista
       cambia en medio, Angular puede confundir qué fila es cuál.
+
+      Dentro de este bloque tienes disponibles las variables contextuales que
+      Angular expone en cada iteración: $index, $count, $first, $last, $even,
+      $odd. No hay que declararlas: existen sin más dentro del @for.
     -->
     @for (tarea of tareas(); track $index) {
+      <!-- TODO 5b: aplica la clase `row--ultima` cuando $last sea true, con
+           [class.row--ultima]="$last". $last es un booleano que solo vale true
+           en la última iteración: sirve para tratar el extremo de la lista sin
+           comparar $index con $count - 1 a mano.
+
+           TODO 6: aplica también `row--par` cuando $even sea true, con
+           [class.row--par]="$even". $even es azúcar sintáctico sobre
+           `$index % 2 === 0`; usarlo mantiene la plantilla declarativa (dices
+           QUÉ quieres, no cómo se calcula) y evita ensuciar el HTML con
+           aritmética. Es el patrón clásico de "zebra striping". -->
       <li class="row">
         <!-- TODO 2: muestra la posición usando la variable contextual $index
-             (recuerda que empieza en 0; suma 1 para enseñar "1, 2, 3…"). -->
+             (recuerda que empieza en 0; suma 1 para enseñar "1, 2, 3…").
+
+             TODO 4: amplíalo a "1/5", "2/5"… añadiendo $count, que es el total
+             de elementos del array en esta pasada. Úsalo en vez de
+             `tareas().length`: $count ya lo tiene calculado y no vuelve a leer
+             el signal desde la plantilla. -->
         <span class="row__num">·</span>
 
         <span class="row__text">{{ tarea.texto }}</span>
+
+        <!-- TODO 5a: envuelve este badge en un bloque `@if ($first) { … }` para
+             que solo aparezca en la primera fila. $first es true únicamente en
+             la primera iteración; es la forma de destacar la cabeza de la lista
+             sin preguntar por $index === 0. -->
+        <span class="row__badge">siguiente</span>
+
         <span class="row__tag" [attr.data-prioridad]="tarea.prioridad">{{ tarea.prioridad }}</span>
       </li>
     }

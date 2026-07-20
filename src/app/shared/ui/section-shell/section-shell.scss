@@ -82,6 +82,45 @@
   color: var(--text);
 }
 
+/* Características principales: viñeta discreta (no numeración) porque el orden
+   no es un procedimiento, y el título en mono ancla cada punto de un vistazo. */
+.keypoints {
+  list-style: none;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  max-width: 60ch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.keypoints__item {
+  position: relative;
+  padding-left: 1rem;
+  line-height: 1.55;
+}
+.keypoints__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.keypoints__title {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  color: var(--text-strong);
+}
+.keypoints__title::after {
+  content: ' · ';
+  color: var(--text-dim);
+}
+.keypoints__text {
+  color: var(--text);
+}
+
 /* Lista de ejemplos: numeración real porque es una enumeración, no decoración. */
 .examples {
   list-style: none;

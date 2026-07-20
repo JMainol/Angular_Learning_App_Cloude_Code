@@ -1,0 +1,47 @@
+<div class="notif-panel">
+  <p class="notif-panel__hint">{{ 'sections.abstract.exercise.hint' | translate }}</p>
+
+  <!-- Dos hijos de la MISMA base abstracta: contrato común, formato propio. -->
+  <div class="notif-panel__grid">
+    <app-notificador-email />
+    <app-notificador-sms />
+  </div>
+
+  <!-- El historial COMPARTIDO: una única instancia entregada por el
+       provider { provide: HistorialBase, useClass: HistorialEnMemoria }. -->
+  <section class="historial">
+    <header class="historial__head">
+      <span class="historial__title">{{ 'sections.abstract.exercise.historyTitle' | translate }}</span>
+      <span class="historial__token">inject(HistorialBase)</span>
+    </header>
+
+    @if (historial.mensajes().length > 0) {
+      <ul class="historial__items">
+        @for (n of historial.mensajes(); track n.hora + n.texto) {
+          <li class="historial__item">
+            <span class="historial__icon" aria-hidden="true">{{ n.icono }}</span>
+            <span class="historial__canal">{{ n.canal }}</span>
+            <span class="historial__texto">{{ n.texto }}</span>
+            <span class="historial__hora">{{ n.hora }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="historial__empty">{{ 'sections.abstract.exercise.empty' | translate }}</p>
+    }
+
+    <footer class="historial__foot">
+      <button
+        class="historial__btn"
+        type="button"
+        (click)="historial.vaciar()"
+        [disabled]="historial.mensajes().length === 0"
+      >
+        {{ 'sections.abstract.exercise.clearBtn' | translate }}
+      </button>
+      <span class="historial__count">
+        {{ historial.mensajes().length }} {{ 'sections.abstract.exercise.count' | translate }}
+      </span>
+    </footer>
+  </section>
+</div>

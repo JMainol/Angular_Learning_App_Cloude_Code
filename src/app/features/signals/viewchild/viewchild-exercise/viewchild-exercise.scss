@@ -56,3 +56,78 @@
   font-family: var(--font-mono);
   color: var(--accent);
 }
+
+/* ==========================================================================
+   PARTE 2 — Opcional vs Required
+   ========================================================================== */
+.divider {
+  border: none;
+  border-top: 1px dashed var(--border);
+  margin: 0.5rem 0;
+}
+
+.compare {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.compare__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.compare__title {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-strong);
+}
+.compare__title code {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+.compare__hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+.compare__absent {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  background: var(--surface-sunken, var(--surface-raised));
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  cursor: pointer;
+}
+.toggle code {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+/* Estado del resultado: verde = resuelto sin error, rojo = required lanzó. */
+.result {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-strong);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+.result--error {
+  color: var(--text-strong);
+  background: color-mix(in srgb, #e5484d 12%, transparent);
+  border-left-color: #e5484d;
+}

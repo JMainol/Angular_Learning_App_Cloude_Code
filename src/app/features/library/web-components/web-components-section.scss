@@ -1,0 +1,393 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+// Documentación a una columna, con scroll propio (mismo patrón que 6.2).
+.doc {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--surface-left);
+  padding: 2.25rem 2.25rem 5rem;
+}
+
+.doc__head {
+  max-width: 70ch;
+  margin: 0 auto;
+}
+.doc__tags {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+.doc__code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.doc__badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.1rem 0.55rem;
+}
+.doc__title {
+  font-size: 2rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  margin-bottom: 0.9rem;
+}
+
+// ===================== TEORÍA / SÍMIL / EJEMPLOS =====================
+.part {
+  max-width: 70ch;
+  margin: 2.25rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.part__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.part__text {
+  margin: 0 0 0.75rem;
+  white-space: pre-line; // respeta los saltos de línea de la teoría
+}
+.part__text--simile {
+  color: var(--text-strong);
+  border-left: 2px solid var(--accent);
+  padding-left: 0.9rem;
+}
+.examples {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.examples__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.examples__num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============ BLOQUES NUMERADOS · Paso N ↔ Diagrama N (dos columnas) ============
+.block {
+  max-width: 980px;
+  margin: 2.5rem auto 0;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+.block__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 1.75rem;
+  align-items: start;
+}
+// Etiqueta "Diagrama N": comparte número con el "Paso N" de la derecha.
+.block__tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+
+// Título del paso y su texto.
+.flow__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.flow__lead {
+  margin: 0 0 1.25rem;
+}
+
+// Bloque a ancho completo (paso 6, el cableado): el diagrama horizontal y los
+// dos code-blocks necesitan más de una columna de 300px.
+.block--full .diagram--row {
+  margin-bottom: 1.5rem;
+}
+.wiring-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+// ============================ DIAGRAMA ============================
+.diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0.9rem;
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+// Variante horizontal (cadena de cableado del paso 6).
+.diagram--row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+
+  .node {
+    flex: 1 1 150px;
+    max-width: 190px;
+  }
+}
+
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 320px;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.branch .node {
+  flex: 1 1 0;
+  min-width: 110px;
+}
+.node__title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-strong);
+  overflow-wrap: anywhere; // rutas de archivo largas sin desbordar
+}
+.node__title--sm {
+  font-size: 0.72rem;
+}
+.node__cap {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.node--accent {
+  border-color: var(--accent);
+}
+.node--accent .node__title {
+  color: var(--accent);
+}
+.node--out {
+  background: var(--accent-soft);
+}
+// Vía descartada / secundaria del flujo.
+.node--muted {
+  opacity: 0.62;
+  border-style: dashed;
+}
+// Aviso / pitfall a recordar.
+.node--warn {
+  border-color: color-mix(in srgb, var(--accent) 30%, orange);
+}
+.node--warn .node__title {
+  color: color-mix(in srgb, var(--text-strong) 40%, orange);
+}
+
+// Conector vertical con punta.
+.arrow {
+  width: 1px;
+  height: 24px;
+  background: var(--border-strong);
+  position: relative;
+}
+.arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--border-strong);
+}
+
+// Conector horizontal (diagrama en fila).
+.arrow--h {
+  width: 22px;
+  height: 1px;
+  align-self: center;
+  flex-shrink: 0;
+}
+.arrow--h::after {
+  bottom: auto;
+  left: auto;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--border-strong);
+  border-right: 0;
+}
+
+.diagram__sidetitle {
+  margin: 1.25rem 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-dim);
+}
+.branch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+  justify-content: center;
+}
+
+// ==================== EJECUTAR EN LOCAL · runbook ====================
+// Dos columnas: tarjetas ordenadas (izq) + bloque copiable (der).
+.run-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+.runbook {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.runbook__step {
+  display: flex;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--border-strong); // el flujo real (A/B) se resalta
+  border-radius: var(--radius-sm);
+}
+// Los dos flujos de arranque que el usuario ejecuta de verdad.
+.runbook__step--accent {
+  border-left-color: var(--accent);
+}
+.runbook__order {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+}
+.runbook__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+.runbook__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.runbook__cmd {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+// Badge con la URL/puerto donde queda sirviendo (clicable si es servidor).
+.runbook__url {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.08rem 0.5rem;
+  text-decoration: none;
+}
+.runbook__url--muted {
+  color: var(--text-dim);
+}
+.runbook__what {
+  margin: 0;
+  font-size: 0.86rem;
+}
+.runbook__why {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+.runbook__whyLabel {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+// --- Responsive: columnas apiladas y cadena horizontal en vertical ---
+@media (max-width: 900px) {
+  .run-grid {
+    grid-template-columns: 1fr;
+  }
+  .doc {
+    overflow-y: visible;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+  .block__grid,
+  .wiring-grid {
+    grid-template-columns: 1fr;
+  }
+  .diagram--row {
+    flex-direction: column;
+
+    .node {
+      flex-basis: auto;
+      max-width: 320px;
+    }
+  }
+  // En columna, el conector horizontal vuelve a ser vertical.
+  .arrow--h {
+    width: 1px;
+    height: 24px;
+  }
+  .arrow--h::after {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid var(--border-strong);
+    border-bottom: 0;
+  }
+}

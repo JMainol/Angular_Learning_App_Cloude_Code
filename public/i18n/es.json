@@ -41,7 +41,10 @@
     "lifecycle": "Ciclo de Vida",
     "forms": "Formularios",
     "utils": "Funciones útiles",
-    "dom-control": "Control avanzado del DOM"
+    "dom-control": "Control avanzado del DOM",
+    "library": "Librería",
+    "inheritance": "Herencia de clases",
+    "proxy": "Proxy"
   },
   "sections": {
     "standalone": {
@@ -187,7 +190,45 @@
     },
     "effect": {
       "title": "Effect",
-      "theory": "Un Effect ejecuta una función cada vez que cambia alguno de los signals que lee dentro. Se crea con `effect(() => ...)`, normalmente en el constructor (necesita un injection context).\n A diferencia de `computed()`, no devuelve un valor: su propósito son los EFECTOS SECUNDARIOS (logging, sincronizar con localStorage o el DOM, analítica…).\n Angular lo limpia automáticamente al destruir el componente. Regla: para DERIVAR datos usa `computed`; reserva `effect` para provocar cosas fuera del mundo reactivo.",
+      "theory": "Un Effect ejecuta una función cada vez que cambia alguno de los signals que lee dentro. Se crea con `effect(() => ...)`, normalmente en el constructor o como campo de clase, porque necesita un injection context.\n A diferencia de `computed()`, no devuelve ningún valor: su propósito son los efectos secundarios (logging, sincronizar con localStorage o el DOM, analítica…). Estas son sus características principales:",
+      "theoryList": [
+        {
+          "title": "Primera ejecución",
+          "text": "Corre una vez al inicializarse el componente. Aunque lo declares en el constructor, no se ejecuta ahí: Angular lo lanza durante la primera detección de cambios, después de renderizar la vista del componente."
+        },
+        {
+          "title": "Re-ejecución",
+          "text": "A partir de ahí vuelve a ejecutarse en cada cambio de cualquiera de los signals que lee dentro."
+        },
+        {
+          "title": "Dependencias automáticas",
+          "text": "No declaras de qué depende: Angular registra los signals que lees durante la ejecución. Si una rama `if` no llega a leer un signal, ese signal no es dependencia en esa pasada."
+        },
+        {
+          "title": "No devuelve valor",
+          "text": "Su salida es lo que provoca fuera del mundo reactivo, no un dato que puedas leer desde el template."
+        },
+        {
+          "title": "Agrupado y asíncrono",
+          "text": "No se dispara síncronamente tras cada `set()`. Varios cambios seguidos se agrupan en una sola ejecución posterior."
+        },
+        {
+          "title": "Limpieza automática",
+          "text": "Se destruye solo cuando muere el componente en cuyo injection context se creó. Si lo creas fuera, puedes pararlo a mano con el `EffectRef.destroy()` que devuelve."
+        },
+        {
+          "title": "onCleanup",
+          "text": "La función recibe un `onCleanup` para cancelar el trabajo de la ejecución anterior (un `setTimeout`, una petición) antes de que arranque la siguiente."
+        },
+        {
+          "title": "untracked",
+          "text": "Envuelve una lectura en `untracked(...)` para consultar un signal sin convertirlo en dependencia y evitar re-ejecuciones que no quieres."
+        },
+        {
+          "title": "Regla de oro",
+          "text": "Para DERIVAR datos usa `computed`; reserva `effect` para provocar cosas fuera del mundo reactivo."
+        }
+      ],
       "simile": "Un Effect es como el sensor de luz de una farola: no calcula ni guarda nada para ti, simplemente observa una condición (anochece) y dispara una acción en el mundo real (encender la luz) cada vez que esa condición cambia.",
       "examples": [
         "Guardar una preferencia del usuario en localStorage cuando cambia.",
@@ -661,6 +702,74 @@
         "apiNote": "Los datos son de"
       }
     },
+    "sockjs-stomp": {
+      "title": "WebSockets (SockJS + STOMP · FXS App)",
+      "badge": "SockJS · STOMP · Push",
+      "intro": "La arquitectura real de una app de notificaciones push: SockJS abre el transporte (con fallback HTTP si el WebSocket falla) y STOMP añade la semántica pub/sub de topics encima. Aunque el canal es bidireccional, la app solo lo usa en dirección servidor → cliente.",
+      "theory": "Esta pila combina dos librerías: `sockjs-client` y `@stomp/stompjs`. No es un WebSocket \"crudo\": SockJS se encarga del transporte y garantiza una conexión incluso en redes hostiles (si el WebSocket no está disponible, cae a XHR streaming o long-polling). STOMP es un protocolo de mensajería que viaja por encima: aporta el modelo pub/sub de topics, los frames CONNECT / SUBSCRIBE y el enrutado por destino.\nEl backend publica notificaciones en topics como `/topic/notifications/{admin | clientId | clients}` y cada cliente se suscribe según su rol. La app nunca hace `send`: es efectivamente un canal de notificaciones push (servidor → cliente).\nSTOMP no abre el socket por su cuenta: se lo pedimos con un `webSocketFactory` que devuelve una instancia de SockJS. Así separamos limpiamente la capa de transporte de la de mensajería.",
+      "simile": "SockJS es la carretera y STOMP el servicio de mensajería que circula por ella. La carretera garantiza que un vehículo llegue (y si el carril rápido está cortado, usa uno secundario); el servicio de mensajería decide a qué buzón —qué topic— va cada paquete. Tú solo te suscribes a tu buzón y las notificaciones aparecen solas.",
+      "examples": [
+        "Panel de administración que recibe en vivo cada nueva orden creada por cualquier cliente.",
+        "Notificaciones por usuario: cada cliente solo escucha los eventos de su propio topic.",
+        "Broadcast de avisos del sistema (mantenimiento, cambios de estado) a todos los clientes conectados."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "La pila SockJS + STOMP",
+        "lead": "En lugar de `new WebSocket(url)`, la app monta dos capas. SockJS negocia el mejor transporte disponible y ofrece un fallback HTTP transparente. STOMP habla su protocolo de frames por encima, aportando el pub/sub de topics. STOMP no abre el socket: se lo pide a SockJS mediante `webSocketFactory`. SockJS necesita el global `global`, que en el navegador no existe, así que un polyfill lo apunta a `window`.",
+        "l1": "Mensajería pub/sub · topics · frames",
+        "l2": "Transporte + fallback HTTP",
+        "l3": "Canal físico negociado"
+      },
+      "p2": {
+        "title": "Estados y suscripción perezosa",
+        "lead": "El socket no se abre al arrancar la app, sino la primera vez que alguien pide escuchar un topic (lazy init). Un `BehaviorSubject` expone el estado (`UNINITIALIZED → CONNECTING → CONNECTED`). El primer `onMessage()` encuentra el estado `UNINITIALIZED` y dispara `init()`; las suscripciones que llegan mientras se conecta quedan en cola hasta que el estado pasa a `CONNECTED`.",
+        "sub0": "Socket cerrado, sin conexión",
+        "sub1": "Handshake en curso",
+        "sub2": "Canal abierto, recibiendo push",
+        "t0": "1er onMessage() → init()",
+        "t1": "frame CONNECTED",
+        "t2": "logout → destroyWs()"
+      },
+      "p3": {
+        "title": "Handshake: CIAM vs token + /ws/info + CONNECT",
+        "lead": "La autenticación depende del entorno. Con CIAM (SSO), la cookie viaja sola con la petición y la conexión es directa. Sin CIAM, esperamos el token del store y lo colgamos como query param, porque SockJS no admite cabeceras `Authorization` personalizadas. Después, SockJS hace `GET /ws/info`, negocia el transporte y abre la conexión; finalmente STOMP envía su frame `CONNECT` por encima.",
+        "n1": "Con CIAM — directo",
+        "n2": "Sin CIAM — token",
+        "n3": "SockJS negocia transporte",
+        "n4": "STOMP conecta"
+      },
+      "p4": {
+        "title": "Fan-out de topics por rol",
+        "lead": "El topic depende del rol del usuario: un admin escucha `/topic/notifications/admin` (todos los eventos), un cliente su propio `/topic/notifications/{clientId}`, y el broadcast general va a `/topic/notifications/clients`. Al llegar a `CONNECTED`, el `BehaviorSubject` emite y se vuelcan todas las suscripciones en cola: un frame `SUBSCRIBE` por topic. A partir de ahí el backend publica hacia esos topics.",
+        "r1": "Administrador",
+        "r2": "Cliente concreto",
+        "r3": "Broadcast a clientes"
+      },
+      "p5": {
+        "title": "Notificación push end-to-end",
+        "lead": "El backend publica un \"sobre\" `{ type, body }` en el topic. `jsonHandler` parsea el sobre, `NotificationService` filtra por `type` y parsea el `body` anidado; el componente suscrito muestra el toast y refresca su grid. Si la red cae, `reconnectDelay: 1000` reintenta cada segundo con un SockJS nuevo y re-crea las suscripciones. En el logout, `destroyWs()` cierra todo y vuelve a `UNINITIALIZED`.",
+        "n1": "Backend publica",
+        "n2": "Parsea el sobre",
+        "n3": "Filtra por tipo",
+        "n4": "Componente reacciona"
+      },
+      "exercise": {
+        "desc": "Completa los 4 TODOs para implementar el canal de notificaciones push. El resultado usa un MockStompClient local que emula @stomp/stompjs: elige un rol, conéctate y observa cómo el socket se abre bajo demanda, filtra los sobres por tipo (solo ORDER llega, HEARTBEAT se descarta) y refresca el grid con cada notificación.",
+        "connectBtn": "Conectar (onNotification)",
+        "logoutBtn": "Logout",
+        "roleLabel": "Rol → topic",
+        "gridLabel": "Grid refrescado",
+        "empty": "Elige un rol y pulsa Conectar para suscribirte al topic.",
+        "waiting": "Suscrito. Esperando notificaciones del backend…",
+        "state": {
+          "UNINITIALIZED": "Sin inicializar · socket cerrado",
+          "CONNECTING": "Conectando · handshake en curso",
+          "CONNECTED": "Conectado · recibiendo push"
+        }
+      }
+    },
     "sse": {
       "title": "Server-Sent Events (SSE)",
       "badge": "SSE · Push unidireccional",
@@ -1073,6 +1182,312 @@
         "noActions": "Sin acciones · perfil de solo lectura",
         "lastAction": "Última acción",
         "none": "todavía ninguna"
+      }
+    },
+    "web-components": {
+      "title": "Librería de Web Components Angular",
+      "badge": "Documentación",
+      "intro": "Cableado real montado en este workspace: el proyecto wc-lib fabrica web components con Angular Elements, el proyecto wc-demo los consume como etiquetas HTML, y el paquete resultante se publica en npm público o en el Artifactory privado de tu empresa. Ocho diagramas, cada uno con su paso y el código real.",
+      "theory": "Angular Elements (@angular/elements) convierte un componente Angular en un custom element estándar del navegador: una etiqueta HTML (`<wc-user-card>`) que funciona en cualquier página, tenga o no Angular detrás.\nEl entregable no es un paquete ng-packagr sino un bundle JS autocontenido: lleva dentro el runtime de Angular y, al cargarse con un `<script type=\"module\">`, registra las etiquetas con `customElements.define()`.\nLos `input()` se exponen como propiedades y atributos del elemento, y los `output()` se despachan como CustomEvent. En este workspace: `projects/wc-lib` (la fábrica) y `projects/wc-demo` (la consumidora).",
+      "simile": "Publicar una librería de web components es como embotellar una receta lista para servir: dentro de la botella va todo lo necesario — los ingredientes (tus componentes) y el cocinero (el runtime de Angular) —. Quien la recibe no necesita saber cocinar Angular: abre la botella con un <script> y sirve la etiqueta en su plato, sea su cocina React, WordPress o HTML a secas.",
+      "examples": [
+        "Design system corporativo compartido entre aplicaciones Angular, React y portales legacy.",
+        "Widgets Angular incrustados en un CMS o portal antiguo (WordPress, SharePoint, JSP…).",
+        "Micro-frontends donde cada equipo publica piezas con su propio stack y versión."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "run": {
+        "kicker": "Ejecutar en local",
+        "title": "Levantar la librería y la demo",
+        "lead": "Todo el montaje ya vive en el repo: solo hay que arrancarlo. Un aviso clave sobre el «desde dónde»: los tres scripts se lanzan SIEMPRE desde la raíz del repositorio, nunca haciendo cd a projects/wc-lib o projects/wc-demo — Angular CLI localiza cada proyecto por su nombre en angular.json, no por el directorio actual. Tienes dos flujos: A) desarrollar la librería aislada, y B) verla consumida por la demo.",
+        "once": "solo la 1ª vez",
+        "whyLabel": "Por qué",
+        "r0": {
+          "what": "Instala las dependencias del workspace, incluida @angular/elements (el paquete que convierte componentes en custom elements).",
+          "why": "Sin node_modules ningún ng build/serve arranca. Basta tras clonar o cuando cambian las dependencias."
+        },
+        "r1": {
+          "what": "Sirve solo projects/wc-lib usando su propio index.html: un banco de pruebas con las etiquetas <wc-user-card> y <wc-contador> sin ninguna app Angular alrededor. Con hot reload.",
+          "why": "Es el modo cómodo para iterar sobre los web components: editas el componente y el navegador refresca al instante, sin pasar por la demo."
+        },
+        "r2": {
+          "what": "Hace primero build:wc-lib (genera dist/wc-lib/browser/main.js) y luego sirve projects/wc-demo, que carga ese main.js como asset y consume las etiquetas con binding de propiedad y CustomEvent.",
+          "why": "El build previo es obligatorio: la demo no importa código de wc-lib, solo carga el bundle ya compilado, así que debe existir en dist/ antes de servir. Ojo: main.js es un asset estático — si tocas la librería con la demo en marcha, hay que re-lanzar este script."
+        },
+        "r3": {
+          "what": "Compila la librería a dist/wc-lib/browser/main.js (sin hash) sin arrancar ningún servidor.",
+          "why": "Útil cuando solo quieres regenerar el bundle: antes de empaquetar/publicar, o para inspeccionar la salida."
+        },
+        "r4": {
+          "what": "Compila, copia el package.json publicable a dist/ y ejecuta npm pack, produciendo un .tgz con lo que se subiría al registro.",
+          "why": "Verifica el flujo de publicación y qué archivos entran en el paquete, sin publicar nada de verdad."
+        },
+        "r5": {
+          "what": "Arranca la app-guía principal (esta misma aplicación con las secciones de aprendizaje).",
+          "why": "Es independiente de wc-lib y wc-demo; se incluye para recordar que los tres proyectos conviven en puertos distintos y no se pisan."
+        }
+      },
+      "p1": {
+        "title": "Un workspace, tres proyectos",
+        "lead": "angular.json es el mapa del workspace: declara cada proyecto, dónde vive su código (root/sourceRoot) y cómo se construye (architect.build). La app-guía ocupa la raíz del repo; los proyectos nuevos nacen en projects/ porque así lo fija newProjectRoot. Cada proyecto se compila y se sirve por separado: ng build wc-lib no toca a los demás.",
+        "n1": "El mapa del workspace",
+        "n2": "La app-guía (raíz)",
+        "n3": "Fábrica de web components",
+        "n4": "App de pruebas"
+      },
+      "p2": {
+        "title": "Las dos vías: application vs library",
+        "lead": "Para web components el entregable es un bundle JS que cualquier página puede cargar, por eso generamos una APPLICATION cuyo main.ts registra los elements. La vía ng generate library + ng-packagr produce un paquete Angular (FESM + metadatos) que solo otra app Angular puede compilar: es la opción correcta para compartir componentes ENTRE apps Angular, pero no sirve para HTML plano, React o un CMS.",
+        "n1": "Bundle JS autocontenido",
+        "n2": "Paquete solo-Angular",
+        "n3": "Lo carga cualquier página"
+      },
+      "p3": {
+        "title": "Del componente al custom element",
+        "lead": "createCustomElement() envuelve un componente Angular normal en una clase estándar de HTMLElement. El puente es automático: cada input() pasa a ser propiedad y atributo dash-case del elemento, y cada output() se despacha como CustomEvent con el valor emitido en event.detail. Con ViewEncapsulation.ShadowDom los estilos quedan aislados de la página host.",
+        "n1": "Componente Angular normal",
+        "n2": "El puente de @angular/elements",
+        "n3": "Clase estándar del navegador",
+        "n4": "→ propiedades y atributos",
+        "n5": "→ CustomEvent (event.detail)"
+      },
+      "p4": {
+        "title": "main.ts sin componente raíz",
+        "lead": "No hay bootstrapApplication(App) ni <app-root>: createApplication() arranca el entorno de Angular (inyector, change detection zoneless) sin pintar nada. Con ese injector, customElements.define() registra cada etiqueta en el registro global del navegador: desde ese momento cualquier <wc-user-card> del documento se \"mejora\" (upgrade) solo, exista ya o se cree después.",
+        "n1": "Punto de entrada del bundle",
+        "n2": "Angular sin vista raíz",
+        "n3": "El inyector compartido",
+        "n4": "Registra cada etiqueta",
+        "n5": "Registro global del navegador"
+      },
+      "p5": {
+        "title": "Build: un único main.js",
+        "lead": "El builder esbuild de Angular, con un solo entry point y sin import() dinámicos, emite un único main.js ESM (~114 kB, ~34 kB transferidos). Dos ajustes clave: outputHashing \"none\" para que el nombre del archivo sea estable (el consumidor lo referencia en un <script> fijo) y styles: [] porque cada componente lleva sus estilos inline. Los budgets se amplían: el bundle embebe el runtime de Angular.",
+        "n1": "Código fuente de la librería",
+        "n2": "Compila con esbuild",
+        "n3": "Bundle único y estable",
+        "n4": "Ajustes que lo hacen posible"
+      },
+      "p6": {
+        "title": "El cableado completo, archivo a archivo",
+        "lead": "La cadena entera: main.ts se compila a dist/wc-lib/browser/main.js; el angular.json de wc-demo lo copia como asset a wc-lib/main.js; el index.html de la demo lo carga con <script type=\"module\"> en el <head> — ANTES que los scripts de la app, porque los module scripts se ejecutan en orden de documento y así el elemento ya está definido cuando Angular bootstrapea —; y el template usa <wc-user-card> gracias a CUSTOM_ELEMENTS_SCHEMA. La demo no importa ni una línea de código de wc-lib: solo consume sus etiquetas.",
+        "n1": "Se compila",
+        "n2": "Salida del build",
+        "n3": "Copiado por angular.json",
+        "n4": "Carga y define las etiquetas",
+        "n5": "Se usa como HTML normal"
+      },
+      "p7": {
+        "title": "Opción A · Publicación pública en npm",
+        "lead": "El paquete publicable es la carpeta dist con un package.json mínimo: name con scope (@mi-scope/wc-lib), version, y exports apuntando a main.js. Con una cuenta de npmjs.com: npm login y npm publish. Ojo al pitfall: los paquetes con scope son PRIVADOS por defecto, y publicar en privado en npmjs requiere plan de pago; para que sea público y gratuito hay que pasar --access public.",
+        "n1": "Manifiesto del paquete",
+        "n2": "Sube el paquete",
+        "n3": "Registro público",
+        "n4": "Cualquiera lo instala",
+        "n5": "Sin --access public falla la publicación",
+        "sideTitle": "Aviso"
+      },
+      "p8": {
+        "title": "Opción B · Privada en JFrog Artifactory",
+        "lead": "En Artifactory conviven tres repos npm: LOCAL (donde publicas tus paquetes), REMOTE (proxy y caché del registry público npmjs) y VIRTUAL (la vista que agrega los dos). El .npmrc del proyecto enruta el scope @empresa al feed virtual y añade el token de autenticación (generado desde \"Set Me Up\"). Se publica apuntando al repo local; se instala siempre desde el virtual: un solo endpoint resuelve tanto tus paquetes privados como los públicos.",
+        "n1": "Enruta el scope y autentica",
+        "n2": "Publica al repo local",
+        "n3": "Tus paquetes privados",
+        "n4": "Proxy/caché de npmjs",
+        "n5": "Agrega local + remote",
+        "n6": "El consumidor instala desde aquí",
+        "sideTitle": "Repos del feed"
+      }
+    },
+    "extends": {
+      "title": "Extender clases (extends)",
+      "badge": "Herencia · TypeScript",
+      "intro": "Una clase base concentra la lógica compartida — signals, computed, métodos e inputs — y cada componente hijo la hereda con extends, aportando solo lo que le hace único: su template y sus estilos.",
+      "theory": "La herencia en Angular es la de TypeScript: un componente, directiva o servicio puede hacer `extends` de otra clase y hereda sus propiedades y métodos… y también sus `input()`, `output()`, host bindings y hooks de ciclo de vida.\nLo que NUNCA se hereda es la metadata del decorador: template, estilos, selector y providers los define cada hijo, porque son la identidad visual del componente, no su lógica.\nEl habilitador moderno es `inject()` en campos: la clase base obtiene sus dependencias sin declarar constructor y los hijos se libran del encadenado de `super(dep1, dep2…)` que hacía incómoda la herencia clásica.",
+      "simile": "Una franquicia de food trucks: la casa madre aporta la receta de la salsa, los procesos y los proveedores (la lógica, los inputs y los servicios de la clase base). Cada food truck hereda todo eso al firmar la franquicia (extends), pero el rótulo, la decoración y el menú que expone al cliente (template, estilos y selector) los elige él — y si uno quiere darle un toque propio a la receta, la cocina sobre la de la madre (override + super).",
+      "examples": [
+        "Clase base para componentes de listado con filtro, ordenación o paginación compartidos.",
+        "Directiva base con comportamiento común (foco, teclado, accesibilidad) que extienden varias variantes.",
+        "Servicio base de acceso a datos (CRUD genérico) que los servicios de dominio extienden y especializan."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "La clase base: lógica compartida, sin template",
+        "lead": "Toda la lógica que se repetiría en cada listado se escribe UNA vez en una clase abstracta: el término de búsqueda (signal), el filtrado derivado (computed) y el input() configurable. Se marca con `@Directive()` sin selector porque declara un input() y Angular solo procesa inputs/outputs de clases con decorador; y `abstract` impide instanciarla suelta a la vez que obliga a cada hijo a aportar sus datos.",
+        "n1": "Lógica compartida: se escribe una vez"
+      },
+      "p2": {
+        "title": "El hijo: extends + su propia vista",
+        "lead": "El hijo declara `extends ListaFiltrableBase` y recibe gratis el input(), los signals, el computed y los métodos: su clase queda casi vacía. Lo que la base no le puede dar es la metadata del decorador: template, estilos, selector y providers son suyos. Por eso dos hijos de la misma base pueden verse completamente distintos compartiendo el 100 % de la lógica.",
+        "n1": "La clase madre",
+        "n2": "Hereda la lógica, pone la vista",
+        "yes": "Se hereda",
+        "no": "No se hereda",
+        "note": "La lógica viaja con extends; la identidad visual, nunca"
+      },
+      "p3": {
+        "title": "Especializar: override + super",
+        "lead": "Un hijo puede redefinir un método de la base. TypeScript exige marcarlo con `override` (este proyecto activa \"noImplicitOverride\"): así, si la base renombra el método, el compilador avisa en vez de dejar un método huérfano que ya no sobrescribe nada. Dentro, `super.limpiar()` reutiliza la lógica de la madre y después el hijo añade la suya — especializar sin duplicar.",
+        "n1": "El hijo redefine el método heredado",
+        "n2": "Primero reutiliza la lógica de la base…",
+        "n3": "…y después añade la suya propia"
+      },
+      "p4": {
+        "title": "inject() en campos: herencia sin peaje",
+        "lead": "Con la DI clásica por constructor, el hijo debía conocer TODAS las dependencias de la base y re-pasarlas con super(...); si la base añadía una, rompían todos los hijos. Con `inject()` en inicializadores de campo cada clase se sirve sus propias dependencias: la base sin constructor, el hijo sin super(). Este cambio es lo que ha hecho que las clases base vuelvan a ser un patrón cómodo en Angular moderno.",
+        "n1": "El hijo re-pasa las deps de la base",
+        "n2": "Cada clase se sirve sola",
+        "note": "Sin constructor no hay super() que mantener"
+      },
+      "exercise": {
+        "desc": "Completa los 4 TODOs: declara la herencia con extends en lista-tecnologias, completa el computed de filtrado heredado en la base, sobrescribe limpiar() en lista-frutas con override + super, y enlaza desde el padre el input() placeholder que los hijos heredan. Escribe en los buscadores: la MISMA lógica heredada filtra dos vistas totalmente distintas.",
+        "hint": "Dos componentes, una sola lógica: ambos heredan de ListaFiltrableBase.",
+        "fruitsTitle": "Frutas · hereda + override",
+        "techTitle": "Tecnologías · solo extends",
+        "techPlaceholder": "Busca una tecnología…",
+        "clearBtn": "Limpiar",
+        "cleanCount": "limpiezas",
+        "empty": "Sin resultados para ese filtro."
+      }
+    },
+    "abstract": {
+      "title": "Clases abstractas",
+      "badge": "Herencia · Contratos",
+      "intro": "Una clase abstracta es mitad contrato, mitad implementación: sus miembros abstract obligan a cada hijo a definir su parte, y sus métodos concretos se heredan ya resueltos. En Angular además tiene un superpoder: como sobrevive en runtime, puede usarse como token de DI.",
+      "theory": "Una clase marcada con abstract no puede instanciarse con new: existe solo para ser extendida. Dentro conviven dos tipos de miembros: los abstract, sin cuerpo, que el compilador OBLIGA a implementar en cada hijo; y los concretos, con cuerpo, que se heredan tal cual. A diferencia de una interface — que se borra al compilar — una clase abstracta compila a JavaScript real, y por eso Angular puede usarla como token de inyección de dependencias con useClass.",
+      "simile": "El plano oficial de una urbanización: nadie puede vivir en el plano (no se instancia), el plano exige que toda casa tenga puerta, tejado y salida de humos (miembros abstract: cada casa DEBE resolverlos a su manera), y a la vez trae ya resueltas la fontanería y la instalación eléctrica comunes (métodos concretos que se heredan hechos). Cada casa construida cumple el plano, pero elige sus acabados.",
+      "examples": [
+        "Clase base abstracta para componentes de formulario reutilizables (el contrato obliga a cada control a implementar su validación).",
+        "Clase abstracta como token de DI para intercambiar implementaciones: mock/real en tests, memoria/localStorage/HTTP en producción.",
+        "Patrón template method en servicios de exportación: CSV y PDF comparten el flujo y cada uno aporta solo su formato."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "El contrato abstract: obligar sin implementar",
+        "lead": "Un miembro abstract declara QUÉ debe existir sin decir CÓMO: no tiene cuerpo, y cada hijo está obligado a implementarlo o TypeScript no compila. El resto de la clase es implementación normal que se hereda hecha. El compilador vigila las dos direcciones: prohíbe `new NotificadorBase()` (error TS2511) y prohíbe un hijo que deje el contrato sin cumplir (error TS2515).",
+        "n1": "Mitad contrato, mitad implementación",
+        "contract": "contrato",
+        "contractCap": "Sin cuerpo: lo pone el hijo",
+        "concrete": "concreto",
+        "concreteCap": "Con cuerpo: se hereda hecho",
+        "noNew": "Error TS2511: no instanciable"
+      },
+      "p2": {
+        "title": "Abstract class vs interface: sobrevivir al compilador",
+        "lead": "Una interface también define un contrato, pero se BORRA al compilar: solo existe para el type-checker y en el JavaScript final no queda nada de ella. Una clase abstracta compila a una función real: puede llevar implementación y estado compartido junto al contrato y — la diferencia clave en Angular — es un valor que existe en runtime, así que puede usarse como token de DI. Regla práctica: interface para dar forma a datos; abstract class cuando además hay código que compartir o un token que inyectar.",
+        "onlyTypes": "solo tipos",
+        "noCode": "sin código",
+        "n1": "Se borra al compilar",
+        "typesAndCode": "tipos + código",
+        "sharedState": "estado compartido",
+        "n2": "Sobrevive en runtime",
+        "note": "Solo lo que existe en runtime puede ser token de DI"
+      },
+      "p3": {
+        "title": "Patrón template method: la base orquesta, el hijo rellena",
+        "lead": "Un método CONCRETO de la base define el flujo completo una sola vez — validar, registrar, limpiar — y delega justo el paso variable en un método abstract que cada hijo implementa a su manera. Ningún hijo repite el flujo ni puede saltarse la validación: solo rellena su hueco. Es el patrón template method: el esqueleto vive en la madre, la personalidad en los hijos.",
+        "n1": "La base orquesta el flujo (concreto)",
+        "n2": "El hueco abstract: lo rellena cada hijo",
+        "n3": "…y el flujo común continúa en la base"
+      },
+      "p4": {
+        "title": "Clase abstracta como token de DI",
+        "lead": "Como la clase abstracta existe en runtime, sirve de clave en el sistema de inyección: el provider `{ provide: HistorialBase, useClass: HistorialEnMemoria }` declara \"cuando alguien pida el contrato, entrega esta implementación\". Los consumidores hacen `inject(HistorialBase)` y dependen solo del contrato: cambiar la implementación (memoria → localStorage → HTTP → mock en tests) es tocar UNA línea del provider y ningún consumidor se entera.",
+        "n1": "El consumidor pide el CONTRATO",
+        "n2": "El token: la clase abstracta",
+        "n3": "La implementación, intercambiable",
+        "note": "Cambiar useClass no toca a ningún consumidor"
+      },
+      "exercise": {
+        "desc": "Completa los 4 TODOs: marca NotificadorBase y su contrato como abstract, completa el template method enviar() en la base, implementa formatear() en el canal SMS (recorte a 25 caracteres) y configura el provider { provide: HistorialBase, useClass: HistorialEnMemoria } en el panel padre. Envía mensajes por los dos canales: cada hijo aplica SU formato, pero todos acaban en el MISMO historial — la instancia única que entrega el token abstracto.",
+        "hint": "Dos canales, un contrato: ambos heredan de NotificadorBase y escriben en el mismo HistorialBase inyectado.",
+        "emailTitle": "Email · hijo 1",
+        "smsTitle": "SMS · hijo 2",
+        "placeholder": "Escribe un mensaje…",
+        "sendBtn": "Enviar",
+        "historyTitle": "Historial compartido",
+        "clearBtn": "Vaciar historial",
+        "count": "notificaciones",
+        "empty": "Aún no hay notificaciones: envía una desde cualquier canal."
+      }
+    },
+    "dev-remote": {
+      "title": "Proxy DEV sin levantar backend local",
+      "badge": "Dev-server · Proxy",
+      "intro": "En desarrollo, el dev-server de Angular puede hacer de intermediario: intercepta las llamadas a /api y /ws, les inyecta tu cookie de sesión ya autenticada y las reenvía a un entorno remoto. Trabajas en local contra datos reales sin arrancar microservicios ni pasar por el login. Cinco pasos, cada uno con su diagrama, y un simulador del flujo.",
+      "theory": "Un proxy de desarrollo redirige, en el lado servidor, ciertas rutas de tu app hacia otro origen. El truco: la app pide a rutas RELATIVAS (/api en vez de https://remoto…/api), así que para el navegador todo sale contra localhost y NO hay cross-origin que bloquear.\nEl salto al dominio remoto lo da el dev-server, donde el CORS no aplica. De paso, el proxy inyecta la cookie de sesión y las cabeceras Origin/Referer/Host, de modo que el backend cree que la petición viene de su propia web ya logueada.\nResultado: la app funciona en local contra datos reales sin levantar ningún backend.",
+      "simile": "Es como un conserje de hotel que hace recados por ti: le pides «tráeme algo de la tienda de enfrente» (una ruta relativa, /api) y él cruza la calle, entra con TU tarjeta de socio ya sellada (tu cookie de sesión) y vuelve con el producto real. Tú nunca sales del hotel (localhost) ni enseñas el carné en la puerta (el login): el conserje (el proxy) pone la cara y las credenciales por ti.",
+      "examples": [
+        "Depurar en local una app contra el entorno de test o preproducción sin desplegar ni arrancar sus microservicios.",
+        "Reproducir un bug que solo aparece con datos reales, usando la sesión ya autenticada del navegador.",
+        "Desarrollar el front de una feature cuyo backend aún no corre en local pero sí existe en un entorno remoto."
+      ],
+      "diagramWord": "Diagrama",
+      "stepWord": "Paso",
+      "p1": {
+        "title": "El archivo de proxy: qué interceptar y a dónde reenviar",
+        "lead": "En la raíz del workspace, proxy-dev.config.js exporta con module.exports un array: un objeto por cada prefijo a interceptar. Cada uno lleva context (el prefijo, /api o /ws), target (la URL remota), changeOrigin y secure:false + agent para aceptar certificados autofirmados. El hook onProxyReq inyecta en cada petición la cookie de sesión y las cabeceras Origin/Referer/Host. Para WebSockets se añade ws:true y se duplica la inyección en onProxyReqWs (el upgrade), porque SockJS hace llamadas HTTP antes de abrir el socket.",
+        "n1": "Datos reales, sin backend local"
+      },
+      "p2": {
+        "title": "El environment: rutas relativas, no absolutas",
+        "lead": "Se crea un environment específico (environment.proxy.ts) donde todas las URLs de API son rutas relativas (/api, /ws) en lugar de apuntar a un localhost absoluto. ¿Por qué importa tanto? Porque una ruta relativa sale contra el propio dev-server y el navegador no la considera cross-origin: no la bloquea. Solo así el proxy tiene algo que interceptar.",
+        "absolute": "URL absoluta",
+        "relative": "Ruta relativa",
+        "cross": "cross-origin · bloqueada",
+        "same": "mismo origen · interceptable",
+        "note": "La ruta relativa es lo que permite que el proxy entre en juego"
+      },
+      "p3": {
+        "title": "angular.json: build + serve",
+        "lead": "Se define la configuración dev-proxy en dos sitios. En architect.build.configurations, un fileReplacements sustituye environment.ts por environment.proxy.ts al compilar. En architect.serve.configurations, una entrada con buildTarget apuntando a esa build (proyecto:build:dev-proxy) y proxyConfig apuntando al archivo del Paso 1. Así el serve compila con rutas relativas y arranca con el proxy activo.",
+        "n1": "buildTarget + proxyConfig"
+      },
+      "p4": {
+        "title": "El script y el flujo completo",
+        "lead": "Se añade a package.json el script start:proxy: ng serve con --configuration=dev-proxy. Al ejecutarlo: Angular compila con rutas relativas → la app pide /api → sale contra localhost:4200 → el dev-server ve que hace match del context y lo intercepta → el proxy inyecta tu cookie y reenvía al remoto → el remoto responde 200 con datos reales. Sin login, sin microservicios locales.",
+        "browser": "Navegador",
+        "intercept": "intercepta",
+        "inject": "inyecta cookie + cabeceras",
+        "remote": "Entorno remoto",
+        "realData": "datos reales"
+      },
+      "p5": {
+        "title": "Mantenimiento: la cookie caduca",
+        "lead": "Las cookies de sesión tienen vida corta. Cuando el proxy empiece a devolver 401 o redirecciones al login, la cookie ha caducado: loguéate de nuevo en el remoto, copia la cookie actualizada desde DevTools y pégala en el archivo de proxy. Por lo mismo, trata este archivo como sensible: contiene una credencial viva, así que añádelo a .gitignore para no subir nunca una cookie real.",
+        "fresh": "Cookie fresca",
+        "expired": "Cookie caducada",
+        "realData": "datos reales",
+        "login": "redirige al login",
+        "time": "pasa el tiempo →",
+        "recopy": "recopia y pega la cookie",
+        "sensitive": "⚠ Archivo sensible · no subir cookies reales"
+      },
+      "exercise": {
+        "desc": "El proxy no renderiza nada, así que el ejercicio reproduce su LÓGICA DE DECISIÓN. Completa los 4 TODOs de resolverPeticion(): haz match del context, devuelve 404 cuando no lo hay, 401 con la cookie caducada y 200 en el camino feliz. Después usa el simulador: escribe rutas y conmuta la cookie para ver cuándo intercepta el proxy, cuándo inyecta la sesión y qué responde el remoto.",
+        "hint": "Escribe una ruta y conmuta la cookie: mira encenderse el flujo Navegador → dev-server → proxy → remoto.",
+        "pathLabel": "Ruta que pide la app",
+        "cookieOk": "Cookie válida",
+        "cookieDead": "Cookie caducada",
+        "browser": "Navegador",
+        "remote": "Entorno remoto",
+        "match": "match",
+        "noMatch": "sin match · no intercepta",
+        "ok200": {
+          "title": "200 · Datos reales",
+          "text": "El proxy hizo match del context, inyectó tu cookie + Origin/Referer/Host y reenvió al remoto, que respondió con datos reales. Sin login ni backend local."
+        },
+        "err401": {
+          "title": "401 · Cookie caducada",
+          "text": "El proxy reenvió la petición, pero el remoto rechazó la sesión y redirige al login. Recopia la cookie desde DevTools y pégala en proxy-dev.config.js."
+        },
+        "err404": {
+          "title": "404 · No interceptado",
+          "text": "La ruta no coincide con ningún context (/api, /ws). El proxy no la toca: se queda en el dev-server (localhost:4200), donde ese recurso no existe."
+        }
       }
     }
   },

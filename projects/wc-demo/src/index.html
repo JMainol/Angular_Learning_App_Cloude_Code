@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>wc-demo · Consumidora de wc-lib</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!--
+      Bundle de la librería de web components. Llega aquí como asset copiado
+      desde dist/wc-lib/browser (ver angular.json de wc-demo). Va en <head> y
+      ANTES de los scripts de la app: los module scripts se ejecutan en orden
+      de documento, así los custom elements ya están definidos cuando Angular
+      bootstrapea y pinta <wc-user-card> (se evita el pitfall de asignar una
+      propiedad al elemento antes de su "upgrade").
+    -->
+    <script type="module" src="wc-lib/main.js"></script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

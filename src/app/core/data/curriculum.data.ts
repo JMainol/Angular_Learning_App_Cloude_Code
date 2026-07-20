@@ -113,7 +113,12 @@ export const CURRICULUM: Block[] = [
     sections: [
       { code: '11.1', title: 'HTTP (REST API)', path: 'server-protocols/http' },
       { code: '11.2', title: 'WebSockets (WS / WSS)', path: 'server-protocols/websockets' },
-      { code: '11.3', title: 'Server-Sent Events (SSE)', path: 'server-protocols/sse' },
+      {
+        code: '11.3',
+        title: 'WebSockets (SockJS + STOMP · FXS App)',
+        path: 'server-protocols/sockjs-stomp',
+      },
+      { code: '11.4', title: 'Server-Sent Events (SSE)', path: 'server-protocols/sse' },
     ],
   },
   {
@@ -166,6 +171,39 @@ export const CURRICULUM: Block[] = [
         code: '16.2',
         title: 'Content projection con ng-content',
         path: 'dom-control/ng-content',
+      },
+    ],
+  },
+  {
+    id: 'library',
+    code: '17',
+    title: 'Librería',
+    sections: [
+      {
+        code: '17.1',
+        title: 'Librería de Web Components Angular',
+        path: 'library/web-components',
+      },
+    ],
+  },
+  {
+    id: 'inheritance',
+    code: '18',
+    title: 'Herencia de clases',
+    sections: [
+      { code: '18.1', title: 'Extender clases (extends)', path: 'inheritance/extends' },
+      { code: '18.2', title: 'Clases abstractas', path: 'inheritance/abstract' },
+    ],
+  },
+  {
+    id: 'proxy',
+    code: '19',
+    title: 'Proxy',
+    sections: [
+      {
+        code: '19.1',
+        title: 'Proxy DEV sin levantar backend local',
+        path: 'proxy/dev-remote',
       },
     ],
   },

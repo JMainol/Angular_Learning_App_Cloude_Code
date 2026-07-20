@@ -12,4 +12,41 @@
     Valor leído por ViewChild:
     <strong>{{ eco() || '—' }}</strong>
   </p>
+
+  <!-- ===================================================================== -->
+  <!-- PARTE 2 — Opcional (?) vs Required                                     -->
+  <!-- ===================================================================== -->
+  <hr class="divider" />
+
+  <div class="compare">
+    <header class="compare__head">
+      <h3 class="compare__title">Opcional <code>( ? )</code> vs <code>.required</code></h3>
+      <p class="compare__hint">
+        Apaga el toggle para quitar el elemento del DOM y observa cómo reacciona
+        cada query.
+      </p>
+    </header>
+
+    <!-- Toggle que controla el @if de abajo. -->
+    <label class="toggle">
+      <input type="checkbox" [checked]="presente()" (change)="alternarPresencia()" />
+      <span>Elemento <code>#objetivo</code> {{ presente() ? 'presente' : 'ausente' }} en el DOM</span>
+    </label>
+
+    <!-- El elemento solo existe cuando presente() es true. -->
+    @if (presente()) {
+      <input #objetivo class="field" type="text" value="hola" placeholder="Elemento objetivo" />
+    } @else {
+      <p class="compare__absent">— el &lt;input #objetivo&gt; no está renderizado —</p>
+    }
+
+    <div class="controls">
+      <button type="button" class="controls__btn" (click)="leerOpcional()">Leer con ?</button>
+      <button type="button" class="controls__btn" (click)="leerRequerido()">Leer con .required</button>
+    </div>
+
+    @if (resultado(); as r) {
+      <p class="result" [class.result--error]="r.error">{{ r.texto }}</p>
+    }
+  </div>
 </div>

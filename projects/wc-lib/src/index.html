@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>wc-lib · Banco de pruebas</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 2rem; background: #f4f5f8; }
+      h1 { font-size: 1.2rem; }
+      p { color: #5c6474; max-width: 60ch; }
+      .fila { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; margin-top: 1.5rem; }
+    </style>
+  </head>
+  <body>
+    <h1>wc-lib · Banco de pruebas sin host Angular</h1>
+    <p>
+      Esta página es HTML plano: no hay ningún componente Angular bootstrapeado.
+      Los elementos de abajo funcionan porque main.js los registró con
+      customElements.define(). Abre la consola y pulsa «Seleccionar» para ver el
+      CustomEvent.
+    </p>
+
+    <div class="fila">
+      <!-- Los inputs se pasan como atributos HTML normales (siempre strings). -->
+      <wc-user-card nombre="Ada Lovelace" rol="Ingeniera de software"></wc-user-card>
+      <wc-contador inicio="5"></wc-contador>
+    </div>
+
+    <script>
+      // Escucha del output como un evento DOM estándar: el valor emitido
+      // por output<string>() viaja en event.detail.
+      document.addEventListener('seleccionar', (event) => {
+        console.log('CustomEvent "seleccionar" recibido. detail =', event.detail);
+      });
+    </script>
+  </body>
+</html>

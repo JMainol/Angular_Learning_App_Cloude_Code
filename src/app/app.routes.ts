@@ -232,10 +232,18 @@ export const routes: Routes = [
     title: '11.2 WebSockets (WS / WSS) · Guía Angular',
   },
   {
+    path: 'server-protocols/sockjs-stomp',
+    loadComponent: () =>
+      import('./features/server-protocols/sockjs-stomp/sockjs-stomp-section').then(
+        (m) => m.SockjsStompSection
+      ),
+    title: '11.3 WebSockets (SockJS + STOMP · FXS App) · Guía Angular',
+  },
+  {
     path: 'server-protocols/sse',
     loadComponent: () =>
       import('./features/server-protocols/sse/sse-section').then((m) => m.SseSection),
-    title: '11.3 Server-Sent Events (SSE) · Guía Angular',
+    title: '11.4 Server-Sent Events (SSE) · Guía Angular',
   },
 
   {
@@ -321,6 +329,37 @@ export const routes: Routes = [
         (m) => m.NgContentSection
       ),
     title: '16.2 Content projection con ng-content · Guía Angular',
+  },
+  {
+    path: 'library/web-components',
+    loadComponent: () =>
+      import('./features/library/web-components/web-components-section').then(
+        (m) => m.WebComponentsSection
+      ),
+    title: '17.1 Librería de Web Components Angular · Guía Angular',
+  },
+
+  {
+    path: 'inheritance/extends',
+    loadComponent: () =>
+      import('./features/inheritance/extends/extends-section').then((m) => m.ExtendsSection),
+    title: '18.1 Extender clases (extends) · Guía Angular',
+  },
+
+  {
+    path: 'inheritance/abstract',
+    loadComponent: () =>
+      import('./features/inheritance/abstract/abstract-section').then((m) => m.AbstractSection),
+    title: '18.2 Clases abstractas · Guía Angular',
+  },
+
+  {
+    path: 'proxy/dev-remote',
+    loadComponent: () =>
+      import('./features/proxy/dev-remote/dev-remote-section').then(
+        (m) => m.DevRemoteSection
+      ),
+    title: '19.1 Proxy DEV sin levantar backend local · Guía Angular',
   },
 
   // Ruta por defecto: arrancamos en la primera sección del temario.

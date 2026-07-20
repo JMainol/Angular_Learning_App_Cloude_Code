@@ -1,0 +1,219 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">18.1</span>
+      <span class="doc__badge">{{ 'sections.extends.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.extends.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.extends.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.extends.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.extends.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.extends.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: la clase base ───────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.extends.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.extends.p1.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">abstract class ListaFiltrableBase</span>
+            <span class="node__cap">{{ 'sections.extends.p1.n1' | translate }}</span>
+          </div>
+          <div class="arrow-split" aria-hidden="true"></div>
+          <div class="signal-row">
+            <div class="signal-pill">
+              <span class="signal-pill__name">signal()</span>
+              <span class="signal-pill__type">termino</span>
+            </div>
+            <div class="signal-pill">
+              <span class="signal-pill__name">computed()</span>
+              <span class="signal-pill__type">filtrados</span>
+            </div>
+            <div class="signal-pill">
+              <span class="signal-pill__name">input()</span>
+              <span class="signal-pill__type">placeholder</span>
+            </div>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge node__badge--dim">&#64;Directive() sin selector</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.extends.stepWord' | translate }} 1 · {{ 'sections.extends.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.extends.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeBase" language="TypeScript" filename="lista-filtrable-base.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: extends — qué se hereda y qué no ────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.extends.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.extends.p2.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">ListaFiltrableBase</span>
+            <span class="node__cap">{{ 'sections.extends.p2.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">class ListaTecnologias extends …</span>
+            <span class="node__cap">{{ 'sections.extends.p2.n2' | translate }}</span>
+          </div>
+          <div class="herencia-compare">
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">✔ {{ 'sections.extends.p2.yes' | translate }}</span>
+              <div class="dom-box">
+                <span class="dom-box__leaf">input() · output()</span>
+                <span class="dom-box__leaf">signals · computed</span>
+                <span class="dom-box__leaf">métodos · lifecycle</span>
+              </div>
+            </div>
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">✘ {{ 'sections.extends.p2.no' | translate }}</span>
+              <div class="dom-box dom-box--ghost">
+                <span class="dom-box__leaf dom-box__leaf--ghost">template</span>
+                <span class="dom-box__leaf dom-box__leaf--ghost">styles</span>
+                <span class="dom-box__leaf dom-box__leaf--ghost">selector · providers</span>
+              </div>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.extends.p2.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.extends.stepWord' | translate }} 2 · {{ 'sections.extends.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.extends.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeExtends" language="TypeScript" filename="lista-tecnologias.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: override + super ────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.extends.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.extends.p3.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">override limpiar()</span>
+            <span class="node__cap">{{ 'sections.extends.p3.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">super.limpiar()</span>
+            <span class="node__cap">{{ 'sections.extends.p3.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">limpiezas.update(n =&gt; n + 1)</span>
+            <span class="node__cap">{{ 'sections.extends.p3.n3' | translate }}</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">"noImplicitOverride": true</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.extends.stepWord' | translate }} 3 · {{ 'sections.extends.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.extends.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeOverride" language="TypeScript" filename="lista-frutas.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: inject() vs constructor ─────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.extends.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.extends.p4.title' | translate">
+          <div class="herencia-compare">
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">constructor + super()</span>
+              <div class="dom-box dom-box--ghost">
+                <span class="dom-box__leaf dom-box__leaf--ghost">constructor(http, router)</span>
+                <span class="dom-box__leaf dom-box__leaf--ghost">super(http)</span>
+              </div>
+              <span class="node__badge node__badge--dim">{{ 'sections.extends.p4.n1' | translate }}</span>
+            </div>
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">inject() en campos</span>
+              <div class="dom-box">
+                <span class="dom-box__leaf">http = inject(HttpClient)</span>
+                <span class="dom-box__leaf">router = inject(Router)</span>
+              </div>
+              <span class="node__badge">{{ 'sections.extends.p4.n2' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.extends.p4.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.extends.stepWord' | translate }} 4 · {{ 'sections.extends.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.extends.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeInject" language="TypeScript" filename="inject-vs-constructor.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.extends.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="listas-exercise" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-listas-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

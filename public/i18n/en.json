@@ -41,7 +41,10 @@
     "lifecycle": "Lifecycle",
     "forms": "Forms",
     "utils": "Useful functions",
-    "dom-control": "Advanced DOM control"
+    "dom-control": "Advanced DOM control",
+    "library": "Library",
+    "inheritance": "Class inheritance",
+    "proxy": "Proxy"
   },
   "sections": {
     "standalone": {
@@ -187,7 +190,45 @@
     },
     "effect": {
       "title": "Effect",
-      "theory": "An Effect runs a function every time one of the signals it reads inside changes. It is created with `effect(() => ...)`, typically in the constructor (needs an injection context).\n Unlike `computed()`, it returns no value: its purpose is SIDE EFFECTS (logging, syncing with localStorage or the DOM, analytics…).\n Angular cleans it up automatically when the component is destroyed. Rule: use `computed` to DERIVE data; reserve `effect` for triggering things outside the reactive world.",
+      "theory": "An Effect runs a function every time one of the signals it reads inside changes. It is created with `effect(() => ...)`, typically in the constructor or as a class field, because it needs an injection context.\n Unlike `computed()`, it returns no value: its purpose is side effects (logging, syncing with localStorage or the DOM, analytics…). These are its main characteristics:",
+      "theoryList": [
+        {
+          "title": "First run",
+          "text": "It runs once when the component initializes. Even if you declare it in the constructor, it does not run there: Angular runs it during the first change detection, after the component's view is rendered."
+        },
+        {
+          "title": "Re-runs",
+          "text": "From then on it runs again on every change to any of the signals it reads inside."
+        },
+        {
+          "title": "Automatic dependencies",
+          "text": "You don't declare what it depends on: Angular tracks the signals you read during the run. If an `if` branch never reads a signal, that signal is not a dependency on that pass."
+        },
+        {
+          "title": "Returns no value",
+          "text": "Its output is what it triggers outside the reactive world, not a value you can read from the template."
+        },
+        {
+          "title": "Batched and async",
+          "text": "It does not fire synchronously after each `set()`. Several changes in a row are batched into a single later run."
+        },
+        {
+          "title": "Automatic cleanup",
+          "text": "It is destroyed on its own when the component whose injection context created it dies. If you create it elsewhere, stop it manually with the `EffectRef.destroy()` it returns."
+        },
+        {
+          "title": "onCleanup",
+          "text": "The function receives an `onCleanup` to cancel the previous run's work (a `setTimeout`, a request) before the next one starts."
+        },
+        {
+          "title": "untracked",
+          "text": "Wrap a read in `untracked(...)` to check a signal without making it a dependency, avoiding re-runs you don't want."
+        },
+        {
+          "title": "Rule of thumb",
+          "text": "Use `computed` to DERIVE data; reserve `effect` for triggering things outside the reactive world."
+        }
+      ],
       "simile": "An Effect is like a streetlight's light sensor: it doesn't calculate or store anything for you, it simply watches a condition (darkness falls) and triggers a real-world action (turn on the light) every time that condition changes.",
       "examples": [
         "Save a user preference to localStorage whenever it changes.",
@@ -661,6 +702,74 @@
         "apiNote": "Data is from"
       }
     },
+    "sockjs-stomp": {
+      "title": "WebSockets (SockJS + STOMP · FXS App)",
+      "badge": "SockJS · STOMP · Push",
+      "intro": "The real architecture of a push-notification app: SockJS opens the transport (with HTTP fallback if the WebSocket fails) and STOMP layers pub/sub topic semantics on top. Although the channel is bidirectional, the app only uses it server → client.",
+      "theory": "This stack combines two libraries: `sockjs-client` and `@stomp/stompjs`. It is not a \"raw\" WebSocket: SockJS handles the transport and guarantees a connection even on hostile networks (if WebSocket is unavailable, it falls back to XHR streaming or long-polling). STOMP is a messaging protocol that travels on top: it provides the pub/sub topic model, the CONNECT / SUBSCRIBE frames and destination-based routing.\nThe backend publishes notifications on topics like `/topic/notifications/{admin | clientId | clients}` and each client subscribes according to its role. The app never calls `send`: it is effectively a push notification channel (server → client).\nSTOMP does not open the socket itself: we hand it a `webSocketFactory` that returns a SockJS instance. This cleanly separates the transport layer from the messaging layer.",
+      "simile": "SockJS is the road and STOMP is the courier service driving on it. The road guarantees a vehicle gets through (and if the fast lane is closed, it uses a side road); the courier decides which mailbox — which topic — each parcel goes to. You just subscribe to your mailbox and the notifications show up on their own.",
+      "examples": [
+        "Admin panel that receives every new order created by any client, live.",
+        "Per-user notifications: each client only listens to events on its own topic.",
+        "Broadcast of system notices (maintenance, status changes) to all connected clients."
+      ],
+      "diagramWord": "Diagram",
+      "stepWord": "Step",
+      "p1": {
+        "title": "The SockJS + STOMP stack",
+        "lead": "Instead of `new WebSocket(url)`, the app assembles two layers. SockJS negotiates the best available transport and offers a transparent HTTP fallback. STOMP speaks its frame protocol on top, providing topic pub/sub. STOMP does not open the socket: it asks SockJS via `webSocketFactory`. SockJS needs the `global` global, which does not exist in the browser, so a polyfill points it to `window`.",
+        "l1": "pub/sub messaging · topics · frames",
+        "l2": "Transport + HTTP fallback",
+        "l3": "Negotiated physical channel"
+      },
+      "p2": {
+        "title": "States and lazy subscription",
+        "lead": "The socket is not opened when the app boots, but the first time someone asks to listen to a topic (lazy init). A `BehaviorSubject` exposes the state (`UNINITIALIZED → CONNECTING → CONNECTED`). The first `onMessage()` finds the `UNINITIALIZED` state and triggers `init()`; subscriptions that arrive while connecting are queued until the state becomes `CONNECTED`.",
+        "sub0": "Socket closed, no connection",
+        "sub1": "Handshake in progress",
+        "sub2": "Channel open, receiving push",
+        "t0": "1st onMessage() → init()",
+        "t1": "CONNECTED frame",
+        "t2": "logout → destroyWs()"
+      },
+      "p3": {
+        "title": "Handshake: CIAM vs token + /ws/info + CONNECT",
+        "lead": "Authentication depends on the environment. With CIAM (SSO), the cookie rides along with the request and the connection is direct. Without CIAM, we wait for the token from the store and attach it as a query param, because SockJS does not allow custom `Authorization` headers. Then SockJS does `GET /ws/info`, negotiates the transport and opens the connection; finally STOMP sends its `CONNECT` frame on top.",
+        "n1": "With CIAM — direct",
+        "n2": "Without CIAM — token",
+        "n3": "SockJS negotiates transport",
+        "n4": "STOMP connects"
+      },
+      "p4": {
+        "title": "Topic fan-out by role",
+        "lead": "The topic depends on the user's role: an admin listens to `/topic/notifications/admin` (all events), a client to its own `/topic/notifications/{clientId}`, and the general broadcast goes to `/topic/notifications/clients`. On reaching `CONNECTED`, the `BehaviorSubject` emits and all queued subscriptions are flushed: one `SUBSCRIBE` frame per topic. From then on the backend publishes toward those topics.",
+        "r1": "Administrator",
+        "r2": "Specific client",
+        "r3": "Broadcast to clients"
+      },
+      "p5": {
+        "title": "End-to-end push notification",
+        "lead": "The backend publishes an \"envelope\" `{ type, body }` on the topic. `jsonHandler` parses the envelope, `NotificationService` filters by `type` and parses the nested `body`; the subscribed component shows the toast and refreshes its grid. If the network drops, `reconnectDelay: 1000` retries every second with a fresh SockJS and re-creates the subscriptions. On logout, `destroyWs()` closes everything and returns to `UNINITIALIZED`.",
+        "n1": "Backend publishes",
+        "n2": "Parse the envelope",
+        "n3": "Filter by type",
+        "n4": "Component reacts"
+      },
+      "exercise": {
+        "desc": "Complete the 4 TODOs to implement the push notification channel. The result uses a local MockStompClient that emulates @stomp/stompjs: pick a role, connect and watch how the socket opens on demand, filters envelopes by type (only ORDER arrives, HEARTBEAT is discarded) and refreshes the grid with each notification.",
+        "connectBtn": "Connect (onNotification)",
+        "logoutBtn": "Logout",
+        "roleLabel": "Role → topic",
+        "gridLabel": "Grid refreshed",
+        "empty": "Pick a role and press Connect to subscribe to the topic.",
+        "waiting": "Subscribed. Waiting for notifications from the backend…",
+        "state": {
+          "UNINITIALIZED": "Uninitialized · socket closed",
+          "CONNECTING": "Connecting · handshake in progress",
+          "CONNECTED": "Connected · receiving push"
+        }
+      }
+    },
     "sse": {
       "title": "Server-Sent Events (SSE)",
       "badge": "SSE · Unidirectional Push",
@@ -1073,6 +1182,312 @@
         "noActions": "No actions · read-only profile",
         "lastAction": "Last action",
         "none": "none yet"
+      }
+    },
+    "web-components": {
+      "title": "Angular Web Components library",
+      "badge": "Documentation",
+      "intro": "The real wiring set up in this workspace: the wc-lib project builds web components with Angular Elements, the wc-demo project consumes them as HTML tags, and the resulting package is published to public npm or to your company's private Artifactory. Eight diagrams, each paired with its step and the real code.",
+      "theory": "Angular Elements (@angular/elements) turns an Angular component into a standard browser custom element: an HTML tag (`<wc-user-card>`) that works on any page, with or without Angular behind it.\nThe deliverable is not an ng-packagr package but a self-contained JS bundle: it carries the Angular runtime inside and, when loaded with a `<script type=\"module\">`, registers the tags via `customElements.define()`.\nEach `input()` is exposed as a property and an attribute of the element, and each `output()` is dispatched as a CustomEvent. In this workspace: `projects/wc-lib` (the factory) and `projects/wc-demo` (the consumer).",
+      "simile": "Publishing a web components library is like bottling a ready-to-serve recipe: everything goes inside the bottle — the ingredients (your components) and the cook (the Angular runtime). Whoever receives it doesn't need to know how to cook Angular: they open the bottle with a <script> and serve the tag on their plate, whether their kitchen is React, WordPress or plain HTML.",
+      "examples": [
+        "A corporate design system shared across Angular apps, React apps and legacy portals.",
+        "Angular widgets embedded in a CMS or legacy portal (WordPress, SharePoint, JSP…).",
+        "Micro-frontends where each team ships pieces built with its own stack and version."
+      ],
+      "diagramWord": "Diagram",
+      "stepWord": "Step",
+      "run": {
+        "kicker": "Run it locally",
+        "title": "Start the library and the demo",
+        "lead": "The whole setup already lives in the repo: you just need to start it. A key note about the «from where»: all three scripts are ALWAYS run from the repo root, never by cd-ing into projects/wc-lib or projects/wc-demo — the Angular CLI finds each project by its name in angular.json, not by the current directory. You get two workflows: A) develop the library in isolation, and B) see it consumed by the demo.",
+        "once": "first time only",
+        "whyLabel": "Why",
+        "r0": {
+          "what": "Installs the workspace dependencies, including @angular/elements (the package that turns components into custom elements).",
+          "why": "Without node_modules no ng build/serve will start. Only needed after cloning or when dependencies change."
+        },
+        "r1": {
+          "what": "Serves projects/wc-lib alone using its own index.html: a test bench with the <wc-user-card> and <wc-contador> tags without any Angular app around them. With hot reload.",
+          "why": "It's the comfortable way to iterate on the web components: edit the component and the browser refreshes instantly, without going through the demo."
+        },
+        "r2": {
+          "what": "First runs build:wc-lib (produces dist/wc-lib/browser/main.js) and then serves projects/wc-demo, which loads that main.js as an asset and consumes the tags via property binding and CustomEvent.",
+          "why": "The prior build is mandatory: the demo imports no wc-lib code, it only loads the already-compiled bundle, so it must exist in dist/ before serving. Note: main.js is a static asset — if you edit the library while the demo is running, you must re-run this script."
+        },
+        "r3": {
+          "what": "Compiles the library to dist/wc-lib/browser/main.js (no hash) without starting any server.",
+          "why": "Useful when you just want to regenerate the bundle: before packaging/publishing, or to inspect the output."
+        },
+        "r4": {
+          "what": "Builds, copies the publishable package.json into dist/ and runs npm pack, producing a .tgz with exactly what would be uploaded to the registry.",
+          "why": "Verifies the publish flow and which files make it into the package, without actually publishing anything."
+        },
+        "r5": {
+          "what": "Starts the main guide app (this very application with the learning sections).",
+          "why": "It's independent from wc-lib and wc-demo; included as a reminder that the three projects coexist on different ports and don't clash."
+        }
+      },
+      "p1": {
+        "title": "One workspace, three projects",
+        "lead": "angular.json is the workspace map: it declares each project, where its code lives (root/sourceRoot) and how it is built (architect.build). The guide app owns the repo root; new projects are born under projects/ because newProjectRoot says so. Each project builds and serves independently: ng build wc-lib doesn't touch the others.",
+        "n1": "The workspace map",
+        "n2": "The guide app (root)",
+        "n3": "Web components factory",
+        "n4": "Demo app"
+      },
+      "p2": {
+        "title": "The two paths: application vs library",
+        "lead": "For web components the deliverable is a JS bundle any page can load, so we generate an APPLICATION whose main.ts registers the elements. The ng generate library + ng-packagr path produces an Angular package (FESM + metadata) that only another Angular app can compile: it's the right choice to share components BETWEEN Angular apps, but useless for plain HTML, React or a CMS.",
+        "n1": "Self-contained JS bundle",
+        "n2": "Angular-only package",
+        "n3": "Any page can load it"
+      },
+      "p3": {
+        "title": "From component to custom element",
+        "lead": "createCustomElement() wraps a regular Angular component in a standard HTMLElement class. The bridge is automatic: each input() becomes a property and a dash-case attribute of the element, and each output() is dispatched as a CustomEvent carrying the emitted value in event.detail. With ViewEncapsulation.ShadowDom the styles stay isolated from the host page.",
+        "n1": "Regular Angular component",
+        "n2": "The @angular/elements bridge",
+        "n3": "Standard browser class",
+        "n4": "→ properties & attributes",
+        "n5": "→ CustomEvent (event.detail)"
+      },
+      "p4": {
+        "title": "main.ts without a root component",
+        "lead": "There is no bootstrapApplication(App) and no <app-root>: createApplication() boots the Angular environment (injector, zoneless change detection) without rendering anything. With that injector, customElements.define() registers each tag in the browser's global registry: from that moment any <wc-user-card> in the document upgrades itself, whether it already exists or is created later.",
+        "n1": "Bundle entry point",
+        "n2": "Angular without a root view",
+        "n3": "The shared injector",
+        "n4": "Registers each tag",
+        "n5": "Browser global registry"
+      },
+      "p5": {
+        "title": "Build: a single main.js",
+        "lead": "Angular's esbuild builder, with a single entry point and no dynamic import(), emits a single ESM main.js (~114 kB raw, ~34 kB transferred). Two key settings: outputHashing \"none\" so the file name stays stable (consumers reference it in a fixed <script>) and styles: [] because each component carries its styles inline. Budgets are raised: the bundle embeds the Angular runtime.",
+        "n1": "Library source code",
+        "n2": "Compiles with esbuild",
+        "n3": "Single stable bundle",
+        "n4": "Settings that make it work"
+      },
+      "p6": {
+        "title": "The full wiring, file by file",
+        "lead": "The whole chain: main.ts compiles to dist/wc-lib/browser/main.js; wc-demo's angular.json copies it as an asset to wc-lib/main.js; the demo's index.html loads it with <script type=\"module\"> in the <head> — BEFORE the app scripts, because module scripts run in document order, so the element is already defined when Angular bootstraps —; and the template uses <wc-user-card> thanks to CUSTOM_ELEMENTS_SCHEMA. The demo doesn't import a single line of wc-lib code: it only consumes its tags.",
+        "n1": "Gets compiled",
+        "n2": "Build output",
+        "n3": "Copied by angular.json",
+        "n4": "Loads & defines the tags",
+        "n5": "Used as plain HTML"
+      },
+      "p7": {
+        "title": "Option A · Public npm publish",
+        "lead": "The publishable package is the dist folder plus a minimal package.json: a scoped name (@my-scope/wc-lib), version, and exports pointing to main.js. With an npmjs.com account: npm login and npm publish. Mind the pitfall: scoped packages are PRIVATE by default, and private publishing on npmjs requires a paid plan; to publish publicly and for free you must pass --access public.",
+        "n1": "Package manifest",
+        "n2": "Uploads the package",
+        "n3": "Public registry",
+        "n4": "Anyone can install it",
+        "n5": "Publish fails without --access public",
+        "sideTitle": "Warning"
+      },
+      "p8": {
+        "title": "Option B · Private on JFrog Artifactory",
+        "lead": "Artifactory hosts three npm repos: LOCAL (where you publish your packages), REMOTE (proxy and cache of the public npmjs registry) and VIRTUAL (the view that aggregates both). The project's .npmrc routes the @company scope to the virtual feed and adds the auth token (generated from \"Set Me Up\"). You publish to the local repo; you always install from the virtual one: a single endpoint resolves both your private packages and the public ones.",
+        "n1": "Routes the scope & authenticates",
+        "n2": "Publishes to the local repo",
+        "n3": "Your private packages",
+        "n4": "npmjs proxy & cache",
+        "n5": "Aggregates local + remote",
+        "n6": "Consumers install from here",
+        "sideTitle": "Feed repos"
+      }
+    },
+    "extends": {
+      "title": "Extending classes (extends)",
+      "badge": "Inheritance · TypeScript",
+      "intro": "A base class concentrates the shared logic — signals, computed, methods and inputs — and every child component inherits it with extends, contributing only what makes it unique: its template and its styles.",
+      "theory": "Inheritance in Angular is TypeScript's: a component, directive or service can `extends` another class and inherits its properties and methods… and also its `input()`, `output()`, host bindings and lifecycle hooks.\nWhat is NEVER inherited is the decorator metadata: template, styles, selector and providers are defined by each child, because they are the component's visual identity, not its logic.\nThe modern enabler is `inject()` in field initializers: the base class gets its dependencies without declaring a constructor, and children are freed from the `super(dep1, dep2…)` chaining that made classic inheritance painful.",
+      "simile": "A food-truck franchise: the parent company provides the sauce recipe, the processes and the suppliers (the base class logic, inputs and services). Each food truck inherits all of that when it signs the franchise (extends), but the sign, the decoration and the menu it shows customers (template, styles and selector) are its own choice — and if one wants to give the recipe a personal twist, it cooks on top of the parent's (override + super).",
+      "examples": [
+        "Base class for list components with shared filtering, sorting or pagination.",
+        "Base directive with common behaviour (focus, keyboard, accessibility) extended by several variants.",
+        "Base data-access service (generic CRUD) that domain services extend and specialise."
+      ],
+      "diagramWord": "Diagram",
+      "stepWord": "Step",
+      "p1": {
+        "title": "The base class: shared logic, no template",
+        "lead": "All the logic that would be repeated in every list is written ONCE in an abstract class: the search term (signal), the derived filtering (computed) and the configurable input(). It is marked with a selector-less `@Directive()` because it declares an input() and Angular only processes inputs/outputs of decorated classes; and `abstract` prevents instantiating it on its own while forcing every child to provide its data.",
+        "n1": "Shared logic: written once"
+      },
+      "p2": {
+        "title": "The child: extends + its own view",
+        "lead": "The child declares `extends ListaFiltrableBase` and gets the input(), the signals, the computed and the methods for free: its class is almost empty. What the base cannot give it is the decorator metadata: template, styles, selector and providers are its own. That is why two children of the same base can look completely different while sharing 100% of the logic.",
+        "n1": "The parent class",
+        "n2": "Inherits the logic, brings the view",
+        "yes": "Inherited",
+        "no": "Not inherited",
+        "note": "Logic travels with extends; visual identity never does"
+      },
+      "p3": {
+        "title": "Specialising: override + super",
+        "lead": "A child can redefine a base method. TypeScript requires marking it with `override` (this project enables \"noImplicitOverride\"): if the base ever renames the method, the compiler warns instead of leaving behind an orphan method that no longer overrides anything. Inside, `super.limpiar()` reuses the parent's logic and then the child adds its own — specialise without duplicating.",
+        "n1": "The child redefines the inherited method",
+        "n2": "First it reuses the base logic…",
+        "n3": "…then it adds its own"
+      },
+      "p4": {
+        "title": "inject() in fields: inheritance without the toll",
+        "lead": "With classic constructor DI, the child had to know ALL the base's dependencies and re-pass them with super(...); if the base added one, every child broke. With `inject()` in field initializers each class serves its own dependencies: the base has no constructor, the child has no super(). This change is what made base classes a comfortable pattern again in modern Angular.",
+        "n1": "The child re-passes the base's deps",
+        "n2": "Each class serves itself",
+        "note": "No constructor means no super() to maintain"
+      },
+      "exercise": {
+        "desc": "Complete the 4 TODOs: declare the inheritance with extends in lista-tecnologias, complete the inherited filtering computed in the base, override limpiar() in lista-frutas with override + super, and bind from the parent the placeholder input() the children inherit. Type in the search boxes: the SAME inherited logic filters two totally different views.",
+        "hint": "Two components, a single piece of logic: both inherit from ListaFiltrableBase.",
+        "fruitsTitle": "Fruits · inherits + override",
+        "techTitle": "Technologies · extends only",
+        "techPlaceholder": "Search a technology…",
+        "clearBtn": "Clear",
+        "cleanCount": "clears",
+        "empty": "No results for that filter."
+      }
+    },
+    "abstract": {
+      "title": "Abstract classes",
+      "badge": "Inheritance · Contracts",
+      "intro": "An abstract class is half contract, half implementation: its abstract members force every child to define its part, and its concrete methods are inherited ready-made. In Angular it also has a superpower: since it survives at runtime, it can be used as a DI token.",
+      "theory": "A class marked abstract cannot be instantiated with new: it exists only to be extended. Inside, two kinds of members coexist: abstract ones, with no body, which the compiler FORCES every child to implement; and concrete ones, with a body, inherited as-is. Unlike an interface — which is erased at compile time — an abstract class compiles to real JavaScript, and that is why Angular can use it as a dependency-injection token with useClass.",
+      "simile": "The official blueprint of a housing development: nobody can live in the blueprint (it cannot be instantiated), the blueprint demands that every house has a door, a roof and a chimney (abstract members: every house MUST solve them its own way), and at the same time it ships the shared plumbing and wiring already solved (concrete methods inherited ready-made). Every built house complies with the blueprint, but chooses its own finishes.",
+      "examples": [
+        "Abstract base class for reusable form components (the contract forces every control to implement its validation).",
+        "Abstract class as a DI token to swap implementations: mock/real in tests, memory/localStorage/HTTP in production.",
+        "Template-method pattern in export services: CSV and PDF share the flow and each contributes only its format."
+      ],
+      "diagramWord": "Diagram",
+      "stepWord": "Step",
+      "p1": {
+        "title": "The abstract contract: enforce without implementing",
+        "lead": "An abstract member declares WHAT must exist without saying HOW: it has no body, and every child is forced to implement it or TypeScript will not compile. The rest of the class is regular implementation, inherited ready-made. The compiler watches both directions: it forbids `new NotificadorBase()` (error TS2511) and forbids a child that leaves the contract unfulfilled (error TS2515).",
+        "n1": "Half contract, half implementation",
+        "contract": "contract",
+        "contractCap": "No body: the child provides it",
+        "concrete": "concrete",
+        "concreteCap": "With body: inherited ready-made",
+        "noNew": "Error TS2511: not instantiable"
+      },
+      "p2": {
+        "title": "Abstract class vs interface: surviving the compiler",
+        "lead": "An interface also defines a contract, but it is ERASED at compile time: it only exists for the type-checker and nothing of it remains in the final JavaScript. An abstract class compiles to a real function: it can carry implementation and shared state next to the contract and — the key difference in Angular — it is a value that exists at runtime, so it can be used as a DI token. Rule of thumb: interface to shape data; abstract class when there is also code to share or a token to inject.",
+        "onlyTypes": "types only",
+        "noCode": "no code",
+        "n1": "Erased at compile time",
+        "typesAndCode": "types + code",
+        "sharedState": "shared state",
+        "n2": "Survives at runtime",
+        "note": "Only what exists at runtime can be a DI token"
+      },
+      "p3": {
+        "title": "Template-method pattern: the base orchestrates, the child fills in",
+        "lead": "A CONCRETE method of the base defines the whole flow once — validate, register, clear — and delegates exactly the variable step to an abstract method that each child implements its own way. No child repeats the flow or can skip the validation: it only fills in its slot. That is the template-method pattern: the skeleton lives in the parent, the personality in the children.",
+        "n1": "The base orchestrates the flow (concrete)",
+        "n2": "The abstract slot: each child fills it in",
+        "n3": "…and the shared flow continues in the base"
+      },
+      "p4": {
+        "title": "Abstract class as a DI token",
+        "lead": "Because the abstract class exists at runtime, it works as a key in the injection system: the provider `{ provide: HistorialBase, useClass: HistorialEnMemoria }` declares \"when someone asks for the contract, deliver this implementation\". Consumers call `inject(HistorialBase)` and depend only on the contract: swapping the implementation (memory → localStorage → HTTP → mock in tests) means touching ONE provider line and no consumer ever notices.",
+        "n1": "The consumer asks for the CONTRACT",
+        "n2": "The token: the abstract class",
+        "n3": "The implementation, swappable",
+        "note": "Changing useClass touches no consumer"
+      },
+      "exercise": {
+        "desc": "Complete the 4 TODOs: mark NotificadorBase and its contract as abstract, complete the enviar() template method in the base, implement formatear() in the SMS channel (trim to 25 characters) and configure the provider { provide: HistorialBase, useClass: HistorialEnMemoria } in the parent panel. Send messages through both channels: each child applies ITS format, but everything ends up in the SAME history — the single instance delivered by the abstract token.",
+        "hint": "Two channels, one contract: both inherit from NotificadorBase and write to the same injected HistorialBase.",
+        "emailTitle": "Email · child 1",
+        "smsTitle": "SMS · child 2",
+        "placeholder": "Type a message…",
+        "sendBtn": "Send",
+        "historyTitle": "Shared history",
+        "clearBtn": "Clear history",
+        "count": "notifications",
+        "empty": "No notifications yet: send one from any channel."
+      }
+    },
+    "dev-remote": {
+      "title": "DEV proxy without running a local backend",
+      "badge": "Dev-server · Proxy",
+      "intro": "In development, the Angular dev-server can act as a middleman: it intercepts calls to /api and /ws, injects your already-authenticated session cookie and forwards them to a remote environment. You work locally against real data without starting any microservices or going through the login. Five steps, each with its diagram, plus a flow simulator.",
+      "theory": "A development proxy redirects, on the server side, certain routes of your app towards another origin. The trick: the app requests RELATIVE routes (/api instead of https://remote…/api), so for the browser everything goes to localhost and there is NO cross-origin to block.\nThe jump to the remote domain is made by the dev-server, where CORS does not apply. Along the way, the proxy injects the session cookie and the Origin/Referer/Host headers, so the backend believes the request comes from its own, already logged-in web app.\nResult: the app runs locally against real data without starting any backend.",
+      "simile": "It is like a hotel concierge running errands for you: you ask «bring me something from the shop across the street» (a relative route, /api) and they cross the road, walk in with YOUR already-stamped membership card (your session cookie) and come back with the real product. You never leave the hotel (localhost) nor show your ID at the door (the login): the concierge (the proxy) is the face and the credentials on your behalf.",
+      "examples": [
+        "Debug an app locally against the test or staging environment without deploying or running its microservices.",
+        "Reproduce a bug that only shows up with real data, using the browser's already-authenticated session.",
+        "Develop the front end of a feature whose backend does not run locally yet but does exist in a remote environment."
+      ],
+      "diagramWord": "Diagram",
+      "stepWord": "Step",
+      "p1": {
+        "title": "The proxy file: what to intercept and where to forward",
+        "lead": "At the workspace root, proxy-dev.config.js exports an array via module.exports: one object per prefix to intercept. Each carries context (the prefix, /api or /ws), target (the remote URL), changeOrigin and secure:false + agent to accept self-signed certificates. The onProxyReq hook injects the session cookie and the Origin/Referer/Host headers into every request. For WebSockets you add ws:true and duplicate the injection in onProxyReqWs (the upgrade), because SockJS makes HTTP calls before opening the socket.",
+        "n1": "Real data, no local backend"
+      },
+      "p2": {
+        "title": "The environment: relative routes, not absolute",
+        "lead": "You create a specific environment (environment.proxy.ts) where all API URLs are relative routes (/api, /ws) instead of pointing to an absolute localhost. Why does it matter so much? Because a relative route goes to the dev-server itself and the browser does not treat it as cross-origin: it does not block it. Only then does the proxy have something to intercept.",
+        "absolute": "Absolute URL",
+        "relative": "Relative route",
+        "cross": "cross-origin · blocked",
+        "same": "same origin · interceptable",
+        "note": "The relative route is what lets the proxy come into play"
+      },
+      "p3": {
+        "title": "angular.json: build + serve",
+        "lead": "You define the dev-proxy configuration in two places. In architect.build.configurations, a fileReplacements swaps environment.ts for environment.proxy.ts at build time. In architect.serve.configurations, an entry with buildTarget pointing at that build (project:build:dev-proxy) and proxyConfig pointing at the Step 1 file. This way serve compiles with relative routes and starts with the proxy active.",
+        "n1": "buildTarget + proxyConfig"
+      },
+      "p4": {
+        "title": "The script and the full flow",
+        "lead": "You add the start:proxy script to package.json: ng serve with --configuration=dev-proxy. When you run it: Angular compiles with relative routes → the app requests /api → it goes to localhost:4200 → the dev-server sees it matches the context and intercepts it → the proxy injects your cookie and forwards to the remote → the remote responds 200 with real data. No login, no local microservices.",
+        "browser": "Browser",
+        "intercept": "intercepts",
+        "inject": "injects cookie + headers",
+        "remote": "Remote environment",
+        "realData": "real data"
+      },
+      "p5": {
+        "title": "Maintenance: the cookie expires",
+        "lead": "Session cookies are short-lived. When the proxy starts returning 401s or login redirects, the cookie has expired: log in to the remote again, copy the updated cookie from DevTools and paste it into the proxy file. For the same reason, treat this file as sensitive: it holds a live credential, so add it to .gitignore to never commit a real cookie.",
+        "fresh": "Fresh cookie",
+        "expired": "Expired cookie",
+        "realData": "real data",
+        "login": "redirects to login",
+        "time": "time passes →",
+        "recopy": "re-copy and paste the cookie",
+        "sensitive": "⚠ Sensitive file · do not commit real cookies"
+      },
+      "exercise": {
+        "desc": "The proxy renders nothing, so the exercise reproduces its DECISION LOGIC. Complete the 4 TODOs in resolverPeticion(): match the context, return 404 when there is none, 401 with an expired cookie and 200 on the happy path. Then use the simulator: type routes and toggle the cookie to see when the proxy intercepts, when it injects the session and what the remote responds.",
+        "hint": "Type a route and toggle the cookie: watch the Browser → dev-server → proxy → remote flow light up.",
+        "pathLabel": "Route the app requests",
+        "cookieOk": "Valid cookie",
+        "cookieDead": "Expired cookie",
+        "browser": "Browser",
+        "remote": "Remote environment",
+        "match": "match",
+        "noMatch": "no match · not intercepted",
+        "ok200": {
+          "title": "200 · Real data",
+          "text": "The proxy matched the context, injected your cookie + Origin/Referer/Host and forwarded to the remote, which responded with real data. No login, no local backend."
+        },
+        "err401": {
+          "title": "401 · Expired cookie",
+          "text": "The proxy forwarded the request, but the remote rejected the session and redirects to login. Re-copy the cookie from DevTools and paste it into proxy-dev.config.js."
+        },
+        "err404": {
+          "title": "404 · Not intercepted",
+          "text": "The route does not match any context (/api, /ws). The proxy leaves it alone: it stays on the dev-server (localhost:4200), where that resource does not exist."
+        }
       }
     }
   },

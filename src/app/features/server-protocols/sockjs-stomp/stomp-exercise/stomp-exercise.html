@@ -1,0 +1,70 @@
+<div class="push">
+
+  <!-- ── Barra de estado ───────────────────────────────────────────── -->
+  <div class="push__bar">
+    <span class="push__dot" [class]="'push__dot--' + state()"></span>
+    <span class="push__status">
+      {{ 'sections.sockjs-stomp.exercise.state.' + state() | translate }}
+    </span>
+    <div class="push__actions">
+      @if (state() === 'UNINITIALIZED') {
+        <button class="push__btn push__btn--connect" (click)="onNotification()">
+          {{ 'sections.sockjs-stomp.exercise.connectBtn' | translate }}
+        </button>
+      } @else {
+        <button class="push__btn push__btn--disconnect" (click)="destroy()">
+          {{ 'sections.sockjs-stomp.exercise.logoutBtn' | translate }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ── Selector de rol (resuelve el topic) ───────────────────────── -->
+  <div class="push__role">
+    <span class="push__role-label">{{ 'sections.sockjs-stomp.exercise.roleLabel' | translate }}</span>
+    <div class="push__role-opts" role="group">
+      <button
+        class="push__chip"
+        [class.push__chip--on]="role() === 'admin'"
+        [disabled]="state() !== 'UNINITIALIZED'"
+        (click)="setRole('admin')"
+      >admin</button>
+      <button
+        class="push__chip"
+        [class.push__chip--on]="role() === 'client'"
+        [disabled]="state() !== 'UNINITIALIZED'"
+        (click)="setRole('client')"
+      >client</button>
+    </div>
+    <code class="push__topic">
+      {{ role() === 'admin' ? '/topic/notifications/admin' : '/topic/notifications/42' }}
+    </code>
+  </div>
+
+  <!-- ── Métrica: refrescos del grid ───────────────────────────────── -->
+  <div class="push__grid">
+    <span class="push__grid-label">{{ 'sections.sockjs-stomp.exercise.gridLabel' | translate }}</span>
+    <span class="push__grid-count">{{ gridRefreshes() }}</span>
+  </div>
+
+  <!-- ── Notificaciones entrantes (toasts) ─────────────────────────── -->
+  <div class="push__feed">
+    @if (notifications().length === 0) {
+      <p class="push__empty">
+        {{ (state() === 'UNINITIALIZED'
+              ? 'sections.sockjs-stomp.exercise.empty'
+              : 'sections.sockjs-stomp.exercise.waiting') | translate }}
+      </p>
+    }
+    @for (n of notifications(); track n.id) {
+      <div class="toast">
+        <div class="toast__row">
+          <span class="toast__title">{{ n.title }}</span>
+          <span class="toast__time">{{ n.time | date:'HH:mm:ss' }}</span>
+        </div>
+        <span class="toast__amount">{{ n.amount }} €</span>
+      </div>
+    }
+  </div>
+
+</div>

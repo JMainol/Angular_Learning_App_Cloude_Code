@@ -26,6 +26,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/wc-lib/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/wc-demo/tsconfig.app.json"
     }
   ]
 }

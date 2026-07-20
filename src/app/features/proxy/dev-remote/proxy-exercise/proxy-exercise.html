@@ -1,0 +1,110 @@
+<div class="sim">
+  <p class="sim__hint">{{ 'sections.dev-remote.exercise.hint' | translate }}</p>
+
+  <!-- ── Controles: la ruta que pide la app + estado de la cookie ─────────── -->
+  <div class="sim__controls">
+    <label class="field">
+      <span class="field__label">{{ 'sections.dev-remote.exercise.pathLabel' | translate }}</span>
+      <input
+        class="field__input"
+        type="text"
+        [value]="path()"
+        (input)="onPathInput($event)"
+        spellcheck="false"
+        autocomplete="off"
+      />
+    </label>
+
+    <div class="presets">
+      @for (p of presets; track p) {
+        <button
+          type="button"
+          class="presets__btn"
+          [class.presets__btn--active]="path() === p"
+          (click)="usarPreset(p)"
+        >
+          {{ p }}
+        </button>
+      }
+    </div>
+
+    <!-- Conmutador de la cookie: dispara el 401 cuando caduca. -->
+    <button
+      type="button"
+      class="cookie"
+      [class.cookie--ok]="cookieValida()"
+      [class.cookie--dead]="!cookieValida()"
+      (click)="toggleCookie()"
+    >
+      <span class="cookie__dot" aria-hidden="true"></span>
+      {{ (cookieValida() ? 'sections.dev-remote.exercise.cookieOk' : 'sections.dev-remote.exercise.cookieDead') | translate }}
+    </button>
+  </div>
+
+  <!-- ── El flujo: se ilumina según la decisión del proxy ─────────────────── -->
+  <div class="flow" [attr.data-status]="resultado().status">
+    <!-- 1 · Navegador -->
+    <div class="stage stage--on">
+      <span class="stage__ico" aria-hidden="true">🌐</span>
+      <span class="stage__name">{{ 'sections.dev-remote.exercise.browser' | translate }}</span>
+      <span class="stage__meta">GET {{ path() }}</span>
+    </div>
+
+    <div class="link link--on" aria-hidden="true"></div>
+
+    <!-- 2 · dev-server (localhost:4200) -->
+    <div class="stage stage--on">
+      <span class="stage__ico" aria-hidden="true">⚙️</span>
+      <span class="stage__name">dev-server</span>
+      <span class="stage__meta">localhost:4200</span>
+    </div>
+
+    <div class="link" [class.link--on]="resultado().interceptado" aria-hidden="true"></div>
+
+    <!-- 3 · Proxy (solo actúa si hace match un context) -->
+    <div class="stage" [class.stage--on]="resultado().interceptado" [class.stage--off]="!resultado().interceptado">
+      <span class="stage__ico" aria-hidden="true">🔀</span>
+      <span class="stage__name">proxy</span>
+      @if (resultado().interceptado) {
+        <span class="stage__meta">{{ 'sections.dev-remote.exercise.match' | translate }} {{ resultado().context }}</span>
+        <span class="stage__inject">+ Cookie · Origin · Referer · Host</span>
+      } @else {
+        <span class="stage__meta stage__meta--dim">{{ 'sections.dev-remote.exercise.noMatch' | translate }}</span>
+      }
+    </div>
+
+    <div class="link" [class.link--on]="resultado().interceptado && resultado().status !== 401" [class.link--dead]="resultado().status === 401" aria-hidden="true"></div>
+
+    <!-- 4 · Entorno remoto -->
+    <div class="stage" [class.stage--on]="resultado().interceptado" [class.stage--off]="!resultado().interceptado">
+      <span class="stage__ico" aria-hidden="true">☁️</span>
+      <span class="stage__name">{{ 'sections.dev-remote.exercise.remote' | translate }}</span>
+      <span class="stage__meta">{{ REMOTE }}</span>
+    </div>
+  </div>
+
+  <!-- ── Veredicto: qué responde el remoto ─────────────────────────────────── -->
+  <div class="verdict" [attr.data-status]="resultado().status">
+    <div class="verdict__code">
+      <span class="verdict__num">{{ resultado().status }}</span>
+      <span class="verdict__proto">{{ resultado().esWs && resultado().status === 200 ? 'WebSocket' : 'HTTP' }}</span>
+    </div>
+    <div class="verdict__body">
+      @switch (resultado().status) {
+        @case (200) {
+          <span class="verdict__title">{{ 'sections.dev-remote.exercise.ok200.title' | translate }}</span>
+          <span class="verdict__text">{{ 'sections.dev-remote.exercise.ok200.text' | translate }}</span>
+          <code class="verdict__url">→ {{ resultado().destino }}</code>
+        }
+        @case (401) {
+          <span class="verdict__title">{{ 'sections.dev-remote.exercise.err401.title' | translate }}</span>
+          <span class="verdict__text">{{ 'sections.dev-remote.exercise.err401.text' | translate }}</span>
+        }
+        @case (404) {
+          <span class="verdict__title">{{ 'sections.dev-remote.exercise.err404.title' | translate }}</span>
+          <span class="verdict__text">{{ 'sections.dev-remote.exercise.err404.text' | translate }}</span>
+        }
+      }
+    </div>
+  </div>
+</div>

@@ -12,6 +12,19 @@
       @for (p of theoryParagraphs(); track $index) {
         <p class="part__text">{{ p }}</p>
       }
+
+      <!-- Características principales. Solo se pinta si la sección las aporta. -->
+      @if (theoryList().length) {
+        <ul class="keypoints">
+          @for (point of theoryList(); track point.title) {
+            <li class="keypoints__item">
+              <span class="keypoints__title">{{ point.title }}</span>
+              <span class="keypoints__text">{{ point.text }}</span>
+            </li>
+          }
+        </ul>
+      }
+
       <app-doc-link [href]="docUrl()" />
     </article>
 

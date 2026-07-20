@@ -146,6 +146,19 @@ Los bloques y secciones van a ir creciendo continuamente
 | 16.1    | ng-container y ng-template                                |
 | 16.2    | Content projection con ng-content                         |
 
+### Bloque 18 — Herencia de clases
+
+| Sección | Concepto                                                  |
+|---------|-----------------------------------------------------------|
+| 18.1    | Extender clases (extends)                                 |
+| 18.2    | Clases abstractas                                         |
+
+### Bloque 19 — Proxy
+
+| Sección | Concepto                                                  |
+|---------|-----------------------------------------------------------|
+| 19.1    | Proxy DEV sin levantar backend local                     |
+
 ---
 
 ## 📋 Estructura de cada sección (template obligatorio)

@@ -1,0 +1,13 @@
+{
+  "name": "@mi-scope/wc-lib",
+  "version": "0.0.1",
+  "description": "Web components Angular (wc-user-card, wc-contador) como bundle ESM autocontenido",
+  "type": "module",
+  "exports": {
+    ".": "./main.js"
+  },
+  "files": ["main.js"],
+  "sideEffects": true,
+  "keywords": ["angular", "elements", "web-components"],
+  "license": "MIT"
+}

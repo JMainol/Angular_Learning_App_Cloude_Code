@@ -1,0 +1,213 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">18.2</span>
+      <span class="doc__badge">{{ 'sections.abstract.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.abstract.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.abstract.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.abstract.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.abstract.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.abstract.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: el contrato abstract ────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.abstract.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.abstract.p1.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">abstract class NotificadorBase</span>
+            <span class="node__cap">{{ 'sections.abstract.p1.n1' | translate }}</span>
+          </div>
+          <div class="herencia-compare">
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">abstract · {{ 'sections.abstract.p1.contract' | translate }}</span>
+              <div class="dom-box dom-box--ghost">
+                <span class="dom-box__leaf dom-box__leaf--ghost">canal · icono</span>
+                <span class="dom-box__leaf dom-box__leaf--ghost">formatear()</span>
+              </div>
+              <span class="node__badge node__badge--dim">{{ 'sections.abstract.p1.contractCap' | translate }}</span>
+            </div>
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">{{ 'sections.abstract.p1.concrete' | translate }}</span>
+              <div class="dom-box">
+                <span class="dom-box__leaf">signal() borrador</span>
+                <span class="dom-box__leaf">alEscribir()</span>
+              </div>
+              <span class="node__badge">{{ 'sections.abstract.p1.concreteCap' | translate }}</span>
+            </div>
+          </div>
+          <div class="arrow-split" aria-hidden="true"></div>
+          <div class="node node--forbidden">
+            <span class="node__title node__title--sm">new NotificadorBase()</span>
+            <span class="node__cap">✘ {{ 'sections.abstract.p1.noNew' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.abstract.stepWord' | translate }} 1 · {{ 'sections.abstract.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.abstract.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeContrato" language="TypeScript" filename="notificador-base.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: abstract class vs interface ─────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.abstract.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.abstract.p2.title' | translate">
+          <div class="herencia-compare">
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">interface</span>
+              <div class="dom-box dom-box--ghost">
+                <span class="dom-box__leaf dom-box__leaf--ghost">{{ 'sections.abstract.p2.onlyTypes' | translate }}</span>
+                <span class="dom-box__leaf dom-box__leaf--ghost">✘ {{ 'sections.abstract.p2.noCode' | translate }}</span>
+                <span class="dom-box__leaf dom-box__leaf--ghost">✘ inject(…)</span>
+              </div>
+              <span class="node__badge node__badge--dim">{{ 'sections.abstract.p2.n1' | translate }}</span>
+            </div>
+            <div class="herencia-compare__col">
+              <span class="node__title node__title--sm">abstract class</span>
+              <div class="dom-box">
+                <span class="dom-box__leaf">{{ 'sections.abstract.p2.typesAndCode' | translate }}</span>
+                <span class="dom-box__leaf">✔ {{ 'sections.abstract.p2.sharedState' | translate }}</span>
+                <span class="dom-box__leaf">✔ inject(…)</span>
+              </div>
+              <span class="node__badge">{{ 'sections.abstract.p2.n2' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.abstract.p2.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.abstract.stepWord' | translate }} 2 · {{ 'sections.abstract.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.abstract.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeVsInterface" language="TypeScript" filename="historial-notificaciones.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: patrón template method ──────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.abstract.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.abstract.p3.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">enviar()</span>
+            <span class="node__cap">{{ 'sections.abstract.p3.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">formatear(texto)</span>
+            <span class="node__cap">{{ 'sections.abstract.p3.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">historial.registrar(…)</span>
+            <span class="node__cap">{{ 'sections.abstract.p3.n3' | translate }}</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">template method</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.abstract.stepWord' | translate }} 3 · {{ 'sections.abstract.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.abstract.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeTemplateMethod" language="TypeScript" filename="notificador-base.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: abstract class como token de DI ─────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.abstract.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.abstract.p4.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">inject(HistorialBase)</span>
+            <span class="node__cap">{{ 'sections.abstract.p4.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">provide: HistorialBase</span>
+            <span class="node__cap">{{ 'sections.abstract.p4.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">useClass: HistorialEnMemoria</span>
+            <span class="node__cap">{{ 'sections.abstract.p4.n3' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.abstract.p4.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.abstract.stepWord' | translate }} 4 · {{ 'sections.abstract.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.abstract.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeDiToken" language="TypeScript" filename="notificaciones-exercise.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.abstract.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="notificaciones-exercise" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-notificaciones-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

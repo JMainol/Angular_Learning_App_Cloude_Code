@@ -1,0 +1,433 @@
+<section class="doc">
+  <!-- Cabecera: documentación (sin ejercicio) -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">17.1</span>
+      <span class="doc__badge">{{ 'sections.web-components.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.web-components.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.web-components.intro' | translate }}</p>
+  </header>
+
+  <!-- 1 · TEORÍA -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.web-components.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- 2 · SÍMIL -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.web-components.simile' | translate }}</p>
+  </article>
+
+  <!-- 3 · EJEMPLOS DE USO COMÚN -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.web-components.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- 4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS (bloques numerados, dos columnas) -->
+
+  <!-- ===== PASO 1 / DIAGRAMA 1 · Workspace multiproyecto ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.web-components.p1.title' | translate">
+          <div class="node node--accent">
+            <span class="node__title">angular.json</span>
+            <span class="node__cap">{{ 'sections.web-components.p1.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="branch branch--three">
+            <div class="node">
+              <span class="node__title node__title--sm">app-guía · root: ""</span>
+              <span class="node__cap">{{ 'sections.web-components.p1.n2' | translate }}</span>
+            </div>
+            <div class="node">
+              <span class="node__title node__title--sm">projects/wc-lib</span>
+              <span class="node__cap">{{ 'sections.web-components.p1.n3' | translate }}</span>
+            </div>
+            <div class="node">
+              <span class="node__title node__title--sm">projects/wc-demo</span>
+              <span class="node__cap">{{ 'sections.web-components.p1.n4' | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 1 · {{ 'sections.web-components.p1.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.web-components.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeWorkspace" language="JSON" filename="angular.json" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 2 / DIAGRAMA 2 · Application vs Library ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.web-components.p2.title' | translate">
+          <div class="branch">
+            <div class="node node--accent">
+              <span class="node__title node__title--sm">ng g application</span>
+              <span class="node__cap">{{ 'sections.web-components.p2.n1' | translate }}</span>
+            </div>
+            <div class="node node--muted">
+              <span class="node__title node__title--sm">ng g library + ng-packagr</span>
+              <span class="node__cap">{{ 'sections.web-components.p2.n2' | translate }}</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">main.js</span>
+            <span class="node__cap">{{ 'sections.web-components.p2.n3' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 2 · {{ 'sections.web-components.p2.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.web-components.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeGenerate" language="Shell" filename="terminal" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 3 / DIAGRAMA 3 · Componente → custom element ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.web-components.p3.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">WcUserCard</span>
+            <span class="node__cap">{{ 'sections.web-components.p3.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">createCustomElement()</span>
+            <span class="node__cap">{{ 'sections.web-components.p3.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">class extends HTMLElement</span>
+            <span class="node__cap">{{ 'sections.web-components.p3.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="branch">
+            <div class="node">
+              <span class="node__title node__title--sm">input()</span>
+              <span class="node__cap">{{ 'sections.web-components.p3.n4' | translate }}</span>
+            </div>
+            <div class="node">
+              <span class="node__title node__title--sm">output()</span>
+              <span class="node__cap">{{ 'sections.web-components.p3.n5' | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 3 · {{ 'sections.web-components.p3.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.web-components.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeUserCard" language="TypeScript" filename="user-card.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 4 / DIAGRAMA 4 · main.ts sin componente raíz ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.web-components.p4.title' | translate">
+          <div class="node">
+            <span class="node__title">main.ts</span>
+            <span class="node__cap">{{ 'sections.web-components.p4.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">createApplication()</span>
+            <span class="node__cap">{{ 'sections.web-components.p4.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">app.injector</span>
+            <span class="node__cap">{{ 'sections.web-components.p4.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">customElements.define('wc-…')</span>
+            <span class="node__cap">{{ 'sections.web-components.p4.n4' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">CustomElementRegistry</span>
+            <span class="node__cap">{{ 'sections.web-components.p4.n5' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 4 · {{ 'sections.web-components.p4.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.web-components.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeMain" language="TypeScript" filename="main.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 5 / DIAGRAMA 5 · Build del bundle ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 5</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.web-components.p5.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">main.ts + componentes</span>
+            <span class="node__cap">{{ 'sections.web-components.p5.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">ng build wc-lib</span>
+            <span class="node__cap">{{ 'sections.web-components.p5.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">dist/wc-lib/browser/main.js</span>
+            <span class="node__cap">{{ 'sections.web-components.p5.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--warn">
+            <span class="node__title node__title--sm">outputHashing: none · styles: []</span>
+            <span class="node__cap">{{ 'sections.web-components.p5.n4' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 5 · {{ 'sections.web-components.p5.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.web-components.p5.lead' | translate }}</p>
+        <app-code-block [code]="codeBuild" language="JSON" filename="angular.json (wc-lib)" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 6 / DIAGRAMA 6 · Cableado completo (ancho completo) ===== -->
+  <article class="block block--full">
+    <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 6</span>
+    <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 6 · {{ 'sections.web-components.p6.title' | translate }}</span>
+    <p class="flow__lead">{{ 'sections.web-components.p6.lead' | translate }}</p>
+
+    <div class="diagram diagram--row" role="img" [attr.aria-label]="'sections.web-components.p6.title' | translate">
+      <div class="node">
+        <span class="node__title node__title--sm">projects/wc-lib/src/main.ts</span>
+        <span class="node__cap">{{ 'sections.web-components.p6.n1' | translate }}</span>
+      </div>
+      <div class="arrow arrow--h" aria-hidden="true"></div>
+      <div class="node">
+        <span class="node__title node__title--sm">dist/wc-lib/browser/main.js</span>
+        <span class="node__cap">{{ 'sections.web-components.p6.n2' | translate }}</span>
+      </div>
+      <div class="arrow arrow--h" aria-hidden="true"></div>
+      <div class="node node--accent">
+        <span class="node__title node__title--sm">asset → wc-lib/main.js</span>
+        <span class="node__cap">{{ 'sections.web-components.p6.n3' | translate }}</span>
+      </div>
+      <div class="arrow arrow--h" aria-hidden="true"></div>
+      <div class="node">
+        <span class="node__title node__title--sm">index.html &lt;script module&gt;</span>
+        <span class="node__cap">{{ 'sections.web-components.p6.n4' | translate }}</span>
+      </div>
+      <div class="arrow arrow--h" aria-hidden="true"></div>
+      <div class="node node--out">
+        <span class="node__title node__title--sm">&lt;wc-user-card&gt;</span>
+        <span class="node__cap">{{ 'sections.web-components.p6.n5' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="wiring-grid">
+      <app-code-block [code]="codeWiring" language="HTML" filename="wc-demo · index.html" />
+      <app-code-block [code]="codeConsume" language="TypeScript" filename="wc-demo · angular.json + app.ts" />
+    </div>
+  </article>
+
+  <!-- ===== EJECUTAR EN LOCAL · runbook (bloque no numerado, ancho completo) ===== -->
+  <article class="block block--full">
+    <span class="block__tag">{{ 'sections.web-components.run.kicker' | translate }}</span>
+    <span class="flow__label">{{ 'sections.web-components.run.title' | translate }}</span>
+    <p class="flow__lead">{{ 'sections.web-components.run.lead' | translate }}</p>
+
+    <div class="run-grid">
+      <!-- Columna izquierda: tarjetas ordenadas (script + url + qué + por qué) -->
+      <ol class="runbook">
+        <li class="runbook__step">
+          <span class="runbook__order">0</span>
+          <div class="runbook__body">
+            <div class="runbook__head">
+              <code class="runbook__cmd">npm install</code>
+              <span class="runbook__url runbook__url--muted">{{ 'sections.web-components.run.once' | translate }}</span>
+            </div>
+            <p class="runbook__what">{{ 'sections.web-components.run.r0.what' | translate }}</p>
+            <p class="runbook__why"><span class="runbook__whyLabel">{{ 'sections.web-components.run.whyLabel' | translate }}</span> {{ 'sections.web-components.run.r0.why' | translate }}</p>
+          </div>
+        </li>
+
+        <li class="runbook__step runbook__step--accent">
+          <span class="runbook__order">A</span>
+          <div class="runbook__body">
+            <div class="runbook__head">
+              <code class="runbook__cmd">npm run serve:wc-lib</code>
+              <a class="runbook__url" href="http://localhost:4301" target="_blank" rel="noreferrer">localhost:4301</a>
+            </div>
+            <p class="runbook__what">{{ 'sections.web-components.run.r1.what' | translate }}</p>
+            <p class="runbook__why"><span class="runbook__whyLabel">{{ 'sections.web-components.run.whyLabel' | translate }}</span> {{ 'sections.web-components.run.r1.why' | translate }}</p>
+          </div>
+        </li>
+
+        <li class="runbook__step runbook__step--accent">
+          <span class="runbook__order">B</span>
+          <div class="runbook__body">
+            <div class="runbook__head">
+              <code class="runbook__cmd">npm run start:demo</code>
+              <a class="runbook__url" href="http://localhost:4300" target="_blank" rel="noreferrer">localhost:4300</a>
+            </div>
+            <p class="runbook__what">{{ 'sections.web-components.run.r2.what' | translate }}</p>
+            <p class="runbook__why"><span class="runbook__whyLabel">{{ 'sections.web-components.run.whyLabel' | translate }}</span> {{ 'sections.web-components.run.r2.why' | translate }}</p>
+          </div>
+        </li>
+
+        <li class="runbook__step">
+          <span class="runbook__order">·</span>
+          <div class="runbook__body">
+            <div class="runbook__head">
+              <code class="runbook__cmd">npm run build:wc-lib</code>
+              <span class="runbook__url runbook__url--muted">dist/wc-lib/browser</span>
+            </div>
+            <p class="runbook__what">{{ 'sections.web-components.run.r3.what' | translate }}</p>
+            <p class="runbook__why"><span class="runbook__whyLabel">{{ 'sections.web-components.run.whyLabel' | translate }}</span> {{ 'sections.web-components.run.r3.why' | translate }}</p>
+          </div>
+        </li>
+
+        <li class="runbook__step">
+          <span class="runbook__order">·</span>
+          <div class="runbook__body">
+            <div class="runbook__head">
+              <code class="runbook__cmd">npm run pack:wc-lib</code>
+              <span class="runbook__url runbook__url--muted">*.tgz</span>
+            </div>
+            <p class="runbook__what">{{ 'sections.web-components.run.r4.what' | translate }}</p>
+            <p class="runbook__why"><span class="runbook__whyLabel">{{ 'sections.web-components.run.whyLabel' | translate }}</span> {{ 'sections.web-components.run.r4.why' | translate }}</p>
+          </div>
+        </li>
+
+        <li class="runbook__step">
+          <span class="runbook__order">·</span>
+          <div class="runbook__body">
+            <div class="runbook__head">
+              <code class="runbook__cmd">npm start</code>
+              <a class="runbook__url" href="http://localhost:4200" target="_blank" rel="noreferrer">localhost:4200</a>
+            </div>
+            <p class="runbook__what">{{ 'sections.web-components.run.r5.what' | translate }}</p>
+            <p class="runbook__why"><span class="runbook__whyLabel">{{ 'sections.web-components.run.whyLabel' | translate }}</span> {{ 'sections.web-components.run.r5.why' | translate }}</p>
+          </div>
+        </li>
+      </ol>
+
+      <!-- Columna derecha: los mismos comandos en bloque copiable con comentarios -->
+      <app-code-block [code]="codeRunLocal" language="Shell" filename="terminal · raíz del repo" />
+    </div>
+  </article>
+
+  <!-- ===== PASO 7 / DIAGRAMA 7 · Publicación pública (npm) ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 7</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.web-components.p7.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">package.json · &#64;mi-scope/wc-lib</span>
+            <span class="node__cap">{{ 'sections.web-components.p7.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">npm publish --access public</span>
+            <span class="node__cap">{{ 'sections.web-components.p7.n2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">registry.npmjs.org</span>
+            <span class="node__cap">{{ 'sections.web-components.p7.n3' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">npm install &#64;mi-scope/wc-lib</span>
+            <span class="node__cap">{{ 'sections.web-components.p7.n4' | translate }}</span>
+          </div>
+          <span class="diagram__sidetitle">{{ 'sections.web-components.p7.sideTitle' | translate }}</span>
+          <div class="node node--warn">
+            <span class="node__title node__title--sm">&#64;scope = private by default</span>
+            <span class="node__cap">{{ 'sections.web-components.p7.n5' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 7 · {{ 'sections.web-components.p7.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.web-components.p7.lead' | translate }}</p>
+        <app-code-block [code]="codePublishNpm" language="JSON + Shell" filename="npm · publicación pública" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ===== PASO 8 / DIAGRAMA 8 · Publicación privada (JFrog Artifactory) ===== -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.web-components.diagramWord' | translate }} 8</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.web-components.p8.title' | translate">
+          <div class="node">
+            <span class="node__title node__title--sm">.npmrc · &#64;empresa:registry</span>
+            <span class="node__cap">{{ 'sections.web-components.p8.n1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--accent">
+            <span class="node__title node__title--sm">npm publish → npm-local</span>
+            <span class="node__cap">{{ 'sections.web-components.p8.n2' | translate }}</span>
+          </div>
+          <span class="diagram__sidetitle">{{ 'sections.web-components.p8.sideTitle' | translate }}</span>
+          <div class="branch">
+            <div class="node">
+              <span class="node__title node__title--sm">npm-local</span>
+              <span class="node__cap">{{ 'sections.web-components.p8.n3' | translate }}</span>
+            </div>
+            <div class="node node--muted">
+              <span class="node__title node__title--sm">npm-remote</span>
+              <span class="node__cap">{{ 'sections.web-components.p8.n4' | translate }}</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--out">
+            <span class="node__title node__title--sm">npm-virtual</span>
+            <span class="node__cap">{{ 'sections.web-components.p8.n5' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node">
+            <span class="node__title node__title--sm">npm install &#64;empresa/wc-lib</span>
+            <span class="node__cap">{{ 'sections.web-components.p8.n6' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">{{ 'sections.web-components.stepWord' | translate }} 8 · {{ 'sections.web-components.p8.title' | translate }}</span>
+        <p class="flow__lead">{{ 'sections.web-components.p8.lead' | translate }}</p>
+        <app-code-block [code]="codePublishJfrog" language="Shell" filename=".npmrc + terminal" />
+      </div>
+    </div>
+  </article>
+</section>

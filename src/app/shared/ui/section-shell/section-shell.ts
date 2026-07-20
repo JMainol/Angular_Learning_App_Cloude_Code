@@ -3,6 +3,17 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DocLink } from '../doc-link/doc-link';
 
 /**
+ * Característica principal de un concepto, dentro del bloque de teoría.
+ * Se parte en `titulo` + `texto` (en vez de una sola cadena con marcas tipo
+ * `**negrita**`) para no tener que interpretar HTML/markdown en tiempo de
+ * ejecución: la plantilla decide el estilo y el JSON solo aporta datos.
+ */
+export interface TheoryPoint {
+  readonly title: string;
+  readonly text: string;
+}
+
+/**
  * Andamiaje reutilizable de una sección.
  *
  * Materializa la estructura obligatoria del proyecto: dos mitades (educativa a la
@@ -31,6 +42,12 @@ export class SectionShell {
   readonly title = input.required<string>();
   /** Texto de teoría (5-6 líneas). Admite varios párrafos separados por '\n'. */
   readonly theory = input.required<string>();
+  /**
+   * Características principales del concepto, listadas bajo la teoría.
+   * Opcional: por defecto `[]`, así que las secciones que no la pasen renderizan
+   * el bloque de teoría igual que antes.
+   */
+  readonly theoryList = input<TheoryPoint[]>([]);
   /** URL de la documentación oficial para el bloque de teoría. */
   readonly docUrl = input.required<string>();
   /** Analogía del mundo real. */

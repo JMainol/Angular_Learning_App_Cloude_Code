@@ -1,0 +1,15 @@
+<div class="listas-panel">
+  <p class="listas-panel__hint">{{ 'sections.extends.exercise.hint' | translate }}</p>
+
+  <div class="listas-panel__grid">
+    <!-- Sin [placeholder]: usa el valor por defecto del input() de la BASE. -->
+    <app-lista-frutas />
+
+    <!-- TODO 4 — Enlaza desde el padre el input() HEREDADO: `placeholder`
+         está declarado en ListaFiltrableBase, no en ListaTecnologias,
+         y aun así el hijo lo acepta como input propio. -->
+    <app-lista-tecnologias
+      [placeholder]="'sections.extends.exercise.techPlaceholder' | translate"
+    />
+  </div>
+</div>
