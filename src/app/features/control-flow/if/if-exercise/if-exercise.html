@@ -25,17 +25,26 @@
 
     <!-- TODO 1: añade una rama @else if para el estado 'error'.
          Debe mostrar un mensaje de error claro (clase .state--error). -->
+    @else if (estado() === 'error') {
+      <p class="state state--error">Error inesperado!</p>
+    }
 
     <!-- TODO 2: añade una rama @else if para 'autenticado' que use el alias `as`:
          @if (usuario(); as u) { ... }
          Dentro, muestra el nombre (u.nombre) y el rol (u.rol).
          Pista: combina la condición de estado con la existencia de usuario. -->
+    @else if (estado() === 'autenticado' && usuario(); as u) {
+      <div class="container">
+        <p class="state state--loading">Nombre usuario: {{u.nombre }}</p>
+        <p class="state state--loading">Rol usuario: {{u.rol }}</p>
+      </div>
+    }
 
     @else {
       <!-- TODO 3: este @else ahora captura TODO lo que no sea 'cargando'.
            Cuando implementes los TODO 1 y 2, deja aquí solo el caso 'anonimo':
            un mensaje invitando a iniciar sesión. -->
-      <p class="state">Estado pendiente de implementar: {{ estado() }}</p>
+      <p class="state">Inciar sesion</p>
     }
   </div>
   <!-- ==================== FIN ZONA DEL EJERCICIO ==================== -->
