@@ -1,0 +1,61 @@
+<div class="lab">
+  <p class="lab__hint">{{ 'sections.guards-factory.exercise.hint' | translate }}</p>
+
+  <!-- ── Controles: quién inicia sesión (o nadie) ─────────────────────────── -->
+  <div class="who">
+    <span class="who__label">{{ 'sections.guards-factory.exercise.whoLabel' | translate }}</span>
+    <div class="who__btns">
+      @for (u of usuarios; track u.nombre) {
+        <button
+          type="button"
+          class="user"
+          [class.user--active]="esActivo(u)"
+          (click)="entrar(u)"
+        >
+          <span class="user__name">{{ u.nombre }}</span>
+          <span class="user__roles">{{ etiquetaRoles(u.roles) }}</span>
+        </button>
+      }
+      <button
+        type="button"
+        class="user user--logout"
+        [class.user--active]="!auth.isAuthenticated()"
+        (click)="salir()"
+      >
+        <span class="user__name">{{ 'sections.guards-factory.exercise.logout' | translate }}</span>
+        <span class="user__roles">null</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Estado actual del signal fuente de verdad ────────────────────────── -->
+  <div class="truth" [attr.data-auth]="auth.isAuthenticated()">
+    <span class="truth__key">user()</span>
+    @if (auth.isAuthenticated()) {
+      <span class="truth__val">{{ auth.user()?.nombre }} · [{{ rolesActuales() }}]</span>
+    } @else {
+      <span class="truth__val truth__val--null">null</span>
+    }
+  </div>
+
+  <!-- ── Rutas protegidas: cada guard se EJECUTA de verdad y se reevalúa solo ─ -->
+  <ul class="grid">
+    @for (f of filas(); track f.path) {
+      <li class="route" [class.route--on]="f.permitido" [class.route--off]="!f.permitido">
+        <div class="route__head">
+          <code class="route__path">{{ f.path }}</code>
+          <span class="route__state">
+            @if (f.permitido) {
+              ✔ {{ 'sections.guards-factory.exercise.active' | translate }}
+            } @else {
+              🔀 {{ 'sections.guards-factory.exercise.redirect' | translate }} {{ f.destino }}
+            }
+          </span>
+        </div>
+        <code class="route__guard">canMatch: [{{ f.guardLabel }}]</code>
+      </li>
+    }
+  </ul>
+
+  <p class="lab__foot">{{ 'sections.guards-factory.exercise.foot' | translate }}</p>
+</div>

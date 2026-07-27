@@ -1,0 +1,217 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">20.1</span>
+      <span class="doc__badge">{{ 'sections.roles-signals.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.roles-signals.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.roles-signals.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.roles-signals.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.roles-signals.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.roles-signals.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: la fuente de verdad ─────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.roles-signals.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.roles-signals.p1.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">login(usuario)</span>
+            <span class="node__cap">{{ 'sections.roles-signals.p1.action' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">🔒 user()</span>
+            <span class="node__cap">signal&lt;Usuario | null&gt;</span>
+            <span class="node__chip">nombre · roles: Rol[]</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">{{ 'sections.roles-signals.p1.single' | translate }}</span>
+            <span class="node__badge node__badge--dim">asReadonly()</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.roles-signals.stepWord' | translate }} 1 · {{ 'sections.roles-signals.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.roles-signals.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeSource" language="TypeScript" filename="auth-store.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: permisos derivados con computed() ───────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.roles-signals.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.roles-signals.p2.title' | translate">
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">🔒 user()</span>
+            <span class="node__cap">{{ 'sections.roles-signals.p2.source' | translate }}</span>
+          </div>
+          <div class="fan" aria-hidden="true">
+            <span class="fan__line"></span>
+            <span class="fan__line"></span>
+            <span class="fan__line"></span>
+          </div>
+          <div class="derived-row">
+            <div class="node node--derived">
+              <span class="node__title node__title--sm">isAdmin()</span>
+              <span class="node__cap">computed</span>
+            </div>
+            <div class="node node--derived">
+              <span class="node__title node__title--sm">isEditor()</span>
+              <span class="node__cap">computed</span>
+            </div>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--derived node--compose">
+            <span class="node__title node__title--sm">canPublish()</span>
+            <span class="node__cap">{{ 'sections.roles-signals.p2.compose' | translate }}</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">{{ 'sections.roles-signals.p2.sync' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.roles-signals.stepWord' | translate }} 2 · {{ 'sections.roles-signals.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.roles-signals.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeDerived" language="TypeScript" filename="auth-store.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: síncrono (computed) vs asíncrono (RxJS) ──── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.roles-signals.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.roles-signals.p3.title' | translate">
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">✘ {{ 'sections.roles-signals.p3.oldTitle' | translate }}</span>
+              <div class="url-box url-box--ghost">
+                <span class="url-box__leaf url-box__leaf--ghost">isAdmin$ | async</span>
+                <span class="url-box__leaf url-box__leaf--ghost">subscribe()</span>
+              </div>
+              <span class="node__badge node__badge--dim">{{ 'sections.roles-signals.p3.oldNote' | translate }}</span>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">✔ {{ 'sections.roles-signals.p3.newTitle' | translate }}</span>
+              <div class="url-box">
+                <span class="url-box__leaf">isAdmin()</span>
+                <span class="url-box__leaf">canPublish()</span>
+              </div>
+              <span class="node__badge">{{ 'sections.roles-signals.p3.newNote' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.roles-signals.p3.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.roles-signals.stepWord' | translate }} 3 · {{ 'sections.roles-signals.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.roles-signals.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeConsume" language="HTML" filename="toolbar.html" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: reactividad en cascada + puente a guards ──── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.roles-signals.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.roles-signals.p4.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">logout()</span>
+            <span class="node__cap">_user.set(null)</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">🔒 user() → null</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--off">
+            <span class="node__title node__title--sm">isAdmin() · canPublish() → false</span>
+            <span class="node__cap">{{ 'sections.roles-signals.p4.auto' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="derived-row">
+            <div class="node node--derived">
+              <span class="node__title node__title--sm">UI</span>
+              <span class="node__cap">&#64;if</span>
+            </div>
+            <div class="node node--derived">
+              <span class="node__title node__title--sm">adminGuard</span>
+              <span class="node__cap">CanActivateFn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.roles-signals.stepWord' | translate }} 4 · {{ 'sections.roles-signals.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.roles-signals.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeCascade" language="TypeScript" filename="admin.guard.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.roles-signals.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="auth-store.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-roles-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

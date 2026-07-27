@@ -159,6 +159,33 @@ Los bloques y secciones van a ir creciendo continuamente
 |---------|-----------------------------------------------------------|
 | 19.1    | Proxy DEV sin levantar backend local                     |
 
+### Bloque 20 — Control de Acceso Reactivo: Roles, Signals y Functional Guards
+
+| Sección | Concepto                                                  |
+|---------|-----------------------------------------------------------|
+| 20.1    | Estado Reactivo de Roles con Signals                     |
+| 20.2    | Functional Guards Parametrizados e `inject()`            |
+| 20.3    | Estrategia de Router: `canMatch` y Redirecciones con `UrlTree` |
+
+### Bloque 21 — Promesas
+
+| Sección | Concepto                                                  |
+|---------|-----------------------------------------------------------|
+| 21.1    | Promesas (estados, then/catch, async/await, combinadores) |
+
+### Bloque 22 — Funciones Factoría
+
+| Sección | Concepto                                                                     |
+|---------|------------------------------------------------------------------------------|
+| 22.1    | HOF (Higher-Order Functions): recibir, devolver y componer funciones — diagrama + 3 ejercicios |
+
+### Bloque 23 — Gestión de Estructuras de Datos Avanzadas Set y Map
+
+| Sección | Concepto                                                                     |
+|---------|------------------------------------------------------------------------------|
+| 23.1    | Set: valores únicos, deduplicar, Set + Signals — diagrama + ejercicio        |
+| 23.2    | Map: clave→valor, indexar por id, Map + Signals — diagrama + 3 ejercicios    |
+
 ---
 
 ## 📋 Estructura de cada sección (template obligatorio)

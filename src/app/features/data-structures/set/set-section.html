@@ -1,0 +1,180 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">23.1</span>
+      <span class="doc__badge">{{ 'sections.set.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.set.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.set.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.set.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.set.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.set.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: anatomía — add / has / delete ────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.set.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.set.p1.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">new Set()</span>
+            <span class="node__cap">{{ 'sections.set.p1.empty' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">add('angular')</span>
+            <span class="node__cap">{{ 'sections.set.p1.in1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">add('rxjs')</span>
+            <span class="node__cap">{{ 'sections.set.p1.in2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--action">
+            <span class="node__title node__title--sm">add('angular') ✕</span>
+            <span class="node__cap">{{ 'sections.set.p1.dup' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">{{ '{' }} 'angular', 'rxjs' {{ '}' }}</span>
+            <span class="node__cap">{{ 'sections.set.p1.out' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.set.p1.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.set.stepWord' | translate }} 1 · {{ 'sections.set.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.set.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeAnatomia" language="TypeScript" filename="set-anatomia.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: array ↔ Set — deduplicar ─────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.set.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.set.p2.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">['a', 'b', 'a', 'c', 'b']</span>
+            <span class="node__cap">{{ 'sections.set.p2.input' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">new Set(array)</span>
+            <span class="node__cap">{{ 'sections.set.p2.toSet' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">[...set]</span>
+            <span class="node__cap">{{ 'sections.set.p2.spread' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">['a', 'b', 'c']</span>
+            <span class="node__cap">{{ 'sections.set.p2.output' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.set.p2.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.set.stepWord' | translate }} 2 · {{ 'sections.set.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.set.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeDeduplicar" language="TypeScript" filename="set-deduplicar.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: Set + Signals — referencia nueva ─────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.set.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.set.p3.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">signal(new Set())</span>
+            <span class="node__cap">{{ 'sections.set.p3.state' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">new Set(prev)</span>
+            <span class="node__cap">{{ 'sections.set.p3.copy' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">add() / delete()</span>
+            <span class="node__cap">{{ 'sections.set.p3.mutate' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">return copia</span>
+            <span class="node__cap">{{ 'sections.set.p3.emit' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.set.p3.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.set.stepWord' | translate }} 3 · {{ 'sections.set.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.set.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeSignals" language="TypeScript" filename="set-signals.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO — código TODO ↔ demo viva
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <span class="ex-head">{{ 'common.labels.exercise' | translate }} · {{ 'sections.set.ex1.title' | translate }}</span>
+    <div class="exercise">
+      <div class="exercise__code">
+        <p class="exercise__desc">{{ 'sections.set.ex1.desc' | translate }}</p>
+        <app-code-block [code]="codeEx1" language="TypeScript" filename="set-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-set-etiquetas-demo />
+      </div>
+    </div>
+  </article>
+
+</section>

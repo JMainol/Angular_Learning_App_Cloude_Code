@@ -1,0 +1,45 @@
+<div class="demo">
+  <p class="demo__hint">{{ 'sections.set.ex1.hint' | translate }}</p>
+
+  <!-- ── Recuento bruto → únicas: hace visible el efecto del TODO 1 ───────── -->
+  <p class="demo__dedupe">
+    <span class="demo__count">{{ etiquetasBrutas.length }}</span>
+    {{ 'sections.set.ex1.rawTags' | translate }}
+    <span class="demo__arrow" aria-hidden="true">→</span>
+    <span class="demo__count demo__count--accent">{{ etiquetas.length }}</span>
+    {{ 'sections.set.ex1.uniqueTags' | translate }}
+  </p>
+
+  <!-- ── Chips: track $index a propósito — con el TODO 1 sin hacer hay
+       duplicados y track por valor rompería el @for ─────────────────────── -->
+  <ul class="tags">
+    @for (etiqueta of etiquetas; track $index) {
+      <li>
+        <button
+          type="button"
+          class="tag"
+          [class.tag--on]="activa(etiqueta)"
+          [attr.aria-pressed]="activa(etiqueta)"
+          (click)="alternar(etiqueta)"
+        >
+          {{ etiqueta }}
+        </button>
+      </li>
+    }
+  </ul>
+
+  <!-- ── Selección derivada: computed sobre size + spread del Set ─────────── -->
+  <div class="demo__foot">
+    <span class="demo__selected">
+      {{ 'sections.set.ex1.selected' | translate }}
+      <strong>{{ total() }}</strong>
+    </span>
+    @if (total() > 0) {
+      <span class="demo__list">{{ listado() }}</span>
+    } @else {
+      <span class="demo__list demo__list--empty">{{ 'sections.set.ex1.none' | translate }}</span>
+    }
+  </div>
+
+  <p class="demo__note">{{ 'sections.set.ex1.note' | translate }}</p>
+</div>

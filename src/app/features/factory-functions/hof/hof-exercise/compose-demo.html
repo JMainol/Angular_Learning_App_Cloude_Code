@@ -1,0 +1,37 @@
+<div class="demo">
+  <p class="demo__hint">{{ 'sections.hof.ex3.hint' | translate }}</p>
+
+  <!-- ── Pasos de la tubería: clic para activar/desactivar ────────────────── -->
+  <div class="pipe">
+    @for (p of pasos(); track p.id) {
+      <button
+        type="button"
+        class="pipe__step"
+        [class.pipe__step--on]="p.activo"
+        (click)="alternar(p.id)"
+      >
+        {{ p.etiqueta }}
+      </button>
+    }
+  </div>
+
+  <!-- ── Entrada editable → salida compuesta ──────────────────────────────── -->
+  <div class="io">
+    <div class="io__box">
+      <span class="io__label">{{ 'sections.hof.ex3.input' | translate }}</span>
+      <input
+        type="text"
+        class="io__value io__value--in"
+        [value]="entrada()"
+        (input)="editar($event)"
+      />
+    </div>
+    <span class="io__arrow" aria-hidden="true">▼</span>
+    <div class="io__box">
+      <span class="io__label">{{ 'sections.hof.ex3.output' | translate }}</span>
+      <span class="io__value io__value--out">{{ salida() || '∅' }}</span>
+    </div>
+  </div>
+
+  <p class="demo__note">{{ 'sections.hof.ex3.note' | translate }}</p>
+</div>

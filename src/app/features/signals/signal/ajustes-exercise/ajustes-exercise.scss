@@ -1,0 +1,111 @@
+:host {
+  display: block;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+/* El tema deriva del propio signal: modoOscuro → esta clase. */
+.panel--dark {
+  background: #14161c;
+  color: #e7e9ee;
+  border-color: #262a33;
+}
+
+.ex-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.ex-head__num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ex-head__title {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.prefs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.prefs__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.prefs__key {
+  font-weight: 500;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.chip--on {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.stepper__btn {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  width: 1.9rem;
+  height: 1.9rem;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.stepper__btn:hover {
+  color: var(--text-strong);
+  border-color: var(--accent);
+}
+.stepper__val {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  min-width: 3ch;
+  text-align: center;
+}
+
+.preview {
+  margin: 0;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border);
+  line-height: 1.5;
+}

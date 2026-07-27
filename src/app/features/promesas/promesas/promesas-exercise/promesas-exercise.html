@@ -1,0 +1,53 @@
+<div class="lab">
+  <p class="lab__hint">{{ 'sections.promesas.exercise.hint' | translate }}</p>
+
+  <!-- ── Controles: cada botón lanza una promesa real ─────────────────────── -->
+  <div class="runners">
+    <button type="button" class="run run--ok" [disabled]="corriendo()" (click)="probarExito()">
+      {{ 'sections.promesas.exercise.btnSuccess' | translate }}
+    </button>
+    <button type="button" class="run run--timeout" [disabled]="corriendo()" (click)="probarTimeout()">
+      {{ 'sections.promesas.exercise.btnTimeout' | translate }}
+    </button>
+    <button type="button" class="run run--retry" [disabled]="corriendo()" (click)="probarReintentos()">
+      {{ 'sections.promesas.exercise.btnRetry' | translate }}
+    </button>
+    <button type="button" class="run run--clear" [disabled]="!registros().length" (click)="limpiar()">
+      {{ 'sections.promesas.exercise.btnClear' | translate }}
+    </button>
+  </div>
+
+  <!-- ── Log en vivo: pendiente → cumplida / rechazada ────────────────────── -->
+  @if (registros().length) {
+    <ul class="log">
+      @for (r of registros(); track r.id) {
+        <li class="row" [attr.data-estado]="r.estado">
+          <span class="row__dot" aria-hidden="true"></span>
+          <div class="row__body">
+            <span class="row__label">{{ r.etiqueta }}</span>
+            <span class="row__detail">
+              @switch (r.estado) {
+                @case ('pendiente') {
+                  ⏳ {{ 'sections.promesas.exercise.pending' | translate }}
+                }
+                @case ('cumplida') {
+                  ✔ {{ 'sections.promesas.exercise.fulfilled' | translate }} · {{ r.detalle }}
+                }
+                @case ('rechazada') {
+                  ✖ {{ 'sections.promesas.exercise.rejected' | translate }} · {{ r.detalle }}
+                }
+              }
+            </span>
+          </div>
+          @if (r.estado !== 'pendiente') {
+            <span class="row__ms">{{ r.ms }} ms</span>
+          }
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="lab__empty">{{ 'sections.promesas.exercise.empty' | translate }}</p>
+  }
+
+  <p class="lab__foot">{{ 'sections.promesas.exercise.foot' | translate }}</p>
+</div>

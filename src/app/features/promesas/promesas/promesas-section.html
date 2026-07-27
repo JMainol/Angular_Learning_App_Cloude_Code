@@ -1,0 +1,214 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">21.1</span>
+      <span class="doc__badge">{{ 'sections.promesas.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.promesas.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.promesas.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.promesas.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.promesas.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.promesas.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: los tres estados ─────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas.p1.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">new Promise(executor)</span>
+            <span class="node__cap">pending · {{ 'sections.promesas.p1.pending' | translate }}</span>
+          </div>
+          <div class="fan" aria-hidden="true">
+            <span class="fan__line"></span>
+            <span class="fan__line"></span>
+          </div>
+          <div class="derived-row">
+            <div class="node node--signal">
+              <span class="node__title node__title--sm">✔ fulfilled</span>
+              <span class="node__cap">resolve(valor)</span>
+            </div>
+            <div class="node node--off">
+              <span class="node__title node__title--sm">✖ rejected</span>
+              <span class="node__cap">reject(motivo)</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas.p1.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas.stepWord' | translate }} 1 · {{ 'sections.promesas.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeEstados" language="TypeScript" filename="estados.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: encadenamiento ───────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas.p2.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">fetch('/api/user')</span>
+            <span class="node__cap">{{ 'sections.promesas.p2.start' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">.then(res =&gt; res.json())</span>
+            <span class="node__cap">{{ 'sections.promesas.p2.newPromise' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">.then(user =&gt; user.nombre)</span>
+            <span class="node__cap">{{ 'sections.promesas.p2.flow' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--off">
+            <span class="node__title node__title--sm">.catch(err)</span>
+            <span class="node__cap">{{ 'sections.promesas.p2.catch' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">.finally()</span>
+            <span class="node__cap">{{ 'sections.promesas.p2.finally' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas.stepWord' | translate }} 2 · {{ 'sections.promesas.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeCadena" language="TypeScript" filename="cadena.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: async/await ──────────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas.p3.title' | translate">
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">.then / .catch</span>
+              <div class="url-box">
+                <span class="url-box__leaf">.then(res =&gt; …)</span>
+                <span class="url-box__leaf">.catch(err =&gt; …)</span>
+              </div>
+              <span class="node__badge node__badge--dim">{{ 'sections.promesas.p3.chained' | translate }}</span>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">async / await</span>
+              <div class="url-box">
+                <span class="url-box__leaf">await …</span>
+                <span class="url-box__leaf">try / catch</span>
+              </div>
+              <span class="node__badge">{{ 'sections.promesas.p3.linear' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas.p3.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas.stepWord' | translate }} 3 · {{ 'sections.promesas.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeAsync" language="TypeScript" filename="async-await.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: combinadores ─────────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas.p4.title' | translate">
+          <div class="combos">
+            <div class="node node--signal">
+              <span class="node__title node__title--sm">Promise.all</span>
+              <span class="node__cap">{{ 'sections.promesas.p4.all' | translate }}</span>
+            </div>
+            <div class="node node--compose">
+              <span class="node__title node__title--sm">Promise.allSettled</span>
+              <span class="node__cap">{{ 'sections.promesas.p4.allSettled' | translate }}</span>
+            </div>
+            <div class="node node--action">
+              <span class="node__title node__title--sm">Promise.race</span>
+              <span class="node__cap">{{ 'sections.promesas.p4.race' | translate }}</span>
+            </div>
+            <div class="node node--signal">
+              <span class="node__title node__title--sm">Promise.any</span>
+              <span class="node__cap">{{ 'sections.promesas.p4.any' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas.p4.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas.stepWord' | translate }} 4 · {{ 'sections.promesas.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeCombinadores" language="TypeScript" filename="combinadores.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.promesas.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="promesas-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-promesas-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

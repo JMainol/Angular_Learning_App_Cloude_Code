@@ -1,0 +1,217 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">20.2</span>
+      <span class="doc__badge">{{ 'sections.guards-factory.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.guards-factory.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.guards-factory.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.guards-factory.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.guards-factory.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.guards-factory.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: la factoría (función que devuelve función) ─ -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.guards-factory.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.guards-factory.p1.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">hasRole('ADMIN')</span>
+            <span class="node__cap">{{ 'sections.guards-factory.p1.param' | translate }}</span>
+            <span class="node__chip">rol: Rol</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">⇒ () =&gt; …</span>
+            <span class="node__cap">CanMatchFn</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">{{ 'sections.guards-factory.p1.higherOrder' | translate }}</span>
+            <span class="node__badge node__badge--dim">closure</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.guards-factory.stepWord' | translate }} 1 · {{ 'sections.guards-factory.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.guards-factory.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeFactory" language="TypeScript" filename="access-guards.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: inject() dentro de la función pura ───────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.guards-factory.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.guards-factory.p2.title' | translate">
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">🧭 Router</span>
+            <span class="node__cap">{{ 'sections.guards-factory.p2.context' | translate }}</span>
+          </div>
+          <div class="fan" aria-hidden="true">
+            <span class="fan__line"></span>
+            <span class="fan__line"></span>
+          </div>
+          <div class="derived-row">
+            <div class="node node--derived">
+              <span class="node__title node__title--sm">inject(AuthStore)</span>
+              <span class="node__cap">{{ 'sections.guards-factory.p2.state' | translate }}</span>
+            </div>
+            <div class="node node--derived">
+              <span class="node__title node__title--sm">inject(Router)</span>
+              <span class="node__cap">{{ 'sections.guards-factory.p2.redirect' | translate }}</span>
+            </div>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">{{ 'sections.guards-factory.p2.noConstructor' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.guards-factory.stepWord' | translate }} 2 · {{ 'sections.guards-factory.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.guards-factory.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeInject" language="TypeScript" filename="access-guards.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: contrato de retorno + CanMatch vs CanActivate ─ -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.guards-factory.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.guards-factory.p3.title' | translate">
+          <div class="derived-row">
+            <div class="node node--compose">
+              <span class="node__title node__title--sm">✔ true</span>
+              <span class="node__cap">{{ 'sections.guards-factory.p3.pass' | translate }}</span>
+            </div>
+            <div class="node node--off">
+              <span class="node__title node__title--sm">🔀 RedirectCommand</span>
+              <span class="node__cap">UrlTree</span>
+            </div>
+          </div>
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">CanMatch</span>
+              <div class="url-box">
+                <span class="url-box__leaf">{{ 'sections.guards-factory.p3.canMatch1' | translate }}</span>
+                <span class="url-box__leaf">{{ 'sections.guards-factory.p3.canMatch2' | translate }}</span>
+              </div>
+              <span class="node__badge">{{ 'sections.guards-factory.p3.recommended' | translate }}</span>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">CanActivate</span>
+              <div class="url-box url-box--ghost">
+                <span class="url-box__leaf url-box__leaf--ghost">{{ 'sections.guards-factory.p3.canActivate1' | translate }}</span>
+                <span class="url-box__leaf url-box__leaf--ghost">{{ 'sections.guards-factory.p3.canActivate2' | translate }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.guards-factory.stepWord' | translate }} 3 · {{ 'sections.guards-factory.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.guards-factory.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeReturn" language="TypeScript" filename="access-guards.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: cableado y evaluación en las rutas ───────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.guards-factory.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.guards-factory.p4.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">/admin</span>
+            <span class="node__cap">{{ 'sections.guards-factory.p4.request' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">canMatch: [hasRole('ADMIN')]</span>
+          </div>
+          <div class="fan" aria-hidden="true">
+            <span class="fan__line"></span>
+            <span class="fan__line"></span>
+          </div>
+          <div class="derived-row">
+            <div class="node node--derived">
+              <span class="node__title node__title--sm">✔ {{ 'sections.guards-factory.p4.load' | translate }}</span>
+              <span class="node__cap">loadComponent</span>
+            </div>
+            <div class="node node--off">
+              <span class="node__title node__title--sm">🔀 {{ 'sections.guards-factory.p4.denied' | translate }}</span>
+              <span class="node__cap">/acceso-denegado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.guards-factory.stepWord' | translate }} 4 · {{ 'sections.guards-factory.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.guards-factory.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeWiring" language="TypeScript" filename="app.routes.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.guards-factory.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="access-guards.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-guards-factory-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

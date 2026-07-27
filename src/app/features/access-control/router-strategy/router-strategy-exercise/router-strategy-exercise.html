@@ -1,0 +1,70 @@
+<div class="lab">
+  <p class="lab__hint">{{ 'sections.router-strategy.exercise.hint' | translate }}</p>
+
+  <!-- ── Controles: quién inicia sesión (o nadie) ─────────────────────────── -->
+  <div class="who">
+    <span class="who__label">{{ 'sections.router-strategy.exercise.whoLabel' | translate }}</span>
+    <div class="who__btns">
+      @for (u of usuarios; track u.nombre) {
+        <button
+          type="button"
+          class="user"
+          [class.user--active]="esActivo(u)"
+          (click)="entrar(u)"
+        >
+          <span class="user__name">{{ u.nombre }}</span>
+          <span class="user__roles">{{ etiquetaRoles(u.roles) }}</span>
+        </button>
+      }
+      <button
+        type="button"
+        class="user user--logout"
+        [class.user--active]="!auth.isAuthenticated()"
+        (click)="salir()"
+      >
+        <span class="user__name">{{ 'sections.router-strategy.exercise.logout' | translate }}</span>
+        <span class="user__roles">null</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Estado actual del signal fuente de verdad ────────────────────────── -->
+  <div class="truth" [attr.data-auth]="auth.isAuthenticated()">
+    <span class="truth__key">user()</span>
+    @if (auth.isAuthenticated()) {
+      <span class="truth__val">{{ auth.user()?.nombre }} · [{{ rolesActuales() }}]</span>
+    } @else {
+      <span class="truth__val truth__val--null">null</span>
+    }
+  </div>
+
+  <!-- ── Navegaciones: el Router resuelve cada URL con los guards reales ───── -->
+  <ul class="grid">
+    @for (f of filas(); track f.url) {
+      <li class="route" [class.route--on]="f.tipo === 'match'" [class.route--off]="f.tipo !== 'match'">
+        <div class="route__head">
+          <code class="route__path">{{ f.url }}</code>
+          <span class="route__state">
+            @switch (f.tipo) {
+              @case ('match') {
+                ✔ {{ 'sections.router-strategy.exercise.match' | translate }} {{ f.detalle }}
+              }
+              @case ('redirect') {
+                🔀 {{ 'sections.router-strategy.exercise.redirect' | translate }} {{ f.detalle }}
+              }
+              @case ('cancel') {
+                ⛔ {{ 'sections.router-strategy.exercise.cancel' | translate }}
+              }
+            }
+          </span>
+        </div>
+        <!-- Traza de resolución: qué devolvió cada guard y por qué ganó esa ruta. -->
+        @for (paso of f.traza; track $index) {
+          <code class="route__guard">{{ paso }}</code>
+        }
+      </li>
+    }
+  </ul>
+
+  <p class="lab__foot">{{ 'sections.router-strategy.exercise.foot' | translate }}</p>
+</div>

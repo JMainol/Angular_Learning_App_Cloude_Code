@@ -207,4 +207,52 @@ export const CURRICULUM: Block[] = [
       },
     ],
   },
+  {
+    id: 'access-control',
+    code: '20',
+    title: 'Control de Acceso Reactivo: Roles, Signals y Functional Guards',
+    sections: [
+      {
+        code: '20.1',
+        title: 'Estado Reactivo de Roles con Signals',
+        path: 'access-control/roles-signals',
+      },
+      {
+        code: '20.2',
+        title: 'Functional Guards Parametrizados e inject()',
+        path: 'access-control/guards-factory',
+      },
+      {
+        code: '20.3',
+        title: 'Estrategia de Router: canMatch y UrlTree',
+        path: 'access-control/router-strategy',
+      },
+    ],
+  },
+  {
+    id: 'promesas',
+    code: '21',
+    title: 'Promesas',
+    sections: [
+      { code: '21.1', title: 'Promesas', path: 'promesas/promesas' },
+      { code: '21.2', title: 'Promesas vs Observables', path: 'promesas/promesas-vs-observables' },
+    ],
+  },
+  {
+    id: 'factory-functions',
+    code: '22',
+    title: 'Funciones Factoría',
+    sections: [
+      { code: '22.1', title: 'HOF (Higher-Order Functions)', path: 'factory-functions/hof' },
+    ],
+  },
+  {
+    id: 'data-structures',
+    code: '23',
+    title: 'Gestión de Estructuras de Datos Avanzadas Set y Map',
+    sections: [
+      { code: '23.1', title: 'Set', path: 'data-structures/set' },
+      { code: '23.2', title: 'Map', path: 'data-structures/map' },
+    ],
+  },
 ];

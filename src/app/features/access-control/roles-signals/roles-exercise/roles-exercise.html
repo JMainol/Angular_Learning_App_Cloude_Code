@@ -1,0 +1,56 @@
+<div class="lab">
+  <p class="lab__hint">{{ 'sections.roles-signals.exercise.hint' | translate }}</p>
+
+  <!-- ── Controles: quién inicia sesión (o nadie) ─────────────────────────── -->
+  <div class="who">
+    <span class="who__label">{{ 'sections.roles-signals.exercise.whoLabel' | translate }}</span>
+    <div class="who__btns">
+      @for (u of usuarios; track u.nombre) {
+        <button
+          type="button"
+          class="user"
+          [class.user--active]="esActivo(u)"
+          (click)="entrar(u)"
+        >
+          <span class="user__name">{{ u.nombre }}</span>
+          <span class="user__roles">{{ etiquetaRoles(u.roles) }}</span>
+        </button>
+      }
+      <!-- logout: un único set(null) apaga todos los permisos en cascada -->
+      <button
+        type="button"
+        class="user user--logout"
+        [class.user--active]="!auth.isAuthenticated()"
+        (click)="salir()"
+      >
+        <span class="user__name">{{ 'sections.roles-signals.exercise.logout' | translate }}</span>
+        <span class="user__roles">null</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Estado actual del signal fuente de verdad ────────────────────────── -->
+  <div class="truth" [attr.data-auth]="auth.isAuthenticated()">
+    <span class="truth__key">user()</span>
+    @if (auth.isAuthenticated(); as authed) {
+      <span class="truth__val">{{ auth.user()?.nombre }} · [{{ rolesActuales() }}]</span>
+    } @else {
+      <span class="truth__val truth__val--null">null</span>
+    }
+  </div>
+
+  <!-- ── Rejilla de permisos DERIVADOS: se ilumina sola al cambiar el signal ─ -->
+  <ul class="grid">
+    @for (p of permisos(); track p.clave) {
+      <li class="perm" [class.perm--on]="p.concedido" [class.perm--off]="!p.concedido">
+        <span class="perm__dot" aria-hidden="true"></span>
+        <code class="perm__name">{{ p.clave }}()</code>
+        <span class="perm__state">
+          {{ (p.concedido ? 'sections.roles-signals.exercise.granted' : 'sections.roles-signals.exercise.denied') | translate }}
+        </span>
+      </li>
+    }
+  </ul>
+
+  <p class="lab__foot">{{ 'sections.roles-signals.exercise.foot' | translate }}</p>
+</div>

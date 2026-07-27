@@ -1,0 +1,207 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">20.3</span>
+      <span class="doc__badge">{{ 'sections.router-strategy.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.router-strategy.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.router-strategy.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.router-strategy.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.router-strategy.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.router-strategy.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: canMatch no descarga el chunk ────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.router-strategy.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.router-strategy.p1.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">🔒 /admin</span>
+            <span class="node__cap">{{ 'sections.router-strategy.p1.request' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">canMatch</span>
+              <div class="url-box">
+                <span class="url-box__leaf">{{ 'sections.router-strategy.p1.canMatch1' | translate }}</span>
+                <span class="url-box__leaf url-box__leaf--ghost">{{ 'sections.router-strategy.p1.canMatch2' | translate }}</span>
+              </div>
+              <span class="node__badge">{{ 'sections.router-strategy.p1.recommended' | translate }}</span>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">canActivate</span>
+              <div class="url-box">
+                <span class="url-box__leaf">{{ 'sections.router-strategy.p1.canActivate1' | translate }}</span>
+                <span class="url-box__leaf">{{ 'sections.router-strategy.p1.canActivate2' | translate }}</span>
+              </div>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.router-strategy.p1.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.router-strategy.stepWord' | translate }} 1 · {{ 'sections.router-strategy.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.router-strategy.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeCanMatch" language="TypeScript" filename="app.routes.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: fall-through (mismo path, distinta vista) ── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.router-strategy.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.router-strategy.p2.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">/dashboard</span>
+            <span class="node__cap">{{ 'sections.router-strategy.p2.request' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--off">
+            <span class="node__title node__title--sm">canMatch: [matchRole('ADMIN')]</span>
+            <span class="node__cap">{{ 'sections.router-strategy.p2.skip' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">path: 'dashboard'</span>
+            <span class="node__cap">{{ 'sections.router-strategy.p2.match' | translate }}</span>
+          </div>
+          <div class="tag-row" aria-hidden="true">
+            <span class="node__badge">fall-through</span>
+            <span class="node__badge node__badge--dim">{{ 'sections.router-strategy.p2.order' | translate }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.router-strategy.stepWord' | translate }} 2 · {{ 'sections.router-strategy.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.router-strategy.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeFallthrough" language="TypeScript" filename="app.routes.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: false vs UrlTree ────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.router-strategy.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.router-strategy.p3.title' | translate">
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">return …</span>
+            <span class="node__cap">boolean | UrlTree</span>
+          </div>
+          <div class="fan" aria-hidden="true">
+            <span class="fan__line"></span>
+            <span class="fan__line"></span>
+          </div>
+          <div class="derived-row">
+            <div class="node node--off">
+              <span class="node__title node__title--sm">false</span>
+              <span class="node__cap">{{ 'sections.router-strategy.p3.false' | translate }}</span>
+            </div>
+            <div class="node node--compose">
+              <span class="node__title node__title--sm">🔀 UrlTree</span>
+              <span class="node__cap">{{ 'sections.router-strategy.p3.urltree' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.router-strategy.p3.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.router-strategy.stepWord' | translate }} 3 · {{ 'sections.router-strategy.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.router-strategy.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeUrlTree" language="TypeScript" filename="strategy-guards.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: returnUrl (volver tras login) ────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.router-strategy.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.router-strategy.p4.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">🔒 /perfil</span>
+            <span class="node__cap">{{ 'sections.router-strategy.p4.noSession' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">/login?returnUrl=/perfil</span>
+            <span class="node__cap">createUrlTree + queryParams</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">✔ {{ 'sections.router-strategy.p4.back' | translate }}</span>
+            <span class="node__cap">navigateByUrl(returnUrl)</span>
+          </div>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.router-strategy.stepWord' | translate }} 4 · {{ 'sections.router-strategy.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.router-strategy.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeReturnUrl" language="TypeScript" filename="strategy-guards.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIO PRÁCTICO (dos columnas)
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.router-strategy.exercise.desc' | translate }}</p>
+        <app-code-block [code]="codeExercise" language="TypeScript" filename="strategy-guards.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-router-strategy-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

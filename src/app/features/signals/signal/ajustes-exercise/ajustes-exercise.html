@@ -1,0 +1,44 @@
+<!--
+  La vista previa reacciona a un ÚNICO signal de objeto: leemos ajustes() una
+  vez y usamos sus campos. Como el objeto es inmutable, cada cambio genera una
+  referencia nueva y Angular repinta solo lo necesario.
+-->
+<div
+  class="panel"
+  [class.panel--dark]="ajustes().modoOscuro"
+  [style.font-size.px]="ajustes().tamanoFuente"
+>
+  <header class="ex-head">
+    <span class="ex-head__num">Ejercicio 2</span>
+    <span class="ex-head__title">Panel de ajustes · signal&lt;Objeto&gt;</span>
+  </header>
+
+  <ul class="prefs">
+    <li class="prefs__row">
+      <span class="prefs__key">Notificaciones</span>
+      <button type="button" class="chip" [class.chip--on]="ajustes().notificaciones" (click)="alternarNotificaciones()">
+        {{ ajustes().notificaciones ? 'Activadas' : 'Desactivadas' }}
+      </button>
+    </li>
+
+    <li class="prefs__row">
+      <span class="prefs__key">Modo oscuro</span>
+      <button type="button" class="chip" [class.chip--on]="ajustes().modoOscuro" (click)="alternarModoOscuro()">
+        {{ ajustes().modoOscuro ? 'Sí' : 'No' }}
+      </button>
+    </li>
+
+    <li class="prefs__row">
+      <span class="prefs__key">Tamaño de fuente</span>
+      <span class="stepper">
+        <button type="button" class="stepper__btn" (click)="cambiarFuente(-1)">−</button>
+        <span class="stepper__val">{{ ajustes().tamanoFuente }}px</span>
+        <button type="button" class="stepper__btn" (click)="cambiarFuente(1)">+</button>
+      </span>
+    </li>
+  </ul>
+
+  <p class="preview">
+    Este texto adopta el tamaño y el tema del objeto de ajustes.
+  </p>
+</div>

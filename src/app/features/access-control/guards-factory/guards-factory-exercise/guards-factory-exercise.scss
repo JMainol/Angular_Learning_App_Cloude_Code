@@ -1,0 +1,168 @@
+:host {
+  display: block;
+  // Estados de acceso locales: verde = ruta activa, rojo = redirige.
+  --grant: #34d399;
+  --grant-soft: rgba(52, 211, 153, 0.12);
+  --deny: #f87171;
+  --deny-soft: rgba(248, 113, 113, 0.1);
+}
+
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+.lab__hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+.lab__foot {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  border-top: 1px solid var(--border);
+  padding-top: 0.9rem;
+}
+
+// ───────────────────────── Selector de usuario ─────────────────────────
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.who__label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.who__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, color 0.15s;
+
+  &__name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-strong);
+  }
+  &__roles {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-dim);
+  }
+  &:hover { border-color: var(--accent); }
+  &--active {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    .user__name { color: var(--accent); }
+  }
+  &--logout .user__name { color: var(--text-dim); }
+  &--logout.user--active .user__name { color: var(--accent); }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+}
+
+// ───────────────────────── Fuente de verdad ─────────────────────────
+.truth {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-raised);
+
+  &[data-auth='true'] { border-color: var(--accent); }
+}
+.truth__key {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.truth__val {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-strong);
+  word-break: break-all;
+}
+.truth__val--null { color: var(--text-dim); }
+
+// ───────────────────────── Rutas protegidas ─────────────────────────
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.route {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-raised);
+  border-left-width: 3px;
+  transition: border-color 0.2s, background 0.2s;
+
+  &--on {
+    border-color: var(--grant);
+    background: var(--grant-soft);
+  }
+  &--off {
+    border-color: var(--deny);
+    background: var(--deny-soft);
+  }
+}
+.route__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.route__path {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-strong);
+}
+.route__state {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: right;
+
+  .route--on & { color: var(--grant); }
+  .route--off & { color: var(--deny); }
+}
+.route__guard {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  word-break: break-all;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .user, .route { transition: none; }
+}

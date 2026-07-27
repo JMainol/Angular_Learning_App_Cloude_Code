@@ -44,9 +44,203 @@
     "dom-control": "Advanced DOM control",
     "library": "Library",
     "inheritance": "Class inheritance",
-    "proxy": "Proxy"
+    "proxy": "Proxy",
+    "access-control": "Reactive Access Control",
+    "promesas": "Promises",
+    "factory-functions": "Factory Functions",
+    "data-structures": "Advanced Data Structures: Set & Map"
   },
   "sections": {
+    "set": {
+      "badge": "unique values · has() in O(1)",
+      "title": "Set",
+      "intro": "Set is JavaScript's native collection for unique values: duplicates are discarded automatically and membership checks are instant. In Angular it shines for multi-selection state, tracking \"already seen\" items or deduplicating data before rendering — and it pairs naturally with Signals as long as you follow one rule: every change, a new Set.",
+      "theory": "new Set() creates a collection of unique values: add the same value twice and the second one is silently ignored. Its API is minimal: add() inserts, has() checks, delete() removes and size counts; all three operations are O(1), with no traversal like array.includes() would need.\nA Set is iterable (for...of, spread, @for), keeps insertion order and compares values with strict equality, just like ===. It is the right structure when the question is \"is it there or not?\" rather than \"at which position?\".",
+      "simile": "A Set is like a wedding guest list: no matter how many times you write your cousin down, they only appear once. And the doorman never re-reads the list top to bottom: he checks his register and instantly answers whether you are in (has), signs you up (add) or crosses you out (delete). An array would be a doorman re-reading the whole list for every newcomer.",
+      "examples": [
+        "Deduplicate data coming from an API (tags, categories, authors) before rendering it with @for.",
+        "Manage multi-selection of rows, chips or checkboxes with add/has/delete in O(1).",
+        "Track \"already processed\" IDs: read notifications, favourites, visited items."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "Anatomy of a Set: add, has, delete",
+        "lead": "A Set starts empty or from any iterable. add() inserts a value only if it was not there; has() answers in O(1) whether a value belongs to the collection; delete() removes it and confirms whether it existed; size counts the unique values. There are no indexes or positions: the only question a Set can answer — and it answers it better than anything else — is \"is it there or not?\".",
+        "empty": "empty collection",
+        "in1": "goes in · size 1",
+        "in2": "goes in · size 2",
+        "dup": "duplicate: ignored · size 2",
+        "out": "unique values only",
+        "note": "has('rxjs') answers instantly, no traversal"
+      },
+      "p2": {
+        "title": "From array to Set and back: deduplicate",
+        "lead": "The constructor accepts any iterable: new Set(array) drops duplicates on the fly. And since the Set itself is iterable, the spread [...set] turns it back into an array keeping first-appearance order. The full round trip —[...new Set(array)]— is the idiomatic way to deduplicate in JavaScript: one line, no loops, no indexOf.",
+        "input": "array with duplicates",
+        "toSet": "the Set drops the repeats",
+        "spread": "spread: back to an array",
+        "output": "unique, in order of appearance",
+        "note": "[...new Set(array)] — deduplicate in one line"
+      },
+      "p3": {
+        "title": "Set + Signals: the new-reference rule",
+        "lead": "For reactive multi-selection, keep the Set inside a signal. The key is how you update it: a signal decides whether it changed by comparing references, so mutating the same Set with add/delete triggers nothing — the reference is identical. The recipe: copy with new Set(prev), mutate the copy and return it. New reference, and the view and computeds react on their own.",
+        "state": "selection state",
+        "copy": "copy: new reference",
+        "mutate": "you mutate the copy, not the original",
+        "emit": "new reference → the view reacts",
+        "note": "mutating the original Set never notifies: same reference"
+      },
+      "ex1": {
+        "title": "Tag selector with signal<Set>",
+        "desc": "Complete the three functions in set-lab.ts: deduplicate the article tags with a Set, toggle the selection by always returning a new Set, and check membership with has(). The right panel runs your functions for real: until you complete the TODOs you will see repeated tags and clicks with no effect.",
+        "hint": "Click a tag to select or unselect it; the counter is a computed over size.",
+        "rawTags": "tags in the article",
+        "uniqueTags": "unique",
+        "selected": "Selected:",
+        "none": "none yet",
+        "note": "The counter reads seleccion().size; every click builds a new Set inside update()."
+      }
+    },
+    "map": {
+      "badge": "key → value · get() in O(1)",
+      "title": "Map",
+      "intro": "Map is JavaScript's native collection for key → value pairs: any type can be a key, insertion order is preserved and reading with get() is instant. In Angular it shines for indexing entities by id, grouping and counting by key or holding product → quantity state — and it pairs with Signals under the same rule as Set: every change, a new Map.",
+      "theory": "new Map() creates a collection of key → value pairs. set() stores (overwriting if the key already existed), get() returns the value or undefined, has() checks the key, delete() removes the pair and size counts; all of them answer in O(1).\nUnlike a plain object, keys can be of any type (numbers, objects, functions), insertion order is preserved and keys(), values() and entries() make it iterable (for...of, spread, @for). It is the right structure when the question is \"what is stored under this key?\".",
+      "simile": "A Map is like a theatre cloakroom: you hand over your coat (the value) and get a numbered ticket (the key). On the way out nobody rummages hanger by hanger: you show the ticket and your coat appears instantly (get). Leave another coat under the same ticket and it replaces the previous one (set overwrites). An array would be a cloakroom without tickets: for every coat, a walk through all the hangers (find).",
+      "examples": [
+        "Normalize API collections into an id → entity index to resolve lookups in O(1).",
+        "Group and count by key: votes per option, errors per code, articles per category.",
+        "Cache results by key: HTTP responses per URL or memoized expensive computations."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "Anatomy of a Map: set, get, delete",
+        "lead": "A Map starts empty or from an iterable of [key, value] pairs. set() stores a value under a key — and if the key already existed it overwrites the value without duplicating the entry; get() retrieves it in O(1) or returns undefined; has() asks about the key; delete() removes the whole pair; size counts the entries. Where a Set answers \"is it there or not?\", a Map answers \"what is stored under this key?\".",
+        "empty": "empty collection",
+        "set1": "pair goes in · size 1",
+        "set2": "pair goes in · size 2",
+        "overwrite": "same key: overwrites · size 2",
+        "out": "the key's current value",
+        "note": "get('ana') answers instantly, no traversal"
+      },
+      "p2": {
+        "title": "From array to Map: index by id",
+        "lead": "The constructor accepts an iterable of [key, value] pairs, so a single map() over the array builds the [id, entity] pairs and yields an index. You pay the traversal ONCE while building it; from then on every lookup is a get() in O(1). Compared to array.find(), which walks the whole collection on every query, this is the normalization pattern stores rely on: keep the index, derive the rest.",
+        "input": "array of entities",
+        "pairs": "each entity → [id, entity] pair",
+        "toMap": "the Map is indexed by id",
+        "get": "O(1) lookup, no traversal",
+        "note": "index once, look up a thousand times for free"
+      },
+      "p3": {
+        "title": "Map + Signals: the new-reference rule",
+        "lead": "For reactive key → value state (a cart, a dynamic form), keep the Map inside a signal. The same rule as with Set applies: a signal decides whether it changed by comparing references, so mutating the same Map with set/delete triggers nothing. The recipe: copy with new Map(prev), mutate the copy and return it. New reference, and the view and computeds react on their own.",
+        "state": "key → value state",
+        "copy": "copy: new reference",
+        "mutate": "you mutate the copy, not the original",
+        "emit": "new reference → the view reacts",
+        "note": "mutating the original Map never notifies: same reference"
+      },
+      "ex1": {
+        "title": "User index by id",
+        "desc": "Complete the two functions in map-lab.ts: build the id → user index with new Map(pairs) and resolve every lookup with get(). The right panel runs your functions for real: until you complete the TODOs the index will be empty and every lookup will return undefined.",
+        "hint": "Pick an id: the card comes from a get() over the index, not from walking the array.",
+        "inArray": "users in the array",
+        "inIndex": "in the index",
+        "notFound": "not in the index (TODO 1a/1b?)",
+        "note": "The card is a computed calling buscarPorId with the selected id."
+      },
+      "ex2": {
+        "title": "Vote count per option",
+        "desc": "Complete contarPorCategoria in map-lab.ts: accumulate each vote with the idiom recuento.set(key, (recuento.get(key) ?? 0) + 1). The panel runs your function inside a computed: vote and watch the Map regroup on its own.",
+        "hint": "Vote for an option: each click adds an entry and the count is recalculated.",
+        "votes": "votes",
+        "groups": "grouped options",
+        "empty": "the count is empty: complete TODO 2",
+        "note": "The bars render [...contarPorCategoria(votos())] — a Map iterates as [key, value] pairs."
+      },
+      "ex3": {
+        "title": "Cart with signal<Map>",
+        "desc": "Complete the two functions in map-lab.ts: adjust the quantity by always returning a new Map (removing the product when it reaches 0) and sum the units with values() + reduce. The panel runs your functions for real: until you complete the TODOs the buttons will change nothing and the total will stay at 0.",
+        "hint": "Use +/− on each product; the total is a computed over the Map's values().",
+        "add": "add one unit",
+        "remove": "remove one unit",
+        "units": "Units:",
+        "distinct": "distinct products",
+        "empty": "empty cart",
+        "note": "Each click builds a new Map inside update(); at 0, delete() drops the product."
+      }
+    },
+    "hof": {
+      "badge": "receive · return · compose",
+      "title": "HOF (Higher-Order Functions)",
+      "intro": "A higher-order function (HOF) is a function that treats other functions as data: it takes them as arguments, returns them as results, or both. It powers everyday modern-Angular patterns —map/filter/reduce over collections, closure-based factories for debounce, composition of transformations— and drives utilities like functional guards or RxJS operators.",
+      "theory": "In JavaScript functions are first-class citizens: you can store them in variables, pass them as arguments and return them from another function. A HOF leans on exactly that. There are three facets: receiving functions (the callbacks of filter/map/reduce), returning functions (a factory that produces an already-configured function backed by a closure) and composing functions (chaining small transformations into a pipeline).\nIn modern Angular they are everywhere: a computed() often relies on array HOFs; a functional guard is a factory returning a CanActivateFn; RxJS pipe() composes operators. Mastering them makes your code more declarative, reusable and testable.",
+      "simile": "A HOF is like a chef who doesn't cook one fixed dish but follows the recipes you hand over. You pass a recipe (a function) and the chef applies it to the ingredients: that's a HOF that RECEIVES functions. Other times the chef hands you a blender already set to the speed you asked for (a function RETURNED by a factory). And along the restaurant's assembly line, each station transforms the dish and passes it on: that's COMPOSING functions.",
+      "examples": [
+        "Derive a total or a filtered list inside a computed() with filter/map/reduce.",
+        "Build a debounce or throttle handler with a factory that captures its state in the closure.",
+        "Compose several pure transformations into a reusable pipeline (RxJS pipe style)."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "A HOF that receives functions",
+        "lead": "Array methods are the most everyday HOFs: they take a function as an argument and decide when to call it. You provide the «what to do» (the callback) and they provide the «how to iterate». filter takes a predicate, map a transformer and reduce a reducer that accumulates. Chained together they form a declarative pipeline that in Angular naturally feeds a computed(), without mutating the original collection.",
+        "input": "input collection",
+        "predicate": "takes a predicate",
+        "transform": "takes a transformer",
+        "reducer": "takes a reducer",
+        "output": "derived value",
+        "note": "you provide the callback; the method provides the iteration"
+      },
+      "p2": {
+        "title": "A HOF that returns a function (factory)",
+        "lead": "A HOF can also RETURN a function: it's a factory that builds already-configured functions. The returned function carries with it, through the closure, the variables from the scope where it was born. That closure can hold private, mutable state (a timer id, a counter), which makes factories the ideal tool for building debounce, throttle or parameterized functional guards.",
+        "factory": "the factory is called once",
+        "captured": "captured in the closure",
+        "returned": "already-configured function",
+        "note": "the closure remembers «factor» across calls"
+      },
+      "p3": {
+        "title": "Composition: chaining functions",
+        "lead": "Composing means joining small functions into one: the output of each is the input of the next. compose(f, g)(x) equals g(f(x)). Every step is a pure function, testable on its own; composition chains them into a reusable pipeline with no intermediate variables. It's the same idea as RxJS pipe(), but applied to synchronous values.",
+        "input": "input value",
+        "output": "pipeline result",
+        "note": "compose(f, g)(x) === g(f(x))"
+      },
+      "ex1": {
+        "title": "Pipeline with filter / map / reduce",
+        "desc": "Complete resumirCarrito in hof-lab.ts: filter the available lines, map each to its subtotal with VAT and reduce everything to a total. The right-hand panel uses a computed() that runs your function: sell out lines or change the VAT and the total recalculates on its own.",
+        "hint": "Click a line to sell it out and watch the total (a computed) react.",
+        "inStock": "available",
+        "soldOut": "sold out",
+        "total": "Total with VAT:",
+        "note": "The total is a computed() that calls your HOF resumirCarrito."
+      },
+      "ex2": {
+        "title": "Debounce factory (closure)",
+        "desc": "Complete crearDebounce in hof-lab.ts: cancel the previous timer and schedule a new one that calls the action after the pause. The panel runs your factory for real: type fast and compare keystrokes against the searches actually fired.",
+        "hint": "Type fast: every key counts, but the search only fires after a 400 ms pause.",
+        "label": "Search (debounced 400 ms)",
+        "placeholder": "type fast…",
+        "keys": "keys",
+        "searches": "searches",
+        "lastSearch": "Last search:",
+        "note": "The closure keeps the timer and cancels the in-between invocations."
+      },
+      "ex3": {
+        "title": "Composing transformations",
+        "desc": "Complete componer in hof-lab.ts: reduce the array of transformations by applying each to the accumulator. The panel builds a «slug» by composing only the active steps: toggle steps on or off and the pipeline recomposes instantly.",
+        "hint": "Toggle steps and edit the input: the output recomposes on its own.",
+        "input": "input",
+        "output": "composed output",
+        "note": "componer(...active) returns a single function; with no steps, the identity."
+      }
+    },
     "standalone": {
       "title": "Standalone architecture",
       "badge": "Documentation",
@@ -1488,6 +1682,291 @@
           "title": "404 · Not intercepted",
           "text": "The route does not match any context (/api, /ws). The proxy leaves it alone: it stays on the dev-server (localhost:4200), where that resource does not exist."
         }
+      }
+    },
+    "roles-signals": {
+      "title": "Reactive Role State with Signals",
+      "badge": "Signals · computed · Permissions",
+      "intro": "The authenticated user and their roles live in a single signal inside a store. Permissions (isAdmin, canPublish…) are not stored or kept in sync by hand: they are DERIVED from that signal with computed(), so reading them is synchronous and they never drift out of sync. Four steps with a diagram and a live lab.",
+      "theory": "An app must always know who is logged in and what they can do. The modern pattern concentrates that truth in a signal<Usuario | null> inside an AuthService or UserStore: a single source of truth.\nPermissions are derived with computed(): isAdmin = computed(() => user()?.roles.includes('ADMIN') ?? false). Being a cached, computed value, reading it is synchronous (isAdmin()) —no subscribe, no async pipe— and it recomputes on its own when the user changes.\nResult: permission rules that are clean, composable and always consistent with the session.",
+      "simile": "It is like a stadium scoreboard wired to the match: the only real fact is «which team has possession» (the user signal). Every sign —«home team attacking», «may shoot on goal»— is not updated one by one by hand: they are wired to the scoreboard (they are computed) and change on their own the instant possession changes. Nobody runs around switching signs off when a play ends.",
+      "examples": [
+        "Show or hide action buttons (Publish, Delete) based on the user's role.",
+        "Protect routes with a functional guard that reads isAdmin() synchronously.",
+        "Adapt the navigation menu to the authenticated user's permissions."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "The source of truth",
+        "lead": "A single private signal holds the user (or null). It is exposed read-only with asReadonly(): nobody mutates it from outside; changes always go through login()/logout(). Concentrating the session in one place avoids contradictory state scattered across the app.",
+        "action": "explicit action",
+        "single": "single source of truth"
+      },
+      "p2": {
+        "title": "Derived permissions with computed()",
+        "lead": "Each permission is a pure function of the current user. computed() caches the result and only recomputes when user() changes. canPublish() is composed of other computeds (isAdmin || isEditor): the business rule stays in one place, readable and never duplicated.",
+        "source": "source of truth",
+        "compose": "isAdmin() || isEditor()",
+        "sync": "synchronous read"
+      },
+      "p3": {
+        "title": "Synchronous vs asynchronous: the why",
+        "lead": "With RxJS, a permission was an Observable you had to unwrap with the async pipe or a manual subscribe (with its teardown and its copy of the value that drifts out of sync). With computed() the permission is a synchronous value: you read it as a function, isAdmin(), right in the template.",
+        "oldTitle": "Before · RxJS",
+        "oldNote": "async / subscribe",
+        "newTitle": "Now · Signals",
+        "newNote": "synchronous, no async",
+        "note": "Less ceremony, zero subscription leaks, impossible to drift out of sync."
+      },
+      "p4": {
+        "title": "Cascading reactivity + bridge to guards",
+        "lead": "logout() does a single set(null) and everything reacts in cascade: the computeds turn false and the UI and guards re-evaluate on their own, with no permission switched off by hand. And because computeds are synchronous, a functional guard fits in one line: () => inject(AuthStore).isAdmin().",
+        "auto": "recompute on their own"
+      },
+      "exercise": {
+        "desc": "Complete the AuthStore computeds. The right-hand panel uses THIS real store: switching user or logging out recomputes the permission grid on its own.",
+        "hint": "Pick who logs in (or log out) and watch which permissions light up.",
+        "whoLabel": "Active session",
+        "logout": "Log out",
+        "granted": "granted",
+        "denied": "denied",
+        "foot": "No permission is touched by hand: they all derive from the user() signal via computed()."
+      }
+    },
+    "guards-factory": {
+      "title": "Parameterized Functional Guards and inject()",
+      "badge": "Guards · Factories · inject()",
+      "intro": "A functional guard is just a function. If we write a function that RETURNS a guard, we get a parameterizable factory: hasRole('ADMIN') or hasAnyRole(['ADMIN','EDITOR']) reuse the same access logic by changing the argument. Inside that pure function, inject() retrieves the AuthStore and the Router with no classes and no constructor. Four steps with a diagram and a live lab.",
+      "theory": "A functional guard (CanMatchFn / CanActivateFn) is a pure function the Router runs to decide whether a route applies. Because it runs in the Router's injection context, it can use inject(AuthStore) and inject(Router) inside, with no @Injectable and no constructor.\nIf instead of a loose function we write a FACTORY —a function that returns the guard— we can parameterize the rule: hasRole('ADMIN'), hasAnyRole(['ADMIN','EDITOR']). The guard returns true, or a declarative redirect with RedirectCommand(UrlTree).\nFor roles on lazy routes CanMatch is preferred: it runs before downloading the chunk and allows fall-through to another route.",
+      "simile": "A guard factory is like a security firm: you don't hire a generic bouncer, you ask for «one for the VIP list» (hasRole('VIP')) and get a bouncer already configured with that list. Each door (route) hires its own with the argument it needs. The bouncer, once at the door, checks the customer's ID (inject(AuthStore)) and, if they are not on the list, walks them to the exit (RedirectCommand).",
+      "examples": [
+        "Protect an admin panel with canMatch: [hasRole('ADMIN')].",
+        "Share a single hasAnyRole([...]) factory across routes by changing only the roles.",
+        "Redirect to /login or /access-denied by returning a RedirectCommand from the guard."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "The factory: a function that returns a guard",
+        "lead": "hasRole('ADMIN') is not the guard: it is a function that RECEIVES the role and RETURNS the CanMatchFn. The role is captured in the returned function's closure, so it needs no extra parameters to know what to check. Result: the same logic is reused on any route by changing only the argument.",
+        "param": "captured parameter",
+        "higherOrder": "higher-order function"
+      },
+      "p2": {
+        "title": "inject() inside the pure function",
+        "lead": "The Router runs the guard inside its injection context. That is why, with no constructor and no @Injectable, inside the function we can use inject(AuthStore) to read the session and inject(Router) to build redirects. Reading permissions is synchronous: auth.user()?.roles.includes(rol).",
+        "context": "injection context",
+        "state": "state / session",
+        "redirect": "redirect",
+        "noConstructor": "no constructor"
+      },
+      "p3": {
+        "title": "Return contract: pass or redirect",
+        "lead": "A guard returns boolean | UrlTree | RedirectCommand. Instead of navigating as a side effect, we DECLARATIVELY return where to go: new RedirectCommand(router.createUrlTree(['/access-denied'])). For roles CanMatch is preferred: it doesn't download the chunk if it fails and allows fall-through; CanActivate runs after the route is matched.",
+        "pass": "let through",
+        "canMatch1": "before loading the chunk",
+        "canMatch2": "allows fall-through",
+        "canActivate1": "after matching the route",
+        "canActivate2": "activate or redirect",
+        "recommended": "recommended for roles"
+      },
+      "p4": {
+        "title": "Wiring and evaluation in the routes",
+        "lead": "In Routes, each route declares its guard with the argument it needs: canMatch: [hasRole('ADMIN')]. On navigation the Router runs the guard: if it returns true it loads the component; if it returns a RedirectCommand, it redirects to /access-denied. One factory, as many doors as needed.",
+        "request": "navigation",
+        "load": "loads the route",
+        "denied": "redirects"
+      },
+      "exercise": {
+        "desc": "Complete the hasRole and hasAnyRole factories in access-guards.ts. The right-hand panel actually RUNS those guards with runInInjectionContext (as the Router would): switching user re-evaluates each route on its own and shows whether it activates or redirects.",
+        "hint": "Pick who logs in and watch which routes stay accessible and which redirect.",
+        "whoLabel": "Active session",
+        "logout": "Log out",
+        "active": "active",
+        "redirect": "redirects to",
+        "foot": "Each guard runs with real inject() inside runInInjectionContext; no route is decided by hand."
+      }
+    },
+    "router-strategy": {
+      "title": "Router Strategy: canMatch and UrlTree Redirects",
+      "badge": "canMatch · fall-through · UrlTree",
+      "intro": "The value a guard returns is an architectural decision. canMatch runs before the lazy chunk is downloaded: an unauthorized user never even receives the JS. Returning false enables fall-through (same URL, different view per role); returning a UrlTree triggers an atomic, declarative redirect to /login or /403. Four steps with a diagram and a lab that resolves routes live.",
+      "theory": "canMatch decides whether a route MATCHES, before loadComponent is resolved; canActivate decides whether an already-matched route is ACTIVATED, after the chunk is downloaded. For role-based access control canMatch is preferred: if it rejects, the route's JS never even reaches the client.\nThe guard's return value also picks the strategy: false = 'not your route' → the Router tries the next one with the same path (fall-through); UrlTree = an atomic, declarative redirect, with no hidden imperative router.navigate().\nA CanMatchFn receives (route, segments): with segments we can build a returnUrl and come back to the original destination after login.",
+      "simile": "canMatch is the gate to the venue: if you're not on the list, you don't even enter the building (the chunk isn't downloaded). canActivate is the bouncer of the inner room: you've already entered the building (the JS already travelled) and only then are you stopped. Returning false is like saying «this isn't your queue, try the next one» (fall-through); returning a UrlTree is the venue itself escorting you to a specific address (/login), noting where you came from to bring you back.",
+      "examples": [
+        "Protect a lazy module with canMatch so its JS isn't downloaded to users without permission.",
+        "Serve a different view under the same URL per role via fall-through.",
+        "Redirect to /login by returning a UrlTree with ?returnUrl= to come back after authenticating."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "canMatch doesn't download the chunk; canActivate does",
+        "lead": "For /admin, canMatch runs BEFORE loadComponent resolves: if it rejects, that route's chunk is never downloaded and the unauthorized user never receives that JS. canActivate, by contrast, matches and downloads the chunk FIRST, and only then decides whether to activate. For role guards, canMatch saves network and reduces exposed surface.",
+        "request": "protected navigation",
+        "canMatch1": "evaluates before loading",
+        "canMatch2": "chunk NOT downloaded",
+        "canActivate1": "downloads the chunk",
+        "canActivate2": "then blocks",
+        "recommended": "recommended for roles",
+        "note": "canMatch cuts in before touching the network"
+      },
+      "p2": {
+        "title": "Fall-through: same URL, different view",
+        "lead": "The Router tries routes in the ORDER they are declared. If the first /dashboard guard (matchRole('ADMIN')) returns false, that route is discarded and the Router tries the next one with the same path: the generic, guard-less one. Result: one URL serves AdminDashboard or PublicDashboard depending on who's looking. Only canMatch allows this fall-through.",
+        "request": "one URL, several routes",
+        "skip": "false → discarded",
+        "match": "matches the fallback",
+        "order": "order decides"
+      },
+      "p3": {
+        "title": "false (fall-through) vs UrlTree (redirect)",
+        "lead": "The returned type changes the behavior. false: 'this route doesn't match'; the Router doesn't redirect, it tries another with the same path and, if there is none, cancels the navigation (you stay where you were). UrlTree: an atomic, declarative redirect; the Router cancels the current navigation and starts a clean one toward that URL. Returning a UrlTree is more testable than an imperative router.navigate() inside the guard.",
+        "false": "no match · fall-through",
+        "urltree": "atomic redirect",
+        "note": "false ≠ redirect"
+      },
+      "p4": {
+        "title": "returnUrl: come back after login",
+        "lead": "A CanMatchFn receives (route, segments). With segments we rebuild the requested URL and pass it as a queryParam: createUrlTree(['/login'], { queryParams: { returnUrl } }). The login component reads that returnUrl from the snapshot and, on authenticating, calls navigateByUrl(returnUrl) to send the user right where they wanted to go.",
+        "noSession": "no session",
+        "back": "returns to /perfil"
+      },
+      "exercise": {
+        "desc": "Complete requireAuth (redirects with UrlTree + returnUrl) and matchRole (false for fall-through) in strategy-guards.ts. The right-hand panel RESOLVES each navigation like the Router: it runs the real guards with runInInjectionContext and, on switching user, recomputes which component matches, which redirects, and which is cancelled.",
+        "hint": "Pick who logs in and watch how /dashboard changes view, and how /perfil and /admin redirect or get cancelled.",
+        "whoLabel": "Active session",
+        "logout": "Log out",
+        "match": "matches",
+        "redirect": "redirects to",
+        "cancel": "navigation cancelled",
+        "foot": "No result is hard-coded: each navigation is resolved by running the real guards in an injection context."
+      }
+    },
+    "promesas": {
+      "title": "Promises",
+      "badge": "pending · then/catch · async/await",
+      "intro": "A promise represents a value that does not exist yet: the future result of an asynchronous operation (a request, a timer, reading a file). Instead of blocking the thread while waiting, we register what to do when the value arrives (then) or when something fails (catch). Four steps with a diagram and a lab that runs real timeouts and retries.",
+      "theory": "A Promise is an object with three states: pending (in progress), fulfilled (resolved, with a value) and rejected (with a reason). Moving from pending to either of the others is final: once settled it is immutable.\nWe chain the result with .then / .catch / .finally, or consume it with async/await, which is syntactic sugar over the same thing. To coordinate several promises at once there are Promise.all, allSettled, race and any.\nIn Angular they coexist with RxJS Observables: a promise models a single future value; an Observable, a stream of values over time.",
+      "simile": "A promise is the ticket you get when you check your coat at the cloakroom: you don't have the coat yet (pending), but you hold a ticket that guarantees an outcome. In the end they'll hand you the coat back (fulfilled) or tell you something went wrong (rejected). Meanwhile you don't stand frozen at the counter blocking the queue: you go to the party and come back when notified. Once redeemed, the ticket can't be redeemed again: the outcome is final.",
+      "examples": [
+        "Consume a REST API with fetch and process the JSON response.",
+        "Put a timeout on a slow operation with Promise.race so you don't wait forever.",
+        "Load several resources in parallel with Promise.all and act once they're all ready."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "Three states and the executor",
+        "lead": "The constructor takes an executor that runs synchronously and immediately, with two functions: resolve (fulfils the promise with a value) and reject (rejects it with a reason). Calling one of them SETTLES the promise for good; a second call is ignored. Registering a .then after it has already resolved doesn't re-run it: it simply receives the already available value.",
+        "pending": "in progress",
+        "note": "settled = immutable: no going back"
+      },
+      "p2": {
+        "title": "Chaining: the value flows",
+        "lead": "Each .then returns a NEW promise, and whatever its callback returns becomes the value of the next one: the data travels down the chain, transformed step by step. A single .catch at the end captures a rejection from any earlier link; if a .then throws or returns a rejected promise, control jumps straight to that catch. .finally always runs, resolve or fail, ideal for hiding a spinner.",
+        "start": "kicks off the operation",
+        "newPromise": "new promise · value = json",
+        "flow": "value flows to the next",
+        "catch": "captures any rejection",
+        "finally": "always runs"
+      },
+      "p3": {
+        "title": "async/await: same promise, linear",
+        "lead": "async/await is syntactic sugar over .then/.catch: same engine, sequential reading. An async function ALWAYS returns a promise, even if you return a plain value. await pauses the function's execution (not the thread) until the promise settles, and a surrounding try/catch is the equivalent of the chained .catch. It reads like synchronous code but doesn't block.",
+        "chained": "chained",
+        "linear": "linear",
+        "note": "same engine, different syntax"
+      },
+      "p4": {
+        "title": "Combinators: coordinate several promises",
+        "lead": "When several promises are in play, each combinator has a distinct semantics. all waits for all and fails-fast if one breaks. allSettled waits for all and never rejects: it gives you the state of each. race settles with the first one to finish, resolve or fail (ideal for timeouts). any returns the first one that FULFILS and only rejects if all fail.",
+        "all": "all · fails if one fails",
+        "allSettled": "all · state of each",
+        "race": "1st to settle",
+        "any": "1st to fulfil",
+        "note": "pick based on what you need to wait for"
+      },
+      "exercise": {
+        "desc": "Complete esperar (promisify setTimeout), conTimeout (reject with Promise.race if it takes too long) and reintentar (async/await + try/catch) in promesas-lab.ts. The panel on the right RUNS those functions for real: each button launches a real promise and you'll see its state go from pending to fulfilled or rejected, with the elapsed time.",
+        "hint": "Press a scenario and watch the promise's life cycle live: first pending, then the outcome.",
+        "btnSuccess": "Success",
+        "btnTimeout": "Timeout",
+        "btnRetry": "Retries",
+        "btnClear": "Clear",
+        "pending": "pending…",
+        "fulfilled": "fulfilled",
+        "rejected": "rejected",
+        "empty": "Launch a scenario to see a promise's life cycle.",
+        "foot": "Nothing is simulated: each line is a real promise settling. The thread never blocks, which is why the buttons stay responsive."
+      }
+    },
+    "promesas-vs-observables": {
+      "title": "Promises vs Observables",
+      "badge": "one value · stream · eager · lazy · cancelable",
+      "intro": "Promises and Observables solve the same problem —working with data that doesn't exist yet— but with different contracts. Rather than re-explaining each API from scratch, we pair every key Observable concept with its Promise counterpart so the mental jump from one to the other is instant. Five diagram blocks plus a comparison table for reference.",
+      "theory": "A Promise models ONE single, future value: it is eager (it starts when constructed), cannot be cancelled and settles only once. An Observable models a STREAM of 0..N values over time: it is lazy (nothing runs until someone subscribes), can be cancelled with unsubscribe and offers a huge catalogue of operators (map, filter, debounceTime…).\nIn Angular they coexist: a promise fits a one-off operation (a fetch, a dynamic import); an Observable rules where there is a continuous stream (events, reactive forms, HttpClient, router). RxJS provides bridges (firstValueFrom, from) to move between both worlds when it makes sense.",
+      "simile": "A promise is a parcel you ordered: it arrives ONCE and that's it; once shipped you can't cancel it, only ignore the box. An Observable is a magazine subscription: issues (next) keep arriving periodically until the last one (complete) or until you cancel the subscription (unsubscribe). And there's a key nuance: the parcel is prepared the moment you order it (eager), but the magazine prints nothing until someone signs up (lazy).",
+      "examples": [
+        "Pick a Promise for a dynamic import() or a one-off fetch returning a single result.",
+        "Pick an Observable to listen to a form's valueChanges, a stream of events or a cancelable HTTP response.",
+        "Convert an HttpClient Observable with firstValueFrom so you can consume it with async/await."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "Cardinality: one value vs a stream",
+        "lead": "The most basic difference. A promise settles with ONE single value (or a rejection reason) and there its story ends: no matter how many .then you register, that value is never emitted again. An Observable can call next many times —emit a stream of values over time— and closes with complete. Think of resolve(v) as a next(v) followed by an immediate complete(): that's why every promise can be seen as an Observable that emits only once.",
+        "oneValue": "resolve(42) · one emission, done",
+        "stream": "next 1, 2, 3 → complete",
+        "note": "Promise ≈ Observable that emits only once"
+      },
+      "p2": {
+        "title": "Evaluation: eager vs lazy",
+        "lead": "A promise is eager: the executor runs the moment you construct it, even if you never register a .then. The operation is already launched. An Observable is lazy: its subscribe function doesn't run until someone calls subscribe; with no subscriber nothing happens —it's a stored recipe, not a cooked dish. Practical consequence: subscribing twice to a cold Observable runs the logic twice; chaining two .then to a promise reuses the same result.",
+        "eagerRun": "runs on CREATE",
+        "lazyWait": "waits for subscribe",
+        "eager": "eager",
+        "lazy": "lazy",
+        "note": "with no subscribe, the Observable does nothing"
+      },
+      "p3": {
+        "title": "Consumption: then/catch/finally vs subscribe",
+        "lead": "The three roles are the same, only the wrapper changes. In a promise they're split across methods: .then (success), .catch (error) and .finally (always). In an Observable they're grouped into an observer with next, error and complete. The mapping is almost literal: next ≈ then (but can fire 0..N times), error ≈ catch (and ends the stream), complete is the natural closing when there will be no more emissions.",
+        "note": "next ≈ then · error ≈ catch · complete ≈ end of stream"
+      },
+      "p4": {
+        "title": "Cancellation: irreversible vs unsubscribe",
+        "lead": "Here the Observable gains a capability the promise lacks. A promise, once launched, cannot be cancelled: you can ignore its result, but the operation keeps running (the fetch completes anyway). An Observable returns a Subscription on subscribe, and unsubscribe() stops production and releases resources (timers, sockets, listeners). In Angular, takeUntilDestroyed() or the async pipe cancel for you when the component is destroyed, preventing memory leaks.",
+        "noCancel": "not cancelable",
+        "noCancelCap": "the operation keeps running",
+        "cancelCap": "stops the stream and frees resources",
+        "note": "unsubscribe prevents memory leaks in Angular"
+      },
+      "p5": {
+        "title": "Bridges: convert from one world to the other",
+        "lead": "You don't have to pick a side forever: RxJS provides bridges both ways. From Observable to Promise, firstValueFrom / lastValueFrom take a single emission so you can use await. From Promise to Observable, from() wraps the promise in a stream so you can chain operators. The combinators pair up too: Promise.all ≈ forkJoin (waits for all), Promise.race ≈ race (first to emit), Promise.any ≈ race with a success filter. combineLatest and merge have no promise equivalent because they're born from the idea of live streams.",
+        "note": "firstValueFrom ▸ to Promise · from ◂ to Observable"
+      },
+      "table": {
+        "caption": "Comparison table · at a glance",
+        "head": {
+          "aspect": "Aspect",
+          "promise": "Promise",
+          "observable": "Observable"
+        },
+        "rows": [
+          { "aspect": "Cardinality", "promise": "A single value (or rejection)", "observable": "Stream of 0..N values over time" },
+          { "aspect": "Evaluation", "promise": "Eager: runs on creation", "observable": "Lazy: runs on subscription" },
+          { "aspect": "Cancelable", "promise": "No", "observable": "Yes, with unsubscribe()" },
+          { "aspect": "Re-execution", "promise": "The result is cached and shared", "observable": "Each subscribe re-runs the logic (cold)" },
+          { "aspect": "Operators", "promise": "Chain with .then", "observable": "pipe(map, filter, debounceTime…)" },
+          { "aspect": "Consumption", "promise": ".then / .catch / .finally", "observable": "subscribe({ next, error, complete })" },
+          { "aspect": "Timing", "promise": "Always asynchronous (microtask)", "observable": "Can emit synchronously or asynchronously" },
+          { "aspect": "Combinators", "promise": "all · allSettled · race · any", "observable": "forkJoin · combineLatest · merge · race" },
+          { "aspect": "In Angular", "promise": "Dynamic import(), one-off fetch", "observable": "HttpClient, forms, router, events" }
+        ]
       }
     }
   },

@@ -1,0 +1,41 @@
+<div class="demo">
+  <p class="demo__hint">{{ 'sections.map.ex2.hint' | translate }}</p>
+
+  <!-- ── Botones de voto: cada clic añade una entrada al signal ──────────── -->
+  <ul class="keys">
+    @for (opcion of opciones; track opcion) {
+      <li>
+        <button type="button" class="key" (click)="votar(opcion)">
+          + {{ opcion }}
+        </button>
+      </li>
+    }
+  </ul>
+
+  <p class="demo__stat">
+    <span class="demo__count">{{ votos().length }}</span>
+    {{ 'sections.map.ex2.votes' | translate }}
+    <span class="demo__arrow" aria-hidden="true">→</span>
+    <span class="demo__count demo__count--accent">{{ recuento().length }}</span>
+    {{ 'sections.map.ex2.groups' | translate }}
+  </p>
+
+  <!-- ── El Map agrupado, pintado como barras [clave → nº de votos] ──────── -->
+  @if (recuento().length > 0) {
+    <ul class="bars">
+      @for (fila of recuento(); track fila[0]) {
+        <li class="bars__row">
+          <span class="bars__key">{{ fila[0] }}</span>
+          <span class="bars__track">
+            <span class="bars__fill" [style.width.%]="(fila[1] / maximo()) * 100"></span>
+          </span>
+          <span class="bars__num">{{ fila[1] }}</span>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="demo__empty">{{ 'sections.map.ex2.empty' | translate }}</p>
+  }
+
+  <p class="demo__note">{{ 'sections.map.ex2.note' | translate }}</p>
+</div>

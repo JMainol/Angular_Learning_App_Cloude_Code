@@ -8,6 +8,27 @@
   gap: 1.25rem;
 }
 
+/* Cabecera común a los tres ejercicios de la sección Signal. */
+.ex-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.ex-head__num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ex-head__title {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
 .gauge {
   display: flex;
   align-items: baseline;

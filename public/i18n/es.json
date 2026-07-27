@@ -44,9 +44,203 @@
     "dom-control": "Control avanzado del DOM",
     "library": "Librería",
     "inheritance": "Herencia de clases",
-    "proxy": "Proxy"
+    "proxy": "Proxy",
+    "access-control": "Control de Acceso Reactivo",
+    "promesas": "Promesas",
+    "factory-functions": "Funciones Factoría",
+    "data-structures": "Gestión de Estructuras de Datos Avanzadas Set y Map"
   },
   "sections": {
+    "set": {
+      "badge": "valores únicos · has() en O(1)",
+      "title": "Set",
+      "intro": "Set es la colección nativa de JavaScript para guardar valores únicos: los duplicados se descartan solos y comprobar pertenencia es instantáneo. En Angular brilla para gestionar selecciones múltiples, marcar elementos «ya vistos» o deduplicar datos antes de pintarlos — y casa de forma natural con Signals si respetas una regla: cada cambio, un Set nuevo.",
+      "theory": "new Set() crea una colección de valores únicos: si añades dos veces el mismo valor, el segundo se ignora en silencio. Su API es mínima: add() añade, has() comprueba, delete() elimina y size cuenta; las tres operaciones son O(1), sin recorrer la colección como haría array.includes().\nUn Set es iterable (for...of, spread, @for), mantiene el orden de inserción y compara los valores con igualdad estricta, igual que ===. Es la estructura idónea cuando la pregunta es «¿está o no está?» y no «¿en qué posición?».",
+      "simile": "Un Set es como la lista de invitados de una boda: da igual cuántas veces apuntes a tu primo, solo figura una vez. Y el portero no relee la lista de arriba abajo cada vez: consulta su registro y responde al instante si estás dentro (has), te apunta (add) o te tacha (delete). Un array sería un portero que recorre la lista entera con cada recién llegado.",
+      "examples": [
+        "Deduplicar datos que llegan de una API (tags, categorías, autores) antes de pintarlos con @for.",
+        "Gestionar la selección múltiple de filas, chips o checkboxes con add/has/delete en O(1).",
+        "Rastrear IDs «ya procesados»: notificaciones leídas, favoritos, elementos visitados."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "Anatomía de un Set: add, has, delete",
+        "lead": "Un Set se crea vacío o a partir de cualquier iterable. add() incorpora un valor solo si no estaba; has() responde en O(1) si un valor pertenece a la colección; delete() lo elimina y confirma si existía; size cuenta los valores únicos. No hay índices ni posiciones: la única pregunta que un Set sabe responder —y la responde mejor que nadie— es «¿está o no está?».",
+        "empty": "colección vacía",
+        "in1": "entra · size 1",
+        "in2": "entra · size 2",
+        "dup": "duplicado: se ignora · size 2",
+        "out": "solo valores únicos",
+        "note": "has('rxjs') responde al instante, sin recorrer"
+      },
+      "p2": {
+        "title": "De array a Set y de vuelta: deduplicar",
+        "lead": "El constructor acepta cualquier iterable: new Set(array) descarta los duplicados al vuelo. Y como el propio Set es iterable, el spread [...set] lo devuelve a array conservando el orden de la primera aparición. La ida y vuelta completa —[...new Set(array)]— es la forma idiomática de deduplicar en JavaScript: una línea, sin bucles ni indexOf.",
+        "input": "array con duplicados",
+        "toSet": "el Set descarta los repetidos",
+        "spread": "spread: de vuelta a array",
+        "output": "únicos, en orden de aparición",
+        "note": "[...new Set(array)] — deduplicar en una línea"
+      },
+      "p3": {
+        "title": "Set + Signals: la regla de la referencia nueva",
+        "lead": "Para una selección múltiple reactiva, guarda el Set dentro de un signal. La clave está en cómo actualizas: un signal decide si ha cambiado comparando referencias, así que mutar el mismo Set con add/delete no dispara nada — la referencia es idéntica. La receta: copiar con new Set(prev), mutar la copia y devolverla. Referencia nueva, y la vista y los computed reaccionan solos.",
+        "state": "estado de selección",
+        "copy": "copia: referencia nueva",
+        "mutate": "mutas la copia, no el original",
+        "emit": "referencia nueva → la vista reacciona",
+        "note": "mutar el Set original no notifica: misma referencia"
+      },
+      "ex1": {
+        "title": "Selector de etiquetas con signal<Set>",
+        "desc": "Completa las tres funciones de set-lab.ts: deduplica las etiquetas del artículo con un Set, alterna la selección devolviendo siempre un Set nuevo y comprueba la pertenencia con has(). El panel de la derecha ejecuta tus funciones de verdad: hasta que no completes los TODO verás etiquetas repetidas y clics sin efecto.",
+        "hint": "Haz clic en una etiqueta para seleccionarla o quitarla; el contador es un computed sobre size.",
+        "rawTags": "etiquetas en el artículo",
+        "uniqueTags": "únicas",
+        "selected": "Seleccionadas:",
+        "none": "ninguna todavía",
+        "note": "El contador lee seleccion().size; cada clic crea un Set nuevo dentro de update()."
+      }
+    },
+    "map": {
+      "badge": "clave → valor · get() en O(1)",
+      "title": "Map",
+      "intro": "Map es la colección nativa de JavaScript para pares clave → valor: cualquier tipo puede ser clave, el orden de inserción se conserva y leer con get() es instantáneo. En Angular brilla para indexar entidades por id, agrupar y contar por clave o guardar estado producto → cantidad — y casa con Signals bajo la misma regla que Set: cada cambio, un Map nuevo.",
+      "theory": "new Map() crea una colección de pares clave → valor. set() guarda (y sobrescribe si la clave ya existía), get() devuelve el valor o undefined, has() comprueba la clave, delete() elimina el par y size cuenta; todas responden en O(1).\nA diferencia de un objeto plano, la clave puede ser de cualquier tipo (números, objetos, funciones), el orden de inserción se conserva y keys(), values() y entries() lo hacen iterable (for...of, spread, @for). Es la estructura idónea cuando la pregunta es «¿qué hay guardado bajo esta clave?».",
+      "simile": "Un Map es como el guardarropa de un teatro: entregas tu abrigo (el valor) y te dan un ticket numerado (la clave). A la salida nadie rebusca percha por percha: presentas el ticket y tu abrigo aparece al instante (get). Si dejas otro abrigo con el mismo ticket, sustituye al anterior (set sobrescribe). Un array sería un guardarropa sin tickets: para cada abrigo, a recorrer todas las perchas (find).",
+      "examples": [
+        "Normalizar colecciones de la API en un índice id → entidad para resolver búsquedas en O(1).",
+        "Agrupar y contar por clave: votos por opción, errores por código, artículos por categoría.",
+        "Cachear resultados por clave: respuestas HTTP por URL o cálculos costosos memoizados."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "Anatomía de un Map: set, get, delete",
+        "lead": "Un Map se crea vacío o a partir de un iterable de pares [clave, valor]. set() guarda un valor bajo una clave — y si la clave ya existía, sobrescribe el valor sin duplicar la entrada; get() lo recupera en O(1) o devuelve undefined; has() pregunta por la clave; delete() elimina el par completo; size cuenta las entradas. Donde un Set responde «¿está o no está?», un Map responde «¿qué hay guardado bajo esta clave?».",
+        "empty": "colección vacía",
+        "set1": "entra el par · size 1",
+        "set2": "entra el par · size 2",
+        "overwrite": "misma clave: sobrescribe · size 2",
+        "out": "el valor actual de la clave",
+        "note": "get('ana') responde al instante, sin recorrer"
+      },
+      "p2": {
+        "title": "De array a Map: indexar por id",
+        "lead": "El constructor acepta un iterable de pares [clave, valor], así que basta un map() sobre el array para fabricar los pares [id, entidad] y obtener un índice. El recorrido se paga UNA vez al construirlo; a partir de ahí cada búsqueda es un get() en O(1). Frente a array.find(), que recorre la colección entera en cada consulta, este es el patrón de normalización que usan los stores: guarda el índice y deriva lo demás.",
+        "input": "array de entidades",
+        "pairs": "cada entidad → par [id, entidad]",
+        "toMap": "el Map queda indexado por id",
+        "get": "búsqueda O(1), sin recorrer",
+        "note": "indexas una vez, buscas mil veces gratis"
+      },
+      "p3": {
+        "title": "Map + Signals: la regla de la referencia nueva",
+        "lead": "Para estado clave → valor reactivo (un carrito, un formulario dinámico), guarda el Map dentro de un signal. Aplica la misma regla que con Set: un signal decide si ha cambiado comparando referencias, así que mutar el mismo Map con set/delete no dispara nada. La receta: copiar con new Map(prev), mutar la copia y devolverla. Referencia nueva, y la vista y los computed reaccionan solos.",
+        "state": "estado clave → valor",
+        "copy": "copia: referencia nueva",
+        "mutate": "mutas la copia, no el original",
+        "emit": "referencia nueva → la vista reacciona",
+        "note": "mutar el Map original no notifica: misma referencia"
+      },
+      "ex1": {
+        "title": "Índice de usuarios por id",
+        "desc": "Completa las dos funciones de map-lab.ts: construye el índice id → usuario con new Map(pares) y resuelve cada búsqueda con get(). El panel de la derecha ejecuta tus funciones de verdad: hasta que no completes los TODO el índice estará vacío y toda búsqueda devolverá undefined.",
+        "hint": "Elige un id: la ficha sale de un get() sobre el índice, no de recorrer el array.",
+        "inArray": "usuarios en el array",
+        "inIndex": "en el índice",
+        "notFound": "no está en el índice (¿TODO 1a/1b?)",
+        "note": "La ficha es un computed que llama a buscarPorId con el id seleccionado."
+      },
+      "ex2": {
+        "title": "Recuento de votos por opción",
+        "desc": "Completa contarPorCategoria en map-lab.ts: acumula cada voto con el idioma recuento.set(clave, (recuento.get(clave) ?? 0) + 1). El panel ejecuta tu función dentro de un computed: vota y observa cómo el Map se re-agrupa solo.",
+        "hint": "Vota una opción: cada clic añade una entrada y el recuento se recalcula.",
+        "votes": "votos",
+        "groups": "opciones agrupadas",
+        "empty": "el recuento está vacío: completa el TODO 2",
+        "note": "Las barras pintan [...contarPorCategoria(votos())] — un Map itera como pares [clave, valor]."
+      },
+      "ex3": {
+        "title": "Carrito con signal<Map>",
+        "desc": "Completa las dos funciones de map-lab.ts: ajusta la cantidad devolviendo siempre un Map nuevo (y elimina el producto al llegar a 0) y suma las unidades con values() + reduce. El panel ejecuta tus funciones de verdad: hasta que no completes los TODO los botones no cambiarán nada y el total seguirá en 0.",
+        "hint": "Usa +/− en cada producto; el total es un computed sobre los values() del Map.",
+        "add": "añadir unidad",
+        "remove": "quitar unidad",
+        "units": "Unidades:",
+        "distinct": "productos distintos",
+        "empty": "carrito vacío",
+        "note": "Cada clic crea un Map nuevo dentro de update(); al llegar a 0, delete() saca el producto."
+      }
+    },
+    "hof": {
+      "badge": "recibe · devuelve · compone",
+      "title": "HOF (Higher-Order Functions)",
+      "intro": "Una función de orden superior (HOF) es una función que trata a otras funciones como datos: las recibe como argumento, las devuelve como resultado, o ambas cosas. Es la base de patrones cotidianos de Angular moderno —map/filter/reduce sobre colecciones, factorías con closure para debounce, composición de transformaciones— y el motor de utilidades como los functional guards o los operadores de RxJS.",
+      "theory": "En JavaScript las funciones son ciudadanos de primera clase: se pueden guardar en variables, pasar como argumento y devolver desde otra función. Una HOF explota justo eso. Hay tres facetas: recibir funciones (los callbacks de filter/map/reduce), devolver funciones (una factoría que produce una función ya configurada, apoyándose en un closure) y componer funciones (encadenar transformaciones pequeñas en una tubería).\nEn Angular moderno están por todas partes: un computed() suele apoyarse en HOF de array; un functional guard es una factoría que devuelve una CanActivateFn; el pipe() de RxJS compone operadores. Dominarlas hace tu código más declarativo, reutilizable y testeable.",
+      "simile": "Una HOF es como un chef que no cocina un plato concreto, sino que sigue las recetas que le entregas. Le pasas una receta (una función) y él la aplica a los ingredientes: es una HOF que RECIBE funciones. Otras veces el chef te entrega una batidora ya programada a la velocidad que pediste (una función DEVUELTA por una factoría). Y en la cadena de montaje del restaurante, cada estación transforma el plato y lo pasa a la siguiente: eso es COMPONER funciones.",
+      "examples": [
+        "Derivar un total o una lista filtrada dentro de un computed() con filter/map/reduce.",
+        "Fabricar un handler de debounce o throttle con una factoría que captura su estado en el closure.",
+        "Componer varias transformaciones puras en una tubería reutilizable (estilo pipe de RxJS)."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "HOF que recibe funciones",
+        "lead": "Los métodos de array son las HOF más cotidianas: reciben una función como argumento y deciden cuándo llamarla. Tú aportas el «qué hacer» (el callback) y ellos ponen el «cómo recorrer». filter recibe un predicado, map un transformador y reduce un reductor que acumula. Encadenados forman una tubería declarativa que en Angular alimenta de forma natural a un computed(), sin mutar la colección original.",
+        "input": "colección de entrada",
+        "predicate": "recibe un predicado",
+        "transform": "recibe un transformador",
+        "reducer": "recibe un reductor",
+        "output": "valor derivado",
+        "note": "tú pones el callback; el método pone el recorrido"
+      },
+      "p2": {
+        "title": "HOF que devuelve una función (factoría)",
+        "lead": "Una HOF también puede DEVOLVER una función: es una factoría que fabrica funciones ya configuradas. La función devuelta arrastra consigo, mediante el closure, las variables del ámbito donde nació. Ese closure puede guardar estado privado y mutable (un id de temporizador, un contador), lo que hace de las factorías la herramienta ideal para construir debounce, throttle o functional guards parametrizados.",
+        "factory": "la factoría se invoca una vez",
+        "captured": "capturado en el closure",
+        "returned": "función ya configurada",
+        "note": "el closure recuerda «factor» entre llamadas"
+      },
+      "p3": {
+        "title": "Composición: encadenar funciones",
+        "lead": "Componer es unir funciones pequeñas en una sola: la salida de una es la entrada de la siguiente. componer(f, g)(x) equivale a g(f(x)). Cada paso es una función pura y testeable por separado; la composición los encadena en una tubería reutilizable sin variables intermedias. Es la misma idea que el pipe() de RxJS, pero aplicada a valores síncronos.",
+        "input": "valor de entrada",
+        "output": "resultado de la tubería",
+        "note": "componer(f, g)(x) === g(f(x))"
+      },
+      "ex1": {
+        "title": "Pipeline con filter / map / reduce",
+        "desc": "Completa resumirCarrito en hof-lab.ts: filtra las líneas disponibles, mapea cada una a su subtotal con IVA y reduce todo a un total. El panel de la derecha usa un computed() que ejecuta tu función: agota líneas o cambia el IVA y el total se recalcula solo.",
+        "hint": "Haz clic en una línea para agotarla y observa cómo el total (un computed) reacciona.",
+        "inStock": "disponible",
+        "soldOut": "agotado",
+        "total": "Total con IVA:",
+        "note": "El total es un computed() que llama a tu HOF resumirCarrito."
+      },
+      "ex2": {
+        "title": "Factoría de debounce (closure)",
+        "desc": "Completa crearDebounce en hof-lab.ts: cancela el temporizador anterior y programa uno nuevo que llame a la acción tras la pausa. El panel ejecuta tu factoría de verdad: teclea rápido y compara las pulsaciones con las búsquedas realmente disparadas.",
+        "hint": "Teclea deprisa: cada tecla suma, pero la búsqueda solo salta al parar 400 ms.",
+        "label": "Buscar (debounced 400 ms)",
+        "placeholder": "escribe rápido…",
+        "keys": "teclas",
+        "searches": "búsquedas",
+        "lastSearch": "Última búsqueda:",
+        "note": "El closure guarda el temporizador y cancela las invocaciones intermedias."
+      },
+      "ex3": {
+        "title": "Composición de transformaciones",
+        "desc": "Completa componer en hof-lab.ts: reduce el array de transformaciones aplicando cada una al acumulador. El panel construye un «slug» componiendo solo los pasos activos: enciende o apaga pasos y la tubería se recompone al instante.",
+        "hint": "Activa o desactiva pasos y edita la entrada: la salida se recompone sola.",
+        "input": "entrada",
+        "output": "salida compuesta",
+        "note": "componer(...activos) devuelve una única función; sin pasos, la identidad."
+      }
+    },
     "standalone": {
       "title": "Arquitectura standalone",
       "badge": "Documentación",
@@ -1488,6 +1682,291 @@
           "title": "404 · No interceptado",
           "text": "La ruta no coincide con ningún context (/api, /ws). El proxy no la toca: se queda en el dev-server (localhost:4200), donde ese recurso no existe."
         }
+      }
+    },
+    "roles-signals": {
+      "title": "Estado Reactivo de Roles con Signals",
+      "badge": "Signals · computed · Permisos",
+      "intro": "El usuario autenticado y sus roles viven en un único signal dentro de un store. Los permisos (isAdmin, canPublish…) no se guardan ni se mantienen a mano: se DERIVAN de ese signal con computed(), así que su lectura es síncrona y nunca se desincronizan. Cuatro pasos con diagrama y un laboratorio en vivo.",
+      "theory": "Una app necesita saber, en todo momento, quién está logueado y qué puede hacer. El patrón moderno concentra esa verdad en un signal<Usuario | null> dentro de un AuthService o UserStore: una única fuente de verdad.\nLos permisos se derivan con computed(): isAdmin = computed(() => user()?.roles.includes('ADMIN') ?? false). Al ser un valor calculado y cacheado, la lectura es síncrona (isAdmin()) —sin subscribe, sin async pipe— y se recalcula sola cuando cambia el usuario.\nResultado: reglas de permiso limpias, componibles y siempre coherentes con la sesión.",
+      "simile": "Es como el marcador de un estadio conectado al partido: el único dato real es «qué equipo tiene la posesión» (el signal user). Todos los carteles —«ataca el local», «puede tirar a puerta»— no se actualizan a mano uno por uno: están cableados al marcador (son computed) y cambian solos en el instante en que cambia la posesión. Nadie corre a apagar carteles cuando acaba la jugada.",
+      "examples": [
+        "Mostrar u ocultar botones de acción (Publicar, Borrar) según el rol del usuario.",
+        "Proteger rutas con un functional guard que lee isAdmin() de forma síncrona.",
+        "Adaptar el menú de navegación a los permisos del usuario autenticado."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "La fuente de verdad",
+        "lead": "Un único signal privado guarda el usuario (o null). Se expone de solo lectura con asReadonly(): nadie lo muta por fuera; los cambios pasan siempre por login()/logout(). Concentrar la sesión en un solo sitio evita estados contradictorios repartidos por la app.",
+        "action": "acción explícita",
+        "single": "única fuente de verdad"
+      },
+      "p2": {
+        "title": "Permisos derivados con computed()",
+        "lead": "Cada permiso es una función pura del usuario actual. computed() cachea el resultado y solo lo recalcula cuando cambia user(). canPublish() se compone de otros computed (isAdmin || isEditor): la regla de negocio queda en un único sitio, legible y sin duplicar.",
+        "source": "fuente de verdad",
+        "compose": "isAdmin() || isEditor()",
+        "sync": "lectura síncrona"
+      },
+      "p3": {
+        "title": "Síncrono vs asíncrono: el porqué",
+        "lead": "Con RxJS, un permiso era un Observable que había que desenvolver con async pipe o un subscribe manual (con su desuscripción y su copia del valor que se desincroniza). Con computed() el permiso es un valor síncrono: se lee como una función, isAdmin(), directamente en la plantilla.",
+        "oldTitle": "Antes · RxJS",
+        "oldNote": "async / subscribe",
+        "newTitle": "Ahora · Signals",
+        "newNote": "síncrono, sin async",
+        "note": "Menos ceremonia, cero fugas de suscripción, imposible desincronizar."
+      },
+      "p4": {
+        "title": "Reactividad en cascada + puente a guards",
+        "lead": "logout() hace un único set(null) y todo reacciona en cascada: los computed pasan a false y la UI y los guards se reevalúan solos, sin apagar permisos a mano. Y como los computed son síncronos, un functional guard queda en una línea: () => inject(AuthStore).isAdmin().",
+        "auto": "se recalculan solos"
+      },
+      "exercise": {
+        "desc": "Completa los computed del AuthStore. El panel de la derecha usa ESTE store real: al cambiar de usuario o cerrar sesión, la rejilla de permisos se recalcula sola.",
+        "hint": "Elige quién inicia sesión (o cierra sesión) y observa qué permisos se encienden.",
+        "whoLabel": "Sesión activa",
+        "logout": "Cerrar sesión",
+        "granted": "concedido",
+        "denied": "denegado",
+        "foot": "Ningún permiso se toca a mano: todos derivan del signal user() vía computed()."
+      }
+    },
+    "guards-factory": {
+      "title": "Functional Guards Parametrizados e inject()",
+      "badge": "Guards · Factorías · inject()",
+      "intro": "Un guard funcional es solo una función. Si escribimos una función que DEVUELVE un guard, obtenemos una factoría parametrizable: hasRole('ADMIN') o hasAnyRole(['ADMIN','EDITOR']) reutilizan la misma lógica de acceso cambiando el argumento. Dentro de esa función pura, inject() recupera el AuthStore y el Router sin clases ni constructor. Cuatro pasos con diagrama y un laboratorio en vivo.",
+      "theory": "Un functional guard (CanMatchFn / CanActivateFn) es una función pura que el Router ejecuta para decidir si una ruta procede. Al ejecutarse en el injection context del Router, dentro puede usar inject(AuthStore) e inject(Router) sin necesidad de @Injectable ni constructor.\nSi en vez de una función suelta escribimos una FACTORÍA —una función que devuelve el guard— podemos parametrizar la regla: hasRole('ADMIN'), hasAnyRole(['ADMIN','EDITOR']). El guard devuelve true, o una redirección declarativa con RedirectCommand(UrlTree).\nPara roles en rutas perezosas se prefiere CanMatch: se evalúa antes de descargar el chunk y permite fall-through a otra ruta.",
+      "simile": "Una factoría de guards es como una empresa de porteros: no contratas a un portero genérico, le pides «uno para la lista VIP» (hasRole('VIP')) y te devuelve un portero ya configurado con esa lista. Cada puerta (ruta) contrata el suyo con el argumento que necesita. El portero, ya en la puerta, consulta el carné del cliente (inject(AuthStore)) y, si no está en la lista, lo acompaña a la salida (RedirectCommand).",
+      "examples": [
+        "Proteger un panel de administración con canMatch: [hasRole('ADMIN')].",
+        "Compartir una única factoría hasAnyRole([...]) en varias rutas cambiando solo los roles.",
+        "Redirigir a /login o /acceso-denegado devolviendo un RedirectCommand desde el guard."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "La factoría: una función que devuelve un guard",
+        "lead": "hasRole('ADMIN') no es el guard: es una función que RECIBE el rol y DEVUELVE el CanMatchFn. El rol queda capturado en el closure de la función devuelta, así que no necesita parámetros extra para saber qué comprobar. Resultado: la misma lógica se reutiliza en cualquier ruta cambiando solo el argumento.",
+        "param": "parámetro capturado",
+        "higherOrder": "higher-order function"
+      },
+      "p2": {
+        "title": "inject() dentro de la función pura",
+        "lead": "El Router ejecuta el guard dentro de su injection context. Por eso, sin constructor y sin @Injectable, dentro de la función podemos usar inject(AuthStore) para leer la sesión e inject(Router) para construir redirecciones. La lectura de permisos es síncrona: auth.user()?.roles.includes(rol).",
+        "context": "injection context",
+        "state": "estado / sesión",
+        "redirect": "redirección",
+        "noConstructor": "sin constructor"
+      },
+      "p3": {
+        "title": "Contrato de retorno: pasar o redirigir",
+        "lead": "Un guard devuelve boolean | UrlTree | RedirectCommand. En vez de navegar como efecto colateral, devolvemos DECLARATIVAMENTE a dónde ir: new RedirectCommand(router.createUrlTree(['/acceso-denegado'])). Para roles se prefiere CanMatch: no descarga el chunk si falla y permite fall-through; CanActivate corre después de emparejar la ruta.",
+        "pass": "deja pasar",
+        "canMatch1": "antes de cargar el chunk",
+        "canMatch2": "permite fall-through",
+        "canActivate1": "tras emparejar la ruta",
+        "canActivate2": "activa o redirige",
+        "recommended": "recomendado para roles"
+      },
+      "p4": {
+        "title": "Cableado y evaluación en las rutas",
+        "lead": "En Routes, cada ruta declara su guard con el argumento que le toca: canMatch: [hasRole('ADMIN')]. Al navegar, el Router ejecuta el guard: si devuelve true carga el componente; si devuelve un RedirectCommand, redirige a /acceso-denegado. Una sola factoría, tantas puertas como haga falta.",
+        "request": "navegación",
+        "load": "carga la ruta",
+        "denied": "redirige"
+      },
+      "exercise": {
+        "desc": "Completa las factorías hasRole y hasAnyRole en access-guards.ts. El panel de la derecha EJECUTA de verdad esos guards con runInInjectionContext (como haría el Router): al cambiar de usuario, cada ruta se reevalúa sola y muestra si se activa o redirige.",
+        "hint": "Elige quién inicia sesión y observa qué rutas quedan accesibles y cuáles redirigen.",
+        "whoLabel": "Sesión activa",
+        "logout": "Cerrar sesión",
+        "active": "activa",
+        "redirect": "redirige a",
+        "foot": "Cada guard se ejecuta con inject() real dentro de runInInjectionContext; ninguna ruta se decide a mano."
+      }
+    },
+    "router-strategy": {
+      "title": "Estrategia de Router: canMatch y Redirecciones con UrlTree",
+      "badge": "canMatch · fall-through · UrlTree",
+      "intro": "El valor que devuelve un guard es una decisión de arquitectura. canMatch se evalúa antes de descargar el chunk lazy: al usuario no autorizado ni le llega el JS. Devolver false permite fall-through (misma URL, distinta vista según el rol); devolver un UrlTree provoca una redirección atómica y declarativa a /login o /403. Cuatro pasos con diagrama y un laboratorio que resuelve rutas en vivo.",
+      "theory": "canMatch decide si una ruta EMPAREJA, antes de resolver loadComponent; canActivate decide si una ruta ya emparejada se ACTIVA, después de descargar el chunk. Para control de acceso por rol se prefiere canMatch: si rechaza, el JS de la ruta ni siquiera viaja al cliente.\nAdemás, el retorno del guard elige la estrategia: false = 'no soy tu ruta' → el Router prueba la siguiente con el mismo path (fall-through); UrlTree = redirección atómica y declarativa, sin router.navigate() imperativo escondido.\nUn CanMatchFn recibe (route, segments): con segments podemos construir un returnUrl y volver al destino original tras el login.",
+      "simile": "canMatch es el control de la puerta del recinto: si no estás en la lista, ni entras al edificio (no se descarga el chunk). canActivate es el portero de la sala interior: ya has entrado al edificio (el JS ya viajó) y solo entonces te paran. Devolver false es como decir «esta no es tu cola, prueba la de al lado» (fall-through); devolver un UrlTree es que el propio recinto te acompañe a otra dirección concreta (/login) apuntando de dónde venías para traerte de vuelta.",
+      "examples": [
+        "Proteger un módulo lazy con canMatch para no descargar su JS a usuarios sin permiso.",
+        "Servir una vista distinta bajo la misma URL según el rol mediante fall-through.",
+        "Redirigir a /login devolviendo un UrlTree con ?returnUrl= para volver tras autenticar."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "canMatch no descarga el chunk; canActivate sí",
+        "lead": "Ante /admin, canMatch corre ANTES de resolver loadComponent: si rechaza, el chunk de esa ruta nunca se descarga y el usuario no autorizado ni recibe ese JS. canActivate, en cambio, empareja y descarga el chunk PRIMERO, y solo después decide si activa. Para guards por rol, canMatch ahorra red y reduce superficie expuesta.",
+        "request": "navegación protegida",
+        "canMatch1": "evalúa antes de cargar",
+        "canMatch2": "chunk NO descargado",
+        "canActivate1": "descarga el chunk",
+        "canActivate2": "y luego bloquea",
+        "recommended": "recomendado para roles",
+        "note": "canMatch corta antes de tocar la red"
+      },
+      "p2": {
+        "title": "Fall-through: misma URL, distinta vista",
+        "lead": "El Router prueba las rutas en el ORDEN en que se declaran. Si el guard de la primera /dashboard (matchRole('ADMIN')) devuelve false, esa ruta se descarta y el Router prueba la siguiente con el mismo path: la genérica sin guard. Resultado: una URL sirve AdminDashboard o PublicDashboard según quién mire. Solo canMatch permite este fall-through.",
+        "request": "una URL, varias rutas",
+        "skip": "false → se descarta",
+        "match": "empareja el fallback",
+        "order": "el orden decide"
+      },
+      "p3": {
+        "title": "false (fall-through) vs UrlTree (redirección)",
+        "lead": "El tipo devuelto cambia el comportamiento. false: 'esta ruta no empareja'; el Router no redirige, prueba otra con el mismo path y, si no hay, cancela la navegación (te quedas donde estabas). UrlTree: redirección atómica y declarativa; el Router cancela la navegación actual y arranca una limpia hacia esa URL. Devolver UrlTree es más testeable que un router.navigate() imperativo dentro del guard.",
+        "false": "no empareja · fall-through",
+        "urltree": "redirección atómica",
+        "note": "false ≠ redirigir"
+      },
+      "p4": {
+        "title": "returnUrl: volver tras el login",
+        "lead": "Un CanMatchFn recibe (route, segments). Con segments reconstruimos la URL pedida y la pasamos como queryParam: createUrlTree(['/login'], { queryParams: { returnUrl } }). El componente de login lee ese returnUrl del snapshot y, al autenticar, hace navigateByUrl(returnUrl) para devolver al usuario justo a donde quería ir.",
+        "noSession": "sin sesión",
+        "back": "vuelve a /perfil"
+      },
+      "exercise": {
+        "desc": "Completa requireAuth (redirige con UrlTree + returnUrl) y matchRole (false para fall-through) en strategy-guards.ts. El panel de la derecha RESUELVE cada navegación como el Router: ejecuta los guards reales con runInInjectionContext y, al cambiar de usuario, recalcula qué componente empareja, qué redirige y qué se cancela.",
+        "hint": "Elige quién inicia sesión y observa cómo /dashboard cambia de vista, y cómo /perfil y /admin redirigen o se cancelan.",
+        "whoLabel": "Sesión activa",
+        "logout": "Cerrar sesión",
+        "match": "empareja",
+        "redirect": "redirige a",
+        "cancel": "navegación cancelada",
+        "foot": "Ningún resultado está escrito a mano: cada navegación se resuelve ejecutando los guards reales en un injection context."
+      }
+    },
+    "promesas": {
+      "title": "Promesas",
+      "badge": "pending · then/catch · async/await",
+      "intro": "Una promesa representa un valor que aún no existe: el resultado futuro de una operación asíncrona (una petición, un temporizador, la lectura de un fichero). En lugar de bloquear el hilo esperando, registramos qué hacer cuando el valor llegue (then) o cuando algo falle (catch). Cuatro pasos con diagrama y un laboratorio que ejecuta timeouts y reintentos de verdad.",
+      "theory": "Una Promise es un objeto con tres estados: pending (en curso), fulfilled (cumplida, con un valor) y rejected (rechazada, con un motivo). El paso de pending a cualquiera de los otros dos es definitivo: una vez asentada (settled) es inmutable.\nEncadenamos el resultado con .then / .catch / .finally, o lo consumimos con async/await, que es azúcar sintáctico sobre lo mismo. Para coordinar varias promesas a la vez existen Promise.all, allSettled, race y any.\nEn Angular conviven con los Observables de RxJS: la promesa modela un valor único y futuro; el Observable, un flujo de valores en el tiempo.",
+      "simile": "Una promesa es el resguardo que te dan al dejar el abrigo en el guardarropa: aún no tienes el abrigo (pending), pero tienes un ticket que garantiza un desenlace. Al final te devolverán el abrigo (fulfilled) o te dirán que hubo un problema (rejected). Mientras tanto no te quedas plantado en el mostrador bloqueando la cola: te vas a la fiesta y vuelves cuando te avisan. El ticket, una vez canjeado, no se puede volver a canjear: el desenlace es definitivo.",
+      "examples": [
+        "Consumir una REST API con fetch y procesar el JSON de la respuesta.",
+        "Poner un timeout a una operación lenta con Promise.race para no esperar indefinidamente.",
+        "Cargar en paralelo varios recursos con Promise.all y actuar cuando todos estén listos."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "Tres estados y el executor",
+        "lead": "El constructor recibe un executor que se ejecuta de forma síncrona e inmediata, con dos funciones: resolve (cumple la promesa con un valor) y reject (la rechaza con un motivo). Llamar a una de ellas ASIENTA la promesa para siempre; una segunda llamada se ignora. Registrar un .then después de que ya se haya cumplido no la vuelve a ejecutar: simplemente recibe el valor ya disponible.",
+        "pending": "en curso",
+        "note": "settled = inmutable: no hay vuelta atrás"
+      },
+      "p2": {
+        "title": "Encadenamiento: el valor fluye",
+        "lead": "Cada .then devuelve una NUEVA promesa, y lo que retorna su callback se convierte en el valor de la siguiente: así el dato viaja por la cadena, transformándose paso a paso. Un único .catch al final captura el rechazo de cualquier eslabón anterior; si un .then lanza o devuelve una promesa rechazada, el control salta directo a ese catch. .finally corre siempre, cumpla o falle, ideal para ocultar un spinner.",
+        "start": "arranca la operación",
+        "newPromise": "nueva promesa · valor = json",
+        "flow": "el valor fluye al siguiente",
+        "catch": "captura cualquier rechazo",
+        "finally": "corre siempre"
+      },
+      "p3": {
+        "title": "async/await: la misma promesa, en lineal",
+        "lead": "async/await es azúcar sintáctico sobre .then/.catch: mismo motor, lectura secuencial. Una función async SIEMPRE devuelve una promesa, aunque hagas un return de un valor plano. await pausa la ejecución de la función (no el hilo) hasta que la promesa se asienta, y un try/catch alrededor equivale al .catch de la versión encadenada. Se lee como código síncrono pero no bloquea.",
+        "chained": "encadenado",
+        "linear": "lineal",
+        "note": "mismo motor, otra sintaxis"
+      },
+      "p4": {
+        "title": "Combinadores: coordinar varias promesas",
+        "lead": "Cuando hay varias promesas en juego, cada combinador tiene una semántica distinta. all espera a todas y falla-rápido si una se rompe. allSettled espera a todas y nunca rechaza: te da el estado de cada una. race se asienta con la primera que termine, cumpla o falle (ideal para timeouts). any devuelve la primera que se CUMPLA y solo rechaza si fallan todas.",
+        "all": "todas · falla si una falla",
+        "allSettled": "todas · estado de cada una",
+        "race": "la 1ª en asentarse",
+        "any": "la 1ª que se cumple",
+        "note": "elige según lo que necesites esperar"
+      },
+      "exercise": {
+        "desc": "Completa esperar (promisifica setTimeout), conTimeout (rechaza con Promise.race si tarda demasiado) y reintentar (async/await + try/catch) en promesas-lab.ts. El panel de la derecha EJECUTA esas funciones de verdad: cada botón lanza una promesa real y verás su estado pasar de pendiente a cumplida o rechazada, con el tiempo transcurrido.",
+        "hint": "Pulsa un escenario y observa el ciclo de vida de la promesa en vivo: primero pendiente, luego el desenlace.",
+        "btnSuccess": "Éxito",
+        "btnTimeout": "Timeout",
+        "btnRetry": "Reintentos",
+        "btnClear": "Limpiar",
+        "pending": "pendiente…",
+        "fulfilled": "cumplida",
+        "rejected": "rechazada",
+        "empty": "Lanza un escenario para ver el ciclo de vida de una promesa.",
+        "foot": "Nada está simulado: cada línea es una promesa real asentándose. El hilo nunca se bloquea, por eso los botones siguen respondiendo."
+      }
+    },
+    "promesas-vs-observables": {
+      "title": "Promesas vs Observables",
+      "badge": "un valor · flujo · eager · lazy · cancelable",
+      "intro": "Promesas y Observables resuelven el mismo problema —trabajar con datos que aún no existen— pero con contratos distintos. Aquí no repetimos cada API de cero: emparejamos cada concepto clave de un Observable con su análogo en las Promesas para que el salto mental de uno a otro sea inmediato. Cinco bloques con diagrama y una tabla comparativa de referencia.",
+      "theory": "Una Promise modela UN valor único y futuro: es eager (arranca al construirse), no se puede cancelar y solo se asienta una vez. Un Observable modela un FLUJO de 0..N valores en el tiempo: es lazy (nada corre hasta que alguien se suscribe), se puede cancelar con unsubscribe y ofrece un catálogo enorme de operadores (map, filter, debounceTime…).\nEn Angular conviven: la promesa encaja para una operación puntual (un fetch, un import dinámico); el Observable domina donde hay un flujo continuo (eventos, formularios reactivos, HttpClient, router). RxJS ofrece puentes (firstValueFrom, from) para pasar de un mundo al otro cuando conviene.",
+      "simile": "Una promesa es un paquete que pediste: llega UNA vez y se acabó; una vez enviado no puedes cancelarlo, solo ignorar la caja. Un Observable es la suscripción a una revista: te van llegando números (next) periódicamente hasta que llega el último (complete) o decides cancelar la suscripción (unsubscribe). Y hay un matiz clave: el paquete se prepara en cuanto lo pides (eager), pero la revista no imprime nada hasta que alguien se da de alta (lazy).",
+      "examples": [
+        "Elegir Promise para un import() dinámico o un fetch puntual que devuelve un único resultado.",
+        "Elegir Observable para escuchar un valueChanges de un formulario, un flujo de eventos o una respuesta HTTP cancelable.",
+        "Convertir con firstValueFrom un Observable de HttpClient para poder consumirlo con async/await."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "Cardinalidad: un valor vs un flujo",
+        "lead": "La diferencia más básica. Una promesa se asienta con UN único valor (o un motivo de rechazo) y ahí termina su historia: registres los .then que registres, ese valor no vuelve a emitirse. Un Observable puede llamar a next muchas veces —emitir un flujo de valores a lo largo del tiempo— y cierra con complete. Piensa en resolve(v) como un next(v) seguido de complete() inmediato: por eso toda promesa se puede ver como un Observable que emite una sola vez.",
+        "oneValue": "resolve(42) · una emisión y fin",
+        "stream": "next 1, 2, 3 → complete",
+        "note": "Promise ≈ Observable que emite una sola vez"
+      },
+      "p2": {
+        "title": "Evaluación: eager vs lazy",
+        "lead": "Una promesa es eager: el executor corre en el mismo momento de construirla, aunque nunca registres un .then. La operación ya está lanzada. Un Observable es lazy: la función de suscripción no se ejecuta hasta que alguien llama a subscribe; sin suscriptor no pasa nada, es una receta guardada, no un plato cocinado. Consecuencia práctica: suscribirse dos veces a un Observable frío ejecuta la lógica dos veces; encadenar dos .then a una promesa reutiliza el mismo resultado.",
+        "eagerRun": "corre al CREAR",
+        "lazyWait": "espera a subscribe",
+        "eager": "eager",
+        "lazy": "lazy",
+        "note": "sin subscribe, el Observable no hace nada"
+      },
+      "p3": {
+        "title": "Consumo: then/catch/finally vs subscribe",
+        "lead": "Los tres papeles son los mismos, solo cambia el envoltorio. En una promesa se reparten en métodos: .then (éxito), .catch (error) y .finally (siempre). En un Observable se agrupan en un observer con next, error y complete. La correspondencia es casi literal: next ≈ then (pero puede dispararse 0..N veces), error ≈ catch (y termina el flujo), complete es el cierre natural cuando ya no habrá más emisiones.",
+        "note": "next ≈ then · error ≈ catch · complete ≈ fin del flujo"
+      },
+      "p4": {
+        "title": "Cancelación: irreversible vs unsubscribe",
+        "lead": "Aquí el Observable gana una capacidad que la promesa no tiene. Una promesa, una vez lanzada, no se puede cancelar: puedes ignorar su resultado, pero la operación sigue en marcha (el fetch se completa igual). Un Observable devuelve una Subscription al suscribirse, y unsubscribe() detiene la producción y libera recursos (timers, sockets, listeners). En Angular, takeUntilDestroyed() o el pipe async cancelan por ti al destruir el componente, evitando fugas de memoria.",
+        "noCancel": "no cancelable",
+        "noCancelCap": "la operación sigue igual",
+        "cancelCap": "corta el flujo y libera recursos",
+        "note": "unsubscribe evita fugas de memoria en Angular"
+      },
+      "p5": {
+        "title": "Puentes: convertir de un mundo al otro",
+        "lead": "No hay que elegir un bando para siempre: RxJS ofrece puentes en ambos sentidos. De Observable a Promise, firstValueFrom / lastValueFrom toman una única emisión para poder usar await. De Promise a Observable, from() envuelve la promesa en un flujo y así encadenas operadores. Los combinadores también se emparejan: Promise.all ≈ forkJoin (espera a todos), Promise.race ≈ race (el primero que emite), Promise.any ≈ race con filtro de éxito. combineLatest y merge no tienen equivalente en promesas porque nacen de la idea de flujos vivos.",
+        "note": "firstValueFrom ▸ hacia Promise · from ◂ hacia Observable"
+      },
+      "table": {
+        "caption": "Tabla comparativa · de un vistazo",
+        "head": {
+          "aspect": "Aspecto",
+          "promise": "Promise",
+          "observable": "Observable"
+        },
+        "rows": [
+          { "aspect": "Cardinalidad", "promise": "Un único valor (o rechazo)", "observable": "Flujo de 0..N valores en el tiempo" },
+          { "aspect": "Evaluación", "promise": "Eager: corre al crearse", "observable": "Lazy: corre al suscribirse" },
+          { "aspect": "Cancelable", "promise": "No", "observable": "Sí, con unsubscribe()" },
+          { "aspect": "Reejecución", "promise": "El resultado se cachea y se comparte", "observable": "Cada subscribe re-ejecuta la lógica (frío)" },
+          { "aspect": "Operadores", "promise": "Encadenar con .then", "observable": "pipe(map, filter, debounceTime…)" },
+          { "aspect": "Consumo", "promise": ".then / .catch / .finally", "observable": "subscribe({ next, error, complete })" },
+          { "aspect": "Sincronía", "promise": "Siempre asíncrona (microtask)", "observable": "Puede emitir de forma síncrona o asíncrona" },
+          { "aspect": "Combinadores", "promise": "all · allSettled · race · any", "observable": "forkJoin · combineLatest · merge · race" },
+          { "aspect": "En Angular", "promise": "import() dinámico, fetch puntual", "observable": "HttpClient, formularios, router, eventos" }
+        ]
       }
     }
   },

@@ -1,0 +1,209 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">22.1</span>
+      <span class="doc__badge">{{ 'sections.hof.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.hof.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.hof.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.hof.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.hof.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.hof.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: HOF que RECIBE funciones ─────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.hof.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.hof.p1.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">[ 1, 2, 3, 4 ]</span>
+            <span class="node__cap">{{ 'sections.hof.p1.input' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">filter(n =&gt; par)</span>
+            <span class="node__cap">{{ 'sections.hof.p1.predicate' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">map(n =&gt; n × 10)</span>
+            <span class="node__cap">{{ 'sections.hof.p1.transform' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">reduce(+)</span>
+            <span class="node__cap">{{ 'sections.hof.p1.reducer' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">60</span>
+            <span class="node__cap">{{ 'sections.hof.p1.output' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.hof.p1.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.hof.stepWord' | translate }} 1 · {{ 'sections.hof.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.hof.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeRecibe" language="TypeScript" filename="hof-recibe.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: HOF que DEVUELVE (factoría + closure) ─────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.hof.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.hof.p2.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">crearMultiplicador(2)</span>
+            <span class="node__cap">{{ 'sections.hof.p2.factory' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">🔒 factor = 2</span>
+            <span class="node__cap">{{ 'sections.hof.p2.captured' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">(n) =&gt; n × 2</span>
+            <span class="node__cap">{{ 'sections.hof.p2.returned' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.hof.p2.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.hof.stepWord' | translate }} 2 · {{ 'sections.hof.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.hof.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeDevuelve" language="TypeScript" filename="hof-factoria.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: COMPOSICIÓN (tubería) ────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.hof.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.hof.p3.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">'  Hola Mundo  '</span>
+            <span class="node__cap">{{ 'sections.hof.p3.input' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">trim()</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">toLowerCase()</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">espacios → -</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">'hola-mundo'</span>
+            <span class="node__cap">{{ 'sections.hof.p3.output' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.hof.p3.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.hof.stepWord' | translate }} 3 · {{ 'sections.hof.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.hof.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeCompone" language="TypeScript" filename="hof-componer.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIOS PRÁCTICOS — uno por faceta (código TODO ↔ demo viva)
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── EJERCICIO 1: pipeline de array ────────────────────────────────── -->
+  <article class="block">
+    <span class="ex-head">{{ 'common.labels.exercise' | translate }} 1 · {{ 'sections.hof.ex1.title' | translate }}</span>
+    <div class="exercise">
+      <div class="exercise__code">
+        <p class="exercise__desc">{{ 'sections.hof.ex1.desc' | translate }}</p>
+        <app-code-block [code]="codeEx1" language="TypeScript" filename="hof-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-arrays-demo />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── EJERCICIO 2: factoría de debounce ─────────────────────────────── -->
+  <article class="block">
+    <span class="ex-head">{{ 'common.labels.exercise' | translate }} 2 · {{ 'sections.hof.ex2.title' | translate }}</span>
+    <div class="exercise">
+      <div class="exercise__code">
+        <p class="exercise__desc">{{ 'sections.hof.ex2.desc' | translate }}</p>
+        <app-code-block [code]="codeEx2" language="TypeScript" filename="hof-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-factory-demo />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── EJERCICIO 3: composición de funciones ─────────────────────────── -->
+  <article class="block">
+    <span class="ex-head">{{ 'common.labels.exercise' | translate }} 3 · {{ 'sections.hof.ex3.title' | translate }}</span>
+    <div class="exercise">
+      <div class="exercise__code">
+        <p class="exercise__desc">{{ 'sections.hof.ex3.desc' | translate }}</p>
+        <app-code-block [code]="codeEx3" language="TypeScript" filename="hof-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-compose-demo />
+      </div>
+    </div>
+  </article>
+
+</section>

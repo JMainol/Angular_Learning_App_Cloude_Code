@@ -1,0 +1,34 @@
+<div class="demo">
+  <p class="demo__hint">{{ 'sections.hof.ex2.hint' | translate }}</p>
+
+  <!-- ── Input: teclea rápido y observa la diferencia de contadores ───────── -->
+  <label class="field">
+    <span class="field__label">{{ 'sections.hof.ex2.label' | translate }}</span>
+    <input
+      type="text"
+      class="field__input"
+      [placeholder]="'sections.hof.ex2.placeholder' | translate"
+      (input)="alTeclear($event)"
+    />
+  </label>
+
+  <!-- ── Dos contadores: teclas (cada pulsación) vs búsquedas (debounced) ──── -->
+  <div class="counters">
+    <div class="counter">
+      <span class="counter__num">{{ teclas() }}</span>
+      <span class="counter__cap">{{ 'sections.hof.ex2.keys' | translate }}</span>
+    </div>
+    <div class="counter counter--accent">
+      <span class="counter__num">{{ busquedas() }}</span>
+      <span class="counter__cap">{{ 'sections.hof.ex2.searches' | translate }}</span>
+    </div>
+  </div>
+
+  @if (ultimaBusqueda()) {
+    <p class="demo__echo">
+      {{ 'sections.hof.ex2.lastSearch' | translate }} <strong>“{{ ultimaBusqueda() }}”</strong>
+    </p>
+  }
+
+  <p class="demo__note">{{ 'sections.hof.ex2.note' | translate }}</p>
+</div>

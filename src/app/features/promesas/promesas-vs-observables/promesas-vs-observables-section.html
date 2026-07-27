@@ -1,0 +1,249 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">21.2</span>
+      <span class="doc__badge">{{ 'sections.promesas-vs-observables.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.promesas-vs-observables.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.promesas-vs-observables.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.promesas-vs-observables.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.promesas-vs-observables.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.promesas-vs-observables.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque numerado empareja el concepto Observable con su análogo
+       en Promesas: columna izquierda = diagrama, derecha = código.
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: cardinalidad ─────────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas-vs-observables.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas-vs-observables.p1.title' | translate">
+          <!-- Fila Promesa: una emisión y fin -->
+          <div class="lane">
+            <span class="lane__tag lane__tag--promise">Promise</span>
+            <div class="lane__track">
+              <span class="dot dot--value">42</span>
+              <span class="lane__flag">✔</span>
+            </div>
+            <span class="lane__cap">{{ 'sections.promesas-vs-observables.p1.oneValue' | translate }}</span>
+          </div>
+          <!-- Fila Observable: varias emisiones -> complete -->
+          <div class="lane">
+            <span class="lane__tag lane__tag--observable">Observable</span>
+            <div class="lane__track">
+              <span class="dot">1</span>
+              <span class="dot">2</span>
+              <span class="dot">3</span>
+              <span class="lane__flag lane__flag--done">|</span>
+            </div>
+            <span class="lane__cap">{{ 'sections.promesas-vs-observables.p1.stream' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas-vs-observables.p1.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas-vs-observables.stepWord' | translate }} 1 · {{ 'sections.promesas-vs-observables.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas-vs-observables.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeCardinalidad" language="TypeScript" filename="cardinalidad.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: eager vs lazy ────────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas-vs-observables.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas-vs-observables.p2.title' | translate">
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">Promise</span>
+              <div class="node node--signal">
+                <span class="node__title node__title--sm">new Promise()</span>
+                <span class="node__cap">{{ 'sections.promesas-vs-observables.p2.eagerRun' | translate }}</span>
+              </div>
+              <span class="node__badge">{{ 'sections.promesas-vs-observables.p2.eager' | translate }}</span>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">Observable</span>
+              <div class="node node--action">
+                <span class="node__title node__title--sm">new Observable()</span>
+                <span class="node__cap">{{ 'sections.promesas-vs-observables.p2.lazyWait' | translate }}</span>
+              </div>
+              <span class="node__badge node__badge--dim">{{ 'sections.promesas-vs-observables.p2.lazy' | translate }}</span>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas-vs-observables.p2.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas-vs-observables.stepWord' | translate }} 2 · {{ 'sections.promesas-vs-observables.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas-vs-observables.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeEager" language="TypeScript" filename="eager-vs-lazy.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: consumo ──────────────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas-vs-observables.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas-vs-observables.p3.title' | translate">
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">Promise</span>
+              <div class="url-box">
+                <span class="url-box__leaf">.then()</span>
+                <span class="url-box__leaf">.catch()</span>
+                <span class="url-box__leaf">.finally()</span>
+              </div>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">Observable</span>
+              <div class="url-box">
+                <span class="url-box__leaf">next</span>
+                <span class="url-box__leaf">error</span>
+                <span class="url-box__leaf">complete</span>
+              </div>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas-vs-observables.p3.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas-vs-observables.stepWord' | translate }} 3 · {{ 'sections.promesas-vs-observables.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas-vs-observables.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeConsumo" language="TypeScript" filename="consumo.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 4 / DIAGRAMA 4: cancelación ──────────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas-vs-observables.diagramWord' | translate }} 4</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas-vs-observables.p4.title' | translate">
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">Promise</span>
+              <div class="node node--off">
+                <span class="node__title node__title--sm">✖ {{ 'sections.promesas-vs-observables.p4.noCancel' | translate }}</span>
+                <span class="node__cap">{{ 'sections.promesas-vs-observables.p4.noCancelCap' | translate }}</span>
+              </div>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">Observable</span>
+              <div class="node node--signal">
+                <span class="node__title node__title--sm">unsubscribe()</span>
+                <span class="node__cap">{{ 'sections.promesas-vs-observables.p4.cancelCap' | translate }}</span>
+              </div>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas-vs-observables.p4.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas-vs-observables.stepWord' | translate }} 4 · {{ 'sections.promesas-vs-observables.p4.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas-vs-observables.p4.lead' | translate }}</p>
+        <app-code-block [code]="codeCancelar" language="TypeScript" filename="cancelacion.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 5 / DIAGRAMA 5: puentes y combinadores ───────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.promesas-vs-observables.diagramWord' | translate }} 5</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.promesas-vs-observables.p5.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">Observable</span>
+          </div>
+          <div class="bridge" aria-hidden="true">
+            <span class="bridge__op">firstValueFrom() ▸</span>
+            <span class="bridge__op">◂ from()</span>
+          </div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">Promise</span>
+          </div>
+          <p class="dom-note">{{ 'sections.promesas-vs-observables.p5.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.promesas-vs-observables.stepWord' | translate }} 5 · {{ 'sections.promesas-vs-observables.p5.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.promesas-vs-observables.p5.lead' | translate }}</p>
+        <app-code-block [code]="codePuentes" language="TypeScript" filename="puentes.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · TABLA COMPARATIVA
+  ═══════════════════════════════════════════════════════════════════════ -->
+  <article class="block">
+    <span class="flow__label">{{ 'sections.promesas-vs-observables.table.caption' | translate }}</span>
+    <div class="table-wrap">
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th scope="col">{{ 'sections.promesas-vs-observables.table.head.aspect' | translate }}</th>
+            <th scope="col" class="cmp__promise">Promise</th>
+            <th scope="col" class="cmp__observable">Observable</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of ('sections.promesas-vs-observables.table.rows' | translate); track $index) {
+            <tr>
+              <th scope="row">{{ row.aspect }}</th>
+              <td>{{ row.promise }}</td>
+              <td>{{ row.observable }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+</section>

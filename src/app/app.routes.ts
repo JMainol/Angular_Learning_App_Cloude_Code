@@ -362,6 +362,70 @@ export const routes: Routes = [
     title: '19.1 Proxy DEV sin levantar backend local · Guía Angular',
   },
 
+  {
+    path: 'access-control/roles-signals',
+    loadComponent: () =>
+      import('./features/access-control/roles-signals/roles-signals-section').then(
+        (m) => m.RolesSignalsSection
+      ),
+    title: '20.1 Estado reactivo de roles con Signals · Guía Angular',
+  },
+  {
+    path: 'access-control/guards-factory',
+    loadComponent: () =>
+      import('./features/access-control/guards-factory/guards-factory-section').then(
+        (m) => m.GuardsFactorySection
+      ),
+    title: '20.2 Functional Guards Parametrizados e inject() · Guía Angular',
+  },
+  {
+    path: 'access-control/router-strategy',
+    loadComponent: () =>
+      import('./features/access-control/router-strategy/router-strategy-section').then(
+        (m) => m.RouterStrategySection
+      ),
+    title: '20.3 Estrategia de Router: canMatch y UrlTree · Guía Angular',
+  },
+
+  {
+    path: 'promesas/promesas',
+    loadComponent: () =>
+      import('./features/promesas/promesas/promesas-section').then(
+        (m) => m.PromesasSection
+      ),
+    title: '21.1 Promesas · Guía Angular',
+  },
+
+  {
+    path: 'promesas/promesas-vs-observables',
+    loadComponent: () =>
+      import('./features/promesas/promesas-vs-observables/promesas-vs-observables-section').then(
+        (m) => m.PromesasVsObservablesSection
+      ),
+    title: '21.2 Promesas vs Observables · Guía Angular',
+  },
+
+  {
+    path: 'factory-functions/hof',
+    loadComponent: () =>
+      import('./features/factory-functions/hof/hof-section').then((m) => m.HofSection),
+    title: '22.1 HOF (Higher-Order Functions) · Guía Angular',
+  },
+
+  {
+    path: 'data-structures/set',
+    loadComponent: () =>
+      import('./features/data-structures/set/set-section').then((m) => m.SetSection),
+    title: '23.1 Set · Guía Angular',
+  },
+
+  {
+    path: 'data-structures/map',
+    loadComponent: () =>
+      import('./features/data-structures/map/map-section').then((m) => m.MapSection),
+    title: '23.2 Map · Guía Angular',
+  },
+
   // Ruta por defecto: arrancamos en la primera sección del temario.
   { path: '', pathMatch: 'full', redirectTo: 'config/standalone' },
 

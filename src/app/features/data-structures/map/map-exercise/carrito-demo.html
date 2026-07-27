@@ -1,0 +1,42 @@
+<div class="demo">
+  <p class="demo__hint">{{ 'sections.map.ex3.hint' | translate }}</p>
+
+  <!-- ── Catálogo: cada fila lee su cantidad del Map con get() ?? 0 ──────── -->
+  <ul class="rows">
+    @for (producto of productos; track producto) {
+      <li class="rows__item" [class.rows__item--on]="cantidad(producto) > 0">
+        <span class="rows__name">{{ producto }}</span>
+        <span class="rows__controls">
+          <button
+            type="button"
+            class="rows__btn"
+            [attr.aria-label]="'sections.map.ex3.remove' | translate"
+            (click)="ajustar(producto, -1)"
+          >−</button>
+          <span class="rows__qty">{{ cantidad(producto) }}</span>
+          <button
+            type="button"
+            class="rows__btn"
+            [attr.aria-label]="'sections.map.ex3.add' | translate"
+            (click)="ajustar(producto, 1)"
+          >+</button>
+        </span>
+      </li>
+    }
+  </ul>
+
+  <!-- ── Derivados: computed sobre totalUnidades y sobre size ────────────── -->
+  <div class="demo__foot">
+    <span class="demo__selected">
+      {{ 'sections.map.ex3.units' | translate }}
+      <strong>{{ total() }}</strong>
+    </span>
+    @if (distintos() > 0) {
+      <span class="demo__list">{{ distintos() }} {{ 'sections.map.ex3.distinct' | translate }}</span>
+    } @else {
+      <span class="demo__list demo__list--empty">{{ 'sections.map.ex3.empty' | translate }}</span>
+    }
+  </div>
+
+  <p class="demo__note">{{ 'sections.map.ex3.note' | translate }}</p>
+</div>

@@ -1,0 +1,44 @@
+<div class="demo">
+  <p class="demo__hint">{{ 'sections.map.ex1.hint' | translate }}</p>
+
+  <!-- ── Tamaño del índice: hace visible el efecto del TODO 1a ──────────── -->
+  <p class="demo__stat">
+    <span class="demo__count">{{ usuarios.length }}</span>
+    {{ 'sections.map.ex1.inArray' | translate }}
+    <span class="demo__arrow" aria-hidden="true">→</span>
+    <span class="demo__count demo__count--accent">{{ indice.size }}</span>
+    {{ 'sections.map.ex1.inIndex' | translate }}
+  </p>
+
+  <!-- ── Selector de id: cada clic consulta el Map, no recorre el array ──── -->
+  <ul class="keys">
+    @for (usuario of usuarios; track usuario.id) {
+      <li>
+        <button
+          type="button"
+          class="key"
+          [class.key--on]="idSeleccionado() === usuario.id"
+          [attr.aria-pressed]="idSeleccionado() === usuario.id"
+          (click)="seleccionar(usuario.id)"
+        >
+          get({{ usuario.id }})
+        </button>
+      </li>
+    }
+  </ul>
+
+  <!-- ── Ficha derivada: computed sobre buscarPorId (TODO 1b) ────────────── -->
+  @if (ficha(); as usuario) {
+    <div class="card">
+      <span class="card__name">{{ usuario.nombre }}</span>
+      <span class="card__role">{{ usuario.rol }}</span>
+    </div>
+  } @else {
+    <div class="card card--empty">
+      <span class="card__miss">undefined</span>
+      <span class="card__role">{{ 'sections.map.ex1.notFound' | translate }}</span>
+    </div>
+  }
+
+  <p class="demo__note">{{ 'sections.map.ex1.note' | translate }}</p>
+</div>

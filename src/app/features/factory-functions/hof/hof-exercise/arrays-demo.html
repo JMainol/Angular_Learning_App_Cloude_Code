@@ -1,0 +1,32 @@
+<div class="demo">
+  <p class="demo__hint">{{ 'sections.hof.ex1.hint' | translate }}</p>
+
+  <!-- ── Líneas del carrito: clic para agotar/reactivar ───────────────────── -->
+  <ul class="cart">
+    @for (l of lineas(); track l.nombre) {
+      <li class="cart__row" [class.cart__row--off]="!l.disponible">
+        <button type="button" class="cart__toggle" (click)="alternar(l.nombre)">
+          <span class="cart__dot" aria-hidden="true"></span>
+          <span class="cart__name">{{ l.nombre }}</span>
+        </button>
+        <span class="cart__meta">{{ l.cantidad }} × {{ l.precio }} €</span>
+        <span class="cart__state">
+          {{ (l.disponible ? 'sections.hof.ex1.inStock' : 'sections.hof.ex1.soldOut') | translate }}
+        </span>
+      </li>
+    }
+  </ul>
+
+  <!-- ── Controles + total derivado ───────────────────────────────────────── -->
+  <div class="demo__foot">
+    <button type="button" class="chip" (click)="ciclarIva()">
+      IVA · {{ iva() * 100 }} %
+    </button>
+    <span class="demo__total">
+      {{ 'sections.hof.ex1.total' | translate }}
+      <strong>{{ total() }} €</strong>
+    </span>
+  </div>
+
+  <p class="demo__note">{{ 'sections.hof.ex1.note' | translate }}</p>
+</div>

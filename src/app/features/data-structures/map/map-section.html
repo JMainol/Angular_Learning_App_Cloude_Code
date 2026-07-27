@@ -1,0 +1,212 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">23.2</span>
+      <span class="doc__badge">{{ 'sections.map.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.map.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.map.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.map.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.map.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.map.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       4+5 · DESCRIPCIÓN PASO A PASO + DIAGRAMAS
+       Cada bloque: columna izquierda = diagrama, derecha = código
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── PASO 1 / DIAGRAMA 1: anatomía — set / get / delete ────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.map.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.map.p1.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">new Map()</span>
+            <span class="node__cap">{{ 'sections.map.p1.empty' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">set('ana', 'admin')</span>
+            <span class="node__cap">{{ 'sections.map.p1.set1' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">set('luis', 'editor')</span>
+            <span class="node__cap">{{ 'sections.map.p1.set2' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--action">
+            <span class="node__title node__title--sm">set('ana', 'viewer') ⟳</span>
+            <span class="node__cap">{{ 'sections.map.p1.overwrite' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">get('ana') → 'viewer'</span>
+            <span class="node__cap">{{ 'sections.map.p1.out' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.map.p1.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.map.stepWord' | translate }} 1 · {{ 'sections.map.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.map.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeAnatomia" language="TypeScript" filename="map-anatomia.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 2 / DIAGRAMA 2: array → Map — indexar por id ─────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.map.diagramWord' | translate }} 2</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.map.p2.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">[{{ '{' }}id: 1{{ '}' }}, {{ '{' }}id: 2{{ '}' }}, ...]</span>
+            <span class="node__cap">{{ 'sections.map.p2.input' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">map(u =&gt; [u.id, u])</span>
+            <span class="node__cap">{{ 'sections.map.p2.pairs' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">new Map(pares)</span>
+            <span class="node__cap">{{ 'sections.map.p2.toMap' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">porId.get(2)</span>
+            <span class="node__cap">{{ 'sections.map.p2.get' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.map.p2.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.map.stepWord' | translate }} 2 · {{ 'sections.map.p2.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.map.p2.lead' | translate }}</p>
+        <app-code-block [code]="codeIndexar" language="TypeScript" filename="map-indexar.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── PASO 3 / DIAGRAMA 3: Map + Signals — referencia nueva ─────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.map.diagramWord' | translate }} 3</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.map.p3.title' | translate">
+          <div class="node node--action">
+            <span class="node__title node__title--sm">signal(new Map())</span>
+            <span class="node__cap">{{ 'sections.map.p3.state' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">new Map(prev)</span>
+            <span class="node__cap">{{ 'sections.map.p3.copy' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--signal">
+            <span class="node__title node__title--sm">set() / delete()</span>
+            <span class="node__cap">{{ 'sections.map.p3.mutate' | translate }}</span>
+          </div>
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="node node--compose">
+            <span class="node__title node__title--sm">return copia</span>
+            <span class="node__cap">{{ 'sections.map.p3.emit' | translate }}</span>
+          </div>
+          <p class="dom-note">{{ 'sections.map.p3.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.map.stepWord' | translate }} 3 · {{ 'sections.map.p3.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.map.p3.lead' | translate }}</p>
+        <app-code-block [code]="codeSignals" language="TypeScript" filename="map-signals.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ══════════════════════════════════════════════════════════════════
+       6 · EJERCICIOS PRÁCTICOS — uno por uso (código TODO ↔ demo viva)
+  ═══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- ── EJERCICIO 1: índice de usuarios por id ─────────────────────────── -->
+  <article class="block">
+    <span class="ex-head">{{ 'common.labels.exercise' | translate }} 1 · {{ 'sections.map.ex1.title' | translate }}</span>
+    <div class="exercise">
+      <div class="exercise__code">
+        <p class="exercise__desc">{{ 'sections.map.ex1.desc' | translate }}</p>
+        <app-code-block [code]="codeEx1" language="TypeScript" filename="map-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-usuarios-demo />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── EJERCICIO 2: recuento por categoría ────────────────────────────── -->
+  <article class="block">
+    <span class="ex-head">{{ 'common.labels.exercise' | translate }} 2 · {{ 'sections.map.ex2.title' | translate }}</span>
+    <div class="exercise">
+      <div class="exercise__code">
+        <p class="exercise__desc">{{ 'sections.map.ex2.desc' | translate }}</p>
+        <app-code-block [code]="codeEx2" language="TypeScript" filename="map-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-categorias-demo />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── EJERCICIO 3: carrito con signal<Map> ───────────────────────────── -->
+  <article class="block">
+    <span class="ex-head">{{ 'common.labels.exercise' | translate }} 3 · {{ 'sections.map.ex3.title' | translate }}</span>
+    <div class="exercise">
+      <div class="exercise__code">
+        <p class="exercise__desc">{{ 'sections.map.ex3.desc' | translate }}</p>
+        <app-code-block [code]="codeEx3" language="TypeScript" filename="map-lab.ts" />
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-carrito-demo />
+      </div>
+    </div>
+  </article>
+
+</section>
