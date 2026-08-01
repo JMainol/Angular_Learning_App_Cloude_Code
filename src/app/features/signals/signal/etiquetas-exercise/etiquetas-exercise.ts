@@ -48,6 +48,9 @@ export class EtiquetasExercise {
    */
   protected quitar(etiqueta: string): void {
     // TODO: implementar con this.etiquetas.update(...)
+    this.etiquetas.update((actual) => 
+      actual.filter((e) => e !== etiqueta)
+    )
   }
 
   /**
@@ -56,5 +59,6 @@ export class EtiquetasExercise {
    */
   protected limpiar(): void {
     // TODO: implementar con this.etiquetas.set(...)
+    this.etiquetas.set([])
   }
 }
