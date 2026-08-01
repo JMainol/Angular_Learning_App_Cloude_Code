@@ -54,6 +54,7 @@ export class AjustesExercise {
    */
   protected alternarModoOscuro(): void {
     // TODO: implementar con this.ajustes.update(...)
+    this.ajustes.update((a) => ({...a, modoOscuro: !a.modoOscuro}))
   }
 
   /**
@@ -64,5 +65,10 @@ export class AjustesExercise {
    */
   protected cambiarFuente(delta: number): void {
     // TODO: implementar con this.ajustes.update(...)
+    this.ajustes.update((a) => {
+      const nuevo = Math.min(this.FUENTE_MAX, Math.max(a.tamanoFuente + delta, this.FUENTE_MIN));
+      return nuevo === a.tamanoFuente ? a : {...a, tamanoFuente: nuevo}
+    })
+
   }
 }
