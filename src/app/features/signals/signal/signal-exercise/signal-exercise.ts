@@ -42,6 +42,7 @@ export class SignalExercise {
    * Usa `.update()` para restar 1, pero sin bajar de 0 (pista: Math.max).
    */
   protected salir(): void {
+    this.aforo.update((n) => Math.max(n -1, 0))
     // TODO: implementar con this.aforo.update(...)
   }
 
@@ -50,6 +51,7 @@ export class SignalExercise {
    * Aquí el nuevo valor NO depende del actual, así que usa `.set(0)`.
    */
   protected reiniciar(): void {
+    this.aforo.set(0)
     // TODO: implementar con this.aforo.set(...)
   }
 }
