@@ -4,6 +4,7 @@
   <app-star-rating
     [valor]="valoracion()"
     (valorar)="setValoracion($event)"
+    (limpiar)="reset()"
   />
   <!--
     TODO 3: escucha también el output `limpiar` para reiniciar la valoración:

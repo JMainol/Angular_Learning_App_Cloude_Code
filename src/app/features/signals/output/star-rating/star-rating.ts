@@ -32,6 +32,7 @@ export class StarRating {
    */
   readonly valorar = output<number>();
 
+  readonly limpiar = output<void>();
   /**
    * TODO 1: declara un output `limpiar` sin payload para avisar al padre de que
    * quiere borrar la valoración:
