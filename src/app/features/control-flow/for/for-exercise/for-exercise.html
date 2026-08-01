@@ -16,7 +16,7 @@
       Angular expone en cada iteración: $index, $count, $first, $last, $even,
       $odd. No hay que declararlas: existen sin más dentro del @for.
     -->
-    @for (tarea of tareas(); track $index) {
+    @for (tarea of tareas(); track tarea.id) {
       <!-- TODO 5b: aplica la clase `row--ultima` cuando $last sea true, con
            [class.row--ultima]="$last". $last es un booleano que solo vale true
            en la última iteración: sirve para tratar el extremo de la lista sin
@@ -27,7 +27,7 @@
            `$index % 2 === 0`; usarlo mantiene la plantilla declarativa (dices
            QUÉ quieres, no cómo se calcula) y evita ensuciar el HTML con
            aritmética. Es el patrón clásico de "zebra striping". -->
-      <li class="row">
+      <li class="row" [class.row--ultima]="$last" [class.row--par]="$even">
         <!-- TODO 2: muestra la posición usando la variable contextual $index
              (recuerda que empieza en 0; suma 1 para enseñar "1, 2, 3…").
 
@@ -35,7 +35,10 @@
              de elementos del array en esta pasada. Úsalo en vez de
              `tareas().length`: $count ya lo tiene calculado y no vuelve a leer
              el signal desde la plantilla. -->
-        <span class="row__num">·</span>
+        <span class="row__num">{{$index + 1}}/{{$count}}</span>
+
+        <!-- Otra sintexis valida -->
+        <!-- <span class="row__num">{{ `${$index + 1}/${$count}` }}</span> -->
 
         <span class="row__text">{{ tarea.texto }}</span>
 
@@ -43,10 +46,16 @@
              que solo aparezca en la primera fila. $first es true únicamente en
              la primera iteración; es la forma de destacar la cabeza de la lista
              sin preguntar por $index === 0. -->
-        <span class="row__badge">siguiente</span>
+        @if ($first) {
+          <span class="row__badge">siguiente</span>
+        }
 
         <span class="row__tag" [attr.data-prioridad]="tarea.prioridad">{{ tarea.prioridad }}</span>
       </li>
+    }
+
+    @empty {
+      <span class="row__error">Lista vacia. Añade una nueva tarea</span>
     }
 
     <!-- TODO 3: añade un bloque @empty (justo después del cierre del @for) que

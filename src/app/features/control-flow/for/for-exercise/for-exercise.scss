@@ -95,6 +95,11 @@
   font-size: 0.9rem;
 }
 
+.row__error {
+  color: purple;
+  font-weight: bold
+}
+
 .row__tag {
   flex-shrink: 0;
   font-family: var(--font-mono);
