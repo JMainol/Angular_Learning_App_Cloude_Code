@@ -1,0 +1,92 @@
+<!--
+  La plantilla no decide nada: solo lee signals. Todo el trabajo (cuándo pedir,
+  qué cancelar) ocurre dentro del effect.
+-->
+<div class="panel">
+  <header class="ex-head">
+    <span class="ex-head__num">Ejercicio 2</span>
+    <span class="ex-head__title">Buscador · debounce → cancelación → resultado</span>
+  </header>
+
+  <div class="buscador">
+    <input
+      class="buscador__input"
+      type="search"
+      placeholder="Escribe una ciudad o un país…"
+      aria-label="Buscar ciudad"
+      [value]="consulta()"
+      (input)="escribir($any($event.target).value)"
+    />
+    <!-- `cargando` lo mantiene el effect: hay una petición pedida o en vuelo. -->
+    <span class="buscador__estado" aria-live="polite">
+      @if (cargando()) {
+        <span class="pulso"></span> buscando…
+      } @else {
+        en reposo
+      }
+    </span>
+  </div>
+
+  <!--
+    El marcador del ejercicio. Con los TODO sin resolver, "peticiones" sube a la
+    par que "pulsaciones". Bien resuelto, escribir "Bilbao" son 6 pulsaciones y
+    1 sola petición.
+  -->
+  <div class="metricas">
+    <span class="metrica">
+      <strong>{{ pulsaciones() }}</strong> pulsaciones
+    </span>
+    <span class="metrica metrica--acento">
+      <strong>{{ lanzadas() }}</strong> peticiones
+    </span>
+    <span class="metrica">
+      <strong>{{ canceladas() }}</strong> canceladas
+    </span>
+    <button type="button" class="metricas__reset" (click)="limpiar()">Reiniciar</button>
+  </div>
+
+  <!--
+    Síntoma del TODO 1 sin resolver: sin texto no debería haber resultados, pero
+    el effect buscó igualmente (y también lo hizo al arrancar el componente).
+  -->
+  @if (!consulta().trim() && resultados().length) {
+    <p class="aviso">
+      Hay resultados con la caja vacía: el effect buscó sin consulta. Eso lo arregla el TODO 1.
+    </p>
+  }
+
+  <ul class="resultados">
+    @for (ciudad of resultados(); track ciudad.id) {
+      <li class="ciudad">
+        <span class="ciudad__nombre">{{ ciudad.nombre }}</span>
+        <span class="ciudad__pais">{{ ciudad.pais }}</span>
+      </li>
+    } @empty {
+      <li class="vacio">
+        @if (consulta().trim()) {
+          Sin coincidencias para «{{ consulta() }}».
+        } @else {
+          Escribe algo para lanzar el effect.
+        }
+      </li>
+    }
+  </ul>
+
+  <!-- Traza del ciclo de vida: el "run → cleanup" del effect, en vivo. -->
+  <div class="traza" aria-live="polite">
+    <span class="traza__label">traza del effect · lo más reciente arriba</span>
+    @if (traza().length) {
+      <ul class="traza__lineas">
+        @for (evento of traza(); track evento.id) {
+          <li class="traza__linea" [class]="'traza__linea--' + evento.tipo">
+            {{ evento.texto }}
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="traza__vacia">
+        (vacía) Teclea en la caja de arriba: cada pulsación reejecuta el effect.
+      </p>
+    }
+  </div>
+</div>

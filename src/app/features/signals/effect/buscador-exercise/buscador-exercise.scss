@@ -1,0 +1,240 @@
+:host {
+  display: block;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ex-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+.ex-head__num {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ex-head__title {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* --- Caja de búsqueda ------------------------------------------------------ */
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.buscador__input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+}
+.buscador__input:focus-visible,
+.metricas__reset:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.buscador__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* Punto que late mientras hay una petición pedida o en vuelo. */
+.pulso {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: latido 1s ease-in-out infinite;
+}
+@keyframes latido {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+/* El latido es decorativo: si el usuario pide menos movimiento, se queda fijo. */
+@media (prefers-reduced-motion: reduce) {
+  .pulso {
+    animation: none;
+  }
+}
+
+/* --- Marcador -------------------------------------------------------------- */
+
+.metricas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1.1rem;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.metrica strong {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text-strong);
+}
+.metrica--acento strong {
+  color: var(--accent);
+}
+.metricas__reset {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.metricas__reset:hover {
+  color: var(--text-strong);
+}
+
+/* Aviso pedagógico: señala el síntoma de un TODO sin resolver. */
+.aviso {
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-sm);
+}
+
+/* --- Resultados ------------------------------------------------------------ */
+
+.resultados {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  /* Alto estable: la traza no salta mientras cambian los resultados. */
+  min-height: 7.5rem;
+}
+.ciudad {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.9rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.82rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+.ciudad__nombre {
+  color: var(--text-strong);
+}
+.ciudad__pais {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.vacio {
+  padding: 1rem 0.85rem;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* --- Traza del effect ------------------------------------------------------ */
+
+.traza {
+  background: var(--surface-code);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  max-height: 16rem;
+  overflow-y: auto;
+}
+.traza__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.traza__lineas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.traza__linea {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+.traza__linea::before {
+  content: '› ';
+  color: var(--text-dim);
+}
+
+/* Un color por fase del ciclo, para leer la secuencia de un vistazo. */
+.traza__linea--run {
+  color: #a78bfa;
+}
+.traza__linea--cleanup {
+  color: #f59e0b;
+}
+.traza__linea--fetch {
+  color: #60a5fa;
+}
+.traza__linea--ok {
+  color: #34d399;
+}
+.traza__linea--abort {
+  color: #f87171;
+}
+
+.traza__vacia {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
