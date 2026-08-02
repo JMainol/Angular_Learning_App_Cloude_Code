@@ -56,6 +56,10 @@ export class ToSignalExercise {
    *   });
    */
 
+    protected readonly repos = toSignal(this.repos$, {
+      initialValue: [] as Repositorio[],
+    })
+
   /**
    * TODO 2: Signal de estado de carga desde el mismo Observable.
    *
@@ -68,4 +72,9 @@ export class ToSignalExercise {
    *     { initialValue: true },
    *   );
    */
+
+  protected readonly cargando = toSignal(
+    this.repos$.pipe(delay(2000),map(() => false)),
+    {initialValue: true},
+  )
 }
