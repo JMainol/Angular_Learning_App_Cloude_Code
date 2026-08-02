@@ -1,0 +1,17 @@
+/*
+  Separación entre los dos ejercicios apilados. Los code-blocks (izquierda) y
+  los widgets (derecha) se declaran en ESTA plantilla, así que la encapsulación
+  de la sección los alcanza sin tocar el section-shell compartido.
+  Usamos el selector de hermano adyacente: el primer nodo no lleva margen.
+*/
+app-code-block + app-code-block {
+  display: block;
+  margin-top: 1.5rem;
+}
+
+[exercise-result] + [exercise-result] {
+  display: block;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}

@@ -6,14 +6,24 @@
   [simile]="'sections.computed.simile' | translate"
   [examples]="'sections.computed.examples' | translate"
 >
-  <!-- Código del ejercicio (con TODOs), copiable. Se proyecta en la mitad izquierda. -->
+  <!--
+    Código de los ejercicios (con TODOs), copiable. Se proyectan en la mitad
+    izquierda. El shell acepta varios nodos [exercise-code]: se apilan en orden.
+  -->
   <app-code-block
     exercise-code
     [code]="exerciseCode"
     language="TypeScript"
-    filename="computed-exercise.ts"
+    filename="1 · computed-exercise.ts"
+  />
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode2"
+    language="TypeScript"
+    filename="2 · inventario-exercise.ts"
   />
 
-  <!-- Ejercicio en vivo. Se proyecta en la mitad derecha ("Resultado"). -->
+  <!-- Ejercicios en vivo. Se proyectan en la mitad derecha ("Resultado"). -->
   <app-computed-exercise exercise-result />
+  <app-inventario-exercise exercise-result />
 </app-section-shell>
