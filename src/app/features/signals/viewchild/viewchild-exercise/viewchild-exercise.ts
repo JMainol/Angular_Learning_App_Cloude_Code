@@ -39,32 +39,33 @@ export class ViewChildExercise {
     this.campo()?.nativeElement.focus();
   }
 
+  protected limpiar(): void {
+    const input = this.campo()?.nativeElement;
+    if (input) {
+      input.value = '',
+      input.focus();
+    }
+    this.eco.set('')
+  }
   /**
    * TODO 1: limpia el input y vuelve a enfocarlo.
    *   const input = this.campo()?.nativeElement;
    *   if (input) { input.value = ''; input.focus(); }
    *   this.eco.set('');
    */
-  protected limpiar(): void {
+
+  protected leer(): void {
     const input = this.campo()?.nativeElement;
     if (input) {
-      input.value = '';
-      input.focus();
+      const value = input.value;
+      this.eco.set(value ?? '');
     }
-    this.eco.set('')
   }
 
   /**
    * TODO 2: lee el valor actual del input y guárdalo en el signal `eco`.
    *   this.eco.set(this.campo()?.nativeElement.value ?? '');
    */
-  protected leer(): void {
-    const input = this.campo()?.nativeElement;
-    if (input) {
-      const value = input.value;
-      this.eco.set(value ?? '')
-    }
-  }
 
   // ==========================================================================
   // PARTE 2 — `viewChild()` opcional  vs  `viewChild.required()`
@@ -118,6 +119,7 @@ export class ViewChildExercise {
    * `objetivoRequerido()` está tipado como `Signal<ElementRef>` (sin `undefined`),
    * así que accedemos directo, SIN `?.`. Si el elemento no existe, la propia
    * lectura del Signal lanza NG0951; lo capturamos para mostrarlo en la UI.
+   * 
    *
    * TODO 3: completa el cuerpo del try/catch.
    *   try {
@@ -128,6 +130,11 @@ export class ViewChildExercise {
    *   }
    */
   protected leerRequerido(): void {
-    // TODO 3
+     try {
+      const ref = this.objetivoRequerido();
+      this.resultado.set({ texto: `Required -> referencia garantizada (valor: "${ref.nativeElement.value}")`, error: false })
+     } catch (e) {
+      this.resultado.set({ texto: `Required -> lanzó un error: ${(e as any).message}`, error: true})
+     }
   }
 }
