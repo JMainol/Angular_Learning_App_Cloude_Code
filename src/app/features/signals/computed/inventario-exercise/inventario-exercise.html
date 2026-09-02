@@ -1,0 +1,114 @@
+<!--
+  La plantilla NO calcula nada: solo lee computeds. Cada `visibles()`,
+  `totalPaginas()` o `resumen()` es una lectura memoizada, así que llamarlos
+  varias veces no repite el trabajo.
+-->
+<div class="panel">
+  <header class="ex-head">
+    <span class="ex-head__num">Ejercicio 2</span>
+    <span class="ex-head__title">Inventario · filtrar → ordenar → paginar</span>
+  </header>
+
+  <!-- Controles: escriben en los signals de ORIGEN y nada más. -->
+  <div class="filtros">
+    <input
+      class="filtros__buscar"
+      type="search"
+      placeholder="Buscar producto…"
+      aria-label="Buscar producto"
+      [value]="busqueda()"
+      (input)="buscar($any($event.target).value)"
+    />
+
+    <select
+      class="filtros__select"
+      aria-label="Filtrar por categoría"
+      [value]="categoria()"
+      (change)="filtrarPor($any($event.target).value)"
+    >
+      @for (cat of categorias(); track cat) {
+        <option [value]="cat">{{ cat }}</option>
+      }
+    </select>
+
+    <select
+      class="filtros__select"
+      aria-label="Ordenar por"
+      [value]="orden()"
+      (change)="ordenarPor($any($event.target).value)"
+    >
+      <option value="nombre">Nombre (A-Z)</option>
+      <option value="precio-asc">Precio ↑</option>
+      <option value="precio-desc">Precio ↓</option>
+    </select>
+
+    <button
+      type="button"
+      class="chip"
+      [class.chip--on]="soloDisponibles()"
+      [attr.aria-pressed]="soloDisponibles()"
+      (click)="alternarDisponibles()"
+    >
+      Solo con stock
+    </button>
+  </div>
+
+  <!-- TODO 5: estas cifras salen del computed `resumen`. -->
+  <div class="resumen">
+    <span class="resumen__dato">
+      <strong>{{ resumen().total }}</strong> resultado(s)
+    </span>
+    <span class="resumen__dato">
+      Precio medio <strong>{{ resumen().precioMedio | number: '1.0-2' }} €</strong>
+    </span>
+    <span class="resumen__dato">
+      Sin stock <strong>{{ resumen().sinStock }}</strong>
+    </span>
+    <button type="button" class="resumen__limpiar" (click)="limpiarFiltros()">Limpiar filtros</button>
+  </div>
+
+  <!-- `track p.id` da identidad estable a cada fila: al reordenar, Angular mueve
+       los nodos en lugar de volver a crearlos. -->
+  <ul class="lista">
+    @for (p of visibles(); track p.id) {
+      <li class="fila" [class.fila--agotado]="p.stock === 0">
+        <span class="fila__nombre">{{ p.nombre }}</span>
+        <span class="fila__cat">{{ p.categoria }}</span>
+        <span class="fila__stock">
+          {{ p.stock === 0 ? 'Agotado' : p.stock + ' uds.' }}
+        </span>
+        <span class="fila__precio">{{ p.precio }} €</span>
+      </li>
+    } @empty {
+      <li class="vacio">Ningún producto coincide con estos filtros.</li>
+    }
+  </ul>
+
+  <!-- La paginación se apoya en `paginaSegura`, no en `pagina`: así los botones
+       reflejan la página que se está viendo de verdad. -->
+  <footer class="paginacion">
+    <button
+      type="button"
+      class="paginacion__btn"
+      aria-label="Página anterior"
+      [disabled]="paginaSegura() <= 1"
+      (click)="moverPagina(-1)"
+    >
+      ‹
+    </button>
+
+    <span class="paginacion__estado">
+      Página {{ paginaSegura() }} de {{ totalPaginas() }}
+    </span>
+
+    <button
+      type="button"
+      class="paginacion__btn"
+      aria-label="Página siguiente"
+      [disabled]="paginaSegura() >= totalPaginas()"
+      (click)="moverPagina(1)"
+    >
+      ›
+    </button>
+  </footer>
+</div>
