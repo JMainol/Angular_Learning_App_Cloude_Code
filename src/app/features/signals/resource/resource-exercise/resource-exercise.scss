@@ -1,0 +1,83 @@
+.exercise-panel {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.panel-section {
+  flex: 1;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--text-1);
+  }
+}
+
+.btn {
+  background: var(--primary);
+  color: var(--text-inverse);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.result-area {
+  margin-top: 1.5rem;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.profile-card {
+  background: var(--surface-1);
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  width: 100%;
+
+  strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-1);
+  }
+  
+  pre {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-2);
+  }
+}

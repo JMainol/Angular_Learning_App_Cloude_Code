@@ -77,6 +77,18 @@ export const routes: Routes = [
     title: '3.7 toSignal · Guía Angular',
   },
   {
+    path: 'signals/resource',
+    loadComponent: () =>
+      import('./features/signals/resource/resource-section').then((m) => m.ResourceSection),
+    title: '3.8 Resource · Guía Angular',
+  },
+  {
+    path: 'signals/rx-resource',
+    loadComponent: () =>
+      import('./features/signals/rx-resource/rx-resource-section').then((m) => m.RxResourceSection),
+    title: '3.9 rxResource · Guía Angular',
+  },
+  {
     path: 'template/events',
     loadComponent: () =>
       import('./features/template/events/events-section').then((m) => m.EventsSection),
@@ -313,6 +325,12 @@ export const routes: Routes = [
       import('./features/utils/clamp/clamp-section').then((m) => m.ClampSection),
     title: '15.2 Tope incremento numérico - Math.min o Math.max · Guía Angular',
   },
+  {
+    path: 'utils/diccionarios-computed',
+    loadComponent: () =>
+      import('./features/utils/diccionarios-computed/diccionarios-computed-section').then((m) => m.DiccionariosComputedSection),
+    title: '15.3 Uso de "diccionarios", computed y corchetes [] · Guía Angular',
+  },
 
   {
     path: 'dom-control/ng-container-template',
@@ -403,6 +421,15 @@ export const routes: Routes = [
         (m) => m.PromesasVsObservablesSection
       ),
     title: '21.2 Promesas vs Observables · Guía Angular',
+  },
+
+  {
+    path: 'promesas/async-await-vs-observable',
+    loadComponent: () =>
+      import('./features/promesas/async-await-vs-observable/async-await-vs-observable-section').then(
+        (m) => m.AsyncAwaitVsObservableSection
+      ),
+    title: '21.3 async-await vs next, error observable · Guía Angular',
   },
 
   {

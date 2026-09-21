@@ -37,6 +37,8 @@ export const CURRICULUM: Block[] = [
       { code: '3.5', title: 'Effect', path: 'signals/effect' },
       { code: '3.6', title: 'ViewChild', path: 'signals/viewchild' },
       { code: '3.7', title: 'toSignal', path: 'signals/to-signal' },
+      { code: '3.8', title: 'Resource', path: 'signals/resource' },
+      { code: '3.9', title: 'rxResource', path: 'signals/rx-resource' },
     ],
   },
   {
@@ -155,6 +157,7 @@ export const CURRICULUM: Block[] = [
     sections: [
       { code: '15.1', title: 'Convertir array en carrusel cíclico - %', path: 'utils/modulo-ciclico' },
       { code: '15.2', title: 'Tope incremento numérico - Math.min o Math.max', path: 'utils/clamp' },
+      { code: '15.3', title: 'Uso de "diccionarios", computed y corchetes []', path: 'utils/diccionarios-computed' },
     ],
   },
   {
@@ -236,6 +239,7 @@ export const CURRICULUM: Block[] = [
     sections: [
       { code: '21.1', title: 'Promesas', path: 'promesas/promesas' },
       { code: '21.2', title: 'Promesas vs Observables', path: 'promesas/promesas-vs-observables' },
+      { code: '21.3', title: 'async-await vs next, error observable', path: 'promesas/async-await-vs-observable' },
     ],
   },
   {

@@ -1957,16 +1957,117 @@
           "observable": "Observable"
         },
         "rows": [
-          { "aspect": "Cardinality", "promise": "A single value (or rejection)", "observable": "Stream of 0..N values over time" },
-          { "aspect": "Evaluation", "promise": "Eager: runs on creation", "observable": "Lazy: runs on subscription" },
-          { "aspect": "Cancelable", "promise": "No", "observable": "Yes, with unsubscribe()" },
-          { "aspect": "Re-execution", "promise": "The result is cached and shared", "observable": "Each subscribe re-runs the logic (cold)" },
-          { "aspect": "Operators", "promise": "Chain with .then", "observable": "pipe(map, filter, debounceTime…)" },
-          { "aspect": "Consumption", "promise": ".then / .catch / .finally", "observable": "subscribe({ next, error, complete })" },
-          { "aspect": "Timing", "promise": "Always asynchronous (microtask)", "observable": "Can emit synchronously or asynchronously" },
-          { "aspect": "Combinators", "promise": "all · allSettled · race · any", "observable": "forkJoin · combineLatest · merge · race" },
-          { "aspect": "In Angular", "promise": "Dynamic import(), one-off fetch", "observable": "HttpClient, forms, router, events" }
+          {
+            "aspect": "Cardinality",
+            "promise": "A single value (or rejection)",
+            "observable": "Stream of 0..N values over time"
+          },
+          {
+            "aspect": "Evaluation",
+            "promise": "Eager: runs on creation",
+            "observable": "Lazy: runs on subscription"
+          },
+          {
+            "aspect": "Cancelable",
+            "promise": "No",
+            "observable": "Yes, with unsubscribe()"
+          },
+          {
+            "aspect": "Re-execution",
+            "promise": "The result is cached and shared",
+            "observable": "Each subscribe re-runs the logic (cold)"
+          },
+          {
+            "aspect": "Operators",
+            "promise": "Chain with .then",
+            "observable": "pipe(map, filter, debounceTime…)"
+          },
+          {
+            "aspect": "Consumption",
+            "promise": ".then / .catch / .finally",
+            "observable": "subscribe({ next, error, complete })"
+          },
+          {
+            "aspect": "Timing",
+            "promise": "Always asynchronous (microtask)",
+            "observable": "Can emit synchronously or asynchronously"
+          },
+          {
+            "aspect": "Combinators",
+            "promise": "all · allSettled · race · any",
+            "observable": "forkJoin · combineLatest · merge · race"
+          },
+          {
+            "aspect": "In Angular",
+            "promise": "Dynamic import(), one-off fetch",
+            "observable": "HttpClient, forms, router, events"
+          }
         ]
+      }
+    },
+    "resource": {
+      "badge": "Angular 22+",
+      "title": "Resource",
+      "intro": "resource() simplifies asynchronous data loading in the Signals era. Instead of orchestrating multiple signals and observables for loading state, data, and errors, resource() bundles all of this into a single reactive primitive.",
+      "theory": "Before resource(), managing an async call meant dealing with a lot of boilerplate code: you needed to create at least three manual signals (`isLoading`, `data`, `error`), manage try/catch blocks, and make sure to clear the error state before each call. Furthermore, simultaneous calls could cause race conditions.\nWith the resource() API introduced in Angular 22, you get a tool designed to solve this natively. You pass it a `loader` function (which returns a Promise) and Angular internally bundles the reactive state (`isLoading()`, `value()`, `error()`). It automatically handles canceling obsolete requests and updating the UI without you having to manage three different variables.",
+      "simile": "The classic approach is like cooking at a campsite: you have to start the fire, watch the clock with a stopwatch, stir constantly, and worry about not burning yourself. Using resource() is like using a smart air fryer: you just give it the ingredients (the params), press a button, and it manages the time, alerts you if there's an error, and returns the finished dish when it's ready, without you supervising every step.",
+      "examples": [
+        "fetch() or HttpClient calls that depend on reactive parameters (like a selected ID).",
+        "Showing loading spinners declaratively using .isLoading().",
+        "Managing automatic reloads when a dependency changes without writing effects or manual unsubscribes."
+      ],
+      "ex1": {
+        "title": "Comparison: Signals + Observables vs resource()",
+        "desc": "In this exercise we simulate an asynchronous load of a user profile.",
+        "hint": "Click the buttons to start the loads and see how resource() simplifies all the boilerplate in the code.",
+        "btnClassic": "Load (Classic)",
+        "btnResource": "Load (Resource)",
+        "loading": "Loading profile...",
+        "loaded": "Profile loaded:"
+      }
+    },
+    "rx-resource": {
+      "badge": "Angular 22+ · RxJS",
+      "title": "rxResource",
+      "intro": "While resource() is used for Promise-based loading, rxResource() is its sibling designed for the RxJS world. It allows you to seamlessly integrate services that return Observables (like HttpClient) into the Signals ecosystem.",
+      "theory": "In Angular, it's very common to use `HttpClient` for requests, which returns Observables. Previously, if you wanted to expose the result in a Signal, you used `toSignal()`, but you lost native control over the loading and error state (unless you wrapped the response). \nWith `rxResource()` (imported from `@angular/core/rxjs-interop`), you can return an Observable from the `loader`. Angular subscribes automatically, manages canceling previous requests when parameters change (behaving like a `switchMap`), and exposes the final result, loading state, and potential errors with exactly the same API as a regular `resource()`.",
+      "simile": "If `resource()` is an air fryer for a single dish, `rxResource()` is a smart conveyor belt. You tell it what stream of ingredients is coming (the server's Observable) and it takes care of packaging it and showing it to you at the end, stopping the belt and throwing away half-finished dishes if you suddenly change your mind (cancellation).",
+      "examples": [
+        "GET requests with HttpClient that depend on Signals (ID, filters, pagination).",
+        "Replacing the `switchMap` + `async pipe` pattern with a 100% Signal-based approach in the template.",
+        "Built-in loading and error state management without extra wrappers."
+      ],
+      "ex1": {
+        "title": "Simulated HTTP request with rxResource",
+        "desc": "This exercise uses rxResource to simulate a search that returns an Observable. If you click rapidly, you'll see how it cancels the previous in-flight calls.",
+        "hint": "Click 'Search' several times quickly and check the console to see how previous requests are discarded.",
+        "btnLoad": "Search (rxResource)",
+        "loading": "Searching...",
+        "loaded": "Search result:"
+      }
+    },
+    "async-await-vs-observable": {
+      "badge": "Async/Await vs Observable",
+      "title": "async-await vs next, error observable",
+      "intro": "How to replace a classic subscribe({ next, error, complete }) with an async-await block using try/catch/finally and firstValueFrom().",
+      "theory": "Often we need to consume an HTTP API (which returns an Observable in Angular) as if it were a Promise, linearly. By using firstValueFrom, we convert that Observable into a Promise, allowing the use of async/await. The next callback becomes the main body of the try block, the error goes to the catch, and the complete to the finally.",
+      "simile": "It is like changing a contract with three contact phone numbers, to waiting yourself for the call to end and deciding what to do (success, failure, or when everything is done).",
+      "examples": [
+        "Migration of classic HTTP calls.",
+        "Simplification of linear asynchronous code."
+      ],
+      "stepWord": "Step",
+      "diagramWord": "Diagram",
+      "p1": {
+        "title": "Block Equivalency",
+        "lead": "Visual comparison between both approaches.",
+        "note": "Notice how each callback has its analog.",
+        "next": "try { // next }",
+        "error": "catch(e) { // error }",
+        "complete": "finally { // complete }"
+      },
+      "exercise": {
+        "desc": "Click each button to see how the flow executes simulating an API call. Check how the console.logs of next/try, error/catch and complete/finally correspond to each other."
       }
     }
   },

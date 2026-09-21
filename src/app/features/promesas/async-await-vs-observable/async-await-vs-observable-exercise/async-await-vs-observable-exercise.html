@@ -1,0 +1,26 @@
+<div class="exercise-panel">
+  <div class="controls">
+    <button (click)="runSubscribe(false)" class="btn btn--primary">1. subscribe (Éxito)</button>
+    <button (click)="runSubscribe(true)" class="btn btn--danger">2. subscribe (Error)</button>
+    <button (click)="runAsyncAwait(false)" class="btn btn--primary">3. async/await (Éxito)</button>
+    <button (click)="runAsyncAwait(true)" class="btn btn--danger">4. async/await (Error)</button>
+    <button (click)="clearLogs()" class="btn btn--secondary">Limpiar</button>
+  </div>
+
+  <div class="logs">
+    <div class="logs__header">Consola</div>
+    <div class="logs__body">
+      @for (log of logs(); track $index) {
+        <div class="log-entry" 
+             [class.log-entry--error]="log.includes('error') || log.includes('catch')"
+             [class.log-entry--success]="log.includes('next') || log.includes('try')">
+          <span class="log-entry__time">{{ $index + 1 }}.</span>
+          <span class="log-entry__text">{{ log }}</span>
+        </div>
+      }
+      @if (logs().length === 0) {
+        <div class="log-entry log-entry--empty">Esperando ejecución...</div>
+      }
+    </div>
+  </div>
+</div>

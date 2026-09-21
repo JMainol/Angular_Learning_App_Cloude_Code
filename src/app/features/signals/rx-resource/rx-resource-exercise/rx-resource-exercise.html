@@ -1,0 +1,26 @@
+<div class="exercise-panel">
+  <div class="panel-section full-width">
+    <h3>{{ 'sections.rx-resource.ex1.title' | translate }}</h3>
+    <p class="desc">{{ 'sections.rx-resource.ex1.desc' | translate }}</p>
+    
+    <div class="hint-box">
+      <strong>Pista:</strong> {{ 'sections.rx-resource.ex1.hint' | translate }}
+    </div>
+
+    <button type="button" class="btn" (click)="triggerSearch()">
+      {{ 'sections.rx-resource.ex1.btnLoad' | translate }}
+    </button>
+
+    <div class="result-area">
+      @if (searchResource.isLoading()) {
+        <div class="spinner"></div>
+        <span>{{ 'sections.rx-resource.ex1.loading' | translate }}</span>
+      } @else if (searchResource.value()) {
+        <div class="profile-card">
+          <strong>{{ 'sections.rx-resource.ex1.loaded' | translate }}</strong>
+          <pre>{{ searchResource.value() | json }}</pre>
+        </div>
+      }
+    </div>
+  </div>
+</div>

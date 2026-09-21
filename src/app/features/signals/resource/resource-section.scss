@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.resource-diagram {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem 1rem;
+  background: var(--surface-result);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.node {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 340px;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+.branch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  width: 100%;
+  justify-content: center;
+}
+.branch .node {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 100px;
+}
+.node__title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-strong);
+}
+.node__title--sm {
+  font-size: 0.72rem;
+}
+.node__cap {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.node--accent {
+  border-color: var(--accent);
+}
+.node--accent .node__title {
+  color: var(--accent);
+}
+.node--out {
+  background: var(--accent-soft);
+}
+.arrow {
+  width: 1px;
+  height: 26px;
+  background: var(--border-strong);
+  position: relative;
+}
+.arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid var(--border-strong);
+}
+
+pre.mermaid {
+  display: none;
+}

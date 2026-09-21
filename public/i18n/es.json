@@ -1308,6 +1308,16 @@
         "Sanear valores que llegan de fuera (input del usuario, query params) antes de usarlos en la UI."
       ]
     },
+    "diccionarios-computed": {
+      "title": "Uso de \"diccionarios\", computed y corchetes []",
+      "theory": "En lugar de usar bloques `if/else` o `switch` para mapear un estado (como un enum) a un valor visual (como una clase CSS), es mucho más limpio y eficiente usar un diccionario estático.\nAl combinar un objeto tipado con `Record<Clave, Valor>` dentro de un `computed()`, delegas el cálculo a Angular. Usando la notación de corchetes `[]`, accedes directamente a la propiedad deseada basándote en el valor actual de tu signal.\nEsto escala perfectamente: si añades nuevos estados en el futuro, solo agregas una línea al diccionario y tu lógica visual se mantiene intacta.",
+      "simile": "Es como buscar una palabra en un diccionario real frente a preguntar por la calle. Tienes un libro con todos los significados (el Record). Cuando tienes una palabra (el estado del signal), vas directo a su definición con un solo movimiento rápido (los corchetes []), en lugar de ir preguntando a cada persona (un switch) hasta dar con la respuesta.",
+      "examples": [
+        "Mapear estados de inventario (IN_STOCK, OUT_OF_STOCK) a clases CSS de colores.",
+        "Asignar iconos específicos (check, warning, error) basándote en el nivel de severidad de una notificación.",
+        "Mostrar textos descriptivos o traducciones a partir de un código de respuesta de la API."
+      ]
+    },
     "ng-container-template": {
       "title": "ng-container y ng-template",
       "badge": "DOM · Plantillas",
@@ -1957,16 +1967,117 @@
           "observable": "Observable"
         },
         "rows": [
-          { "aspect": "Cardinalidad", "promise": "Un único valor (o rechazo)", "observable": "Flujo de 0..N valores en el tiempo" },
-          { "aspect": "Evaluación", "promise": "Eager: corre al crearse", "observable": "Lazy: corre al suscribirse" },
-          { "aspect": "Cancelable", "promise": "No", "observable": "Sí, con unsubscribe()" },
-          { "aspect": "Reejecución", "promise": "El resultado se cachea y se comparte", "observable": "Cada subscribe re-ejecuta la lógica (frío)" },
-          { "aspect": "Operadores", "promise": "Encadenar con .then", "observable": "pipe(map, filter, debounceTime…)" },
-          { "aspect": "Consumo", "promise": ".then / .catch / .finally", "observable": "subscribe({ next, error, complete })" },
-          { "aspect": "Sincronía", "promise": "Siempre asíncrona (microtask)", "observable": "Puede emitir de forma síncrona o asíncrona" },
-          { "aspect": "Combinadores", "promise": "all · allSettled · race · any", "observable": "forkJoin · combineLatest · merge · race" },
-          { "aspect": "En Angular", "promise": "import() dinámico, fetch puntual", "observable": "HttpClient, formularios, router, eventos" }
+          {
+            "aspect": "Cardinalidad",
+            "promise": "Un único valor (o rechazo)",
+            "observable": "Flujo de 0..N valores en el tiempo"
+          },
+          {
+            "aspect": "Evaluación",
+            "promise": "Eager: corre al crearse",
+            "observable": "Lazy: corre al suscribirse"
+          },
+          {
+            "aspect": "Cancelable",
+            "promise": "No",
+            "observable": "Sí, con unsubscribe()"
+          },
+          {
+            "aspect": "Reejecución",
+            "promise": "El resultado se cachea y se comparte",
+            "observable": "Cada subscribe re-ejecuta la lógica (frío)"
+          },
+          {
+            "aspect": "Operadores",
+            "promise": "Encadenar con .then",
+            "observable": "pipe(map, filter, debounceTime…)"
+          },
+          {
+            "aspect": "Consumo",
+            "promise": ".then / .catch / .finally",
+            "observable": "subscribe({ next, error, complete })"
+          },
+          {
+            "aspect": "Sincronía",
+            "promise": "Siempre asíncrona (microtask)",
+            "observable": "Puede emitir de forma síncrona o asíncrona"
+          },
+          {
+            "aspect": "Combinadores",
+            "promise": "all · allSettled · race · any",
+            "observable": "forkJoin · combineLatest · merge · race"
+          },
+          {
+            "aspect": "En Angular",
+            "promise": "import() dinámico, fetch puntual",
+            "observable": "HttpClient, formularios, router, eventos"
+          }
         ]
+      }
+    },
+    "resource": {
+      "badge": "Angular 22+",
+      "title": "Resource",
+      "intro": "resource() simplifica la carga asíncrona de datos en la era de los Signals. En lugar de orquestar múltiples signals y observables para el estado de carga, los datos y los errores, resource() agrupa todo esto en un único primitivo reactivo.",
+      "theory": "Antes de la llegada de resource(), gestionar una llamada asíncrona implicaba lidiar con mucho código repetitivo (*boilerplate*): necesitabas crear al menos tres signals manuales (`isLoading`, `data`, `error`), gestionar los bloques try/catch, y asegurarte de limpiar el estado de error antes de cada llamada. Además, las llamadas simultáneas podían causar problemas de *race conditions* (condiciones de carrera).\nCon la API de resource() introducida en Angular 22, obtienes una herramienta diseñada para solucionar esto nativamente. Le pasas una función `loader` (que devuelve una Promesa) y Angular agrupa internamente el estado reactivo (`isLoading()`, `value()`, `error()`). Se encarga automáticamente de cancelar peticiones obsoletas y actualizar la interfaz sin que tengas que gestionar tres variables distintas.",
+      "simile": "El enfoque clásico es como cocinar en un camping: tienes que encender el fuego, vigilar el reloj con un cronómetro, remover constantemente y preocuparte de no quemarte. Usar resource() es como usar una freidora de aire inteligente: simplemente le das los ingredientes (los parámetros), pulsas un botón, y ella se encarga del tiempo, te avisa si hay un error y te devuelve el plato terminado cuando está listo, sin que tú supervises cada paso.",
+      "examples": [
+        "Llamadas fetch() u HttpClient que dependen de parámetros reactivos (como un ID seleccionado).",
+        "Mostrar spinners de carga de forma declarativa usando .isLoading().",
+        "Gestionar recargas automáticas cuando cambia una dependencia sin escribir effects ni manual unsubscribes."
+      ],
+      "ex1": {
+        "title": "Comparativa: Signals + Observables vs resource()",
+        "desc": "En este ejercicio simulamos una carga asíncrona de un perfil de usuario.",
+        "hint": "Pulsa los botones para iniciar las cargas y observa cómo en el código resource() simplifica todo el boilerplate.",
+        "btnClassic": "Cargar (Clásico)",
+        "btnResource": "Cargar (Resource)",
+        "loading": "Cargando perfil...",
+        "loaded": "Perfil cargado:"
+      }
+    },
+    "rx-resource": {
+      "badge": "Angular 22+ · RxJS",
+      "title": "rxResource",
+      "intro": "Mientras que resource() se utiliza para cargas basadas en Promesas, rxResource() es su hermano diseñado para el mundo de RxJS. Permite integrar fácilmente servicios que devuelven Observables (como HttpClient) dentro del ecosistema de Signals.",
+      "theory": "En Angular, es muy común utilizar `HttpClient` para realizar peticiones, el cual devuelve Observables. Antes, si querías exponer el resultado en un Signal, usabas `toSignal()`, pero perdías el control nativo sobre el estado de carga y error (a menos que envolvieras la respuesta). \nCon `rxResource()` (importado de `@angular/core/rxjs-interop`), puedes devolver un Observable desde el `loader`. Angular se suscribe automáticamente, gestiona la cancelación de peticiones anteriores cuando los parámetros cambian (comportándose como un `switchMap`), y expone el resultado final, el estado de carga y los posibles errores exactamente con la misma API que un `resource()` normal.",
+      "simile": "Si `resource()` es una freidora de aire para un solo plato, `rxResource()` es una cinta transportadora inteligente. Le dices qué flujo de ingredientes va a llegar (el Observable del servidor) y se encarga de empaquetarlo y mostrártelo al final, deteniendo la cinta y tirando los platos a medias si de repente cambias de opinión (cancelación).",
+      "examples": [
+        "Peticiones GET con HttpClient que dependen de Signals (ID, filtros, paginación).",
+        "Sustituir el patrón de `switchMap` + `async pipe` por un enfoque 100% basado en Signals en el template.",
+        "Manejo de estado de carga y error integrado sin envoltorios extra."
+      ],
+      "ex1": {
+        "title": "Petición HTTP simulada con rxResource",
+        "desc": "Este ejercicio usa rxResource para simular una búsqueda que devuelve un Observable. Si haces clics rápidos, verás cómo cancela las llamadas en vuelo anteriores.",
+        "hint": "Pulsa 'Buscar' varias veces rápido y mira la consola para comprobar cómo las peticiones previas se descartan.",
+        "btnLoad": "Buscar (rxResource)",
+        "loading": "Buscando...",
+        "loaded": "Resultado de la búsqueda:"
+      }
+    },
+    "async-await-vs-observable": {
+      "badge": "Async/Await vs Observable",
+      "title": "async-await vs next, error observable",
+      "intro": "Cómo sustituir un clásico subscribe({ next, error, complete }) por un bloque async-await utilizando try/catch/finally y firstValueFrom().",
+      "theory": "En muchas ocasiones necesitamos consumir una API HTTP (que devuelve un Observable en Angular) como si fuera una Promesa, de forma lineal. Utilizando firstValueFrom convertimos ese Observable en una Promesa, permitiendo el uso de async/await. El callback next se convierte en el cuerpo principal del try, el error pasa al catch y el complete al finally.",
+      "simile": "Es como cambiar un contrato con tres números de teléfono de contacto, a esperar tú mismo a que termine la llamada y decidir qué hacer (éxito, fallo, o al terminar todo).",
+      "examples": [
+        "Migración de llamadas HTTP clásicas.",
+        "Simplificación de código asíncrono lineal."
+      ],
+      "stepWord": "Paso",
+      "diagramWord": "Diagrama",
+      "p1": {
+        "title": "Equivalencia de Bloques",
+        "lead": "Comparativa visual entre ambos enfoques.",
+        "note": "Observa cómo cada callback tiene su análogo.",
+        "next": "try { // next }",
+        "error": "catch(e) { // error }",
+        "complete": "finally { // complete }"
+      },
+      "exercise": {
+        "desc": "Haz click en cada botón para ver cómo se ejecuta el flujo simulando una llamada a una API. Comprueba cómo los console.log de next/try, error/catch y complete/finally se corresponden."
       }
     }
   },

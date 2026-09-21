@@ -1,0 +1,39 @@
+<div class="exercise-panel">
+  <div class="panel-section">
+    <h3>{{ 'sections.resource.ex1.btnClassic' | translate }}</h3>
+    <button type="button" class="btn" (click)="loadClassic()">
+      {{ 'sections.resource.ex1.btnClassic' | translate }}
+    </button>
+    
+    <div class="result-area">
+      @if (isLoadingClassic()) {
+        <div class="spinner"></div>
+        <span>{{ 'sections.resource.ex1.loading' | translate }}</span>
+      } @else if (profileClassic()) {
+        <div class="profile-card">
+          <strong>{{ 'sections.resource.ex1.loaded' | translate }}</strong>
+          <pre>{{ profileClassic() | json }}</pre>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="panel-section">
+    <h3>{{ 'sections.resource.ex1.btnResource' | translate }}</h3>
+    <button type="button" class="btn" (click)="loadWithResource()">
+      {{ 'sections.resource.ex1.btnResource' | translate }}
+    </button>
+
+    <div class="result-area">
+      @if (profileResource.isLoading()) {
+        <div class="spinner"></div>
+        <span>{{ 'sections.resource.ex1.loading' | translate }}</span>
+      } @else if (profileResource.value()) {
+        <div class="profile-card">
+          <strong>{{ 'sections.resource.ex1.loaded' | translate }}</strong>
+          <pre>{{ profileResource.value() | json }}</pre>
+        </div>
+      }
+    </div>
+  </div>
+</div>

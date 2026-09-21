@@ -1,0 +1,17 @@
+<app-section-shell
+  code="15.3"
+  [title]="'sections.diccionarios-computed.title' | translate"
+  [theory]="'sections.diccionarios-computed.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.diccionarios-computed.simile' | translate"
+  [examples]="'sections.diccionarios-computed.examples' | translate"
+>
+  <app-code-block
+    exercise-code
+    [code]="exerciseCode"
+    language="TypeScript"
+    filename="diccionarios-computed-exercise.ts"
+  />
+
+  <app-diccionarios-computed-exercise exercise-result />
+</app-section-shell>

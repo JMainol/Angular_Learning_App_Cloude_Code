@@ -1,0 +1,90 @@
+<section class="doc">
+
+  <!-- ── Cabecera ────────────────────────────────────────────────────── -->
+  <header class="doc__head">
+    <div class="doc__tags">
+      <span class="doc__code">21.3</span>
+      <span class="doc__badge">{{ 'sections.async-await-vs-observable.badge' | translate }}</span>
+    </div>
+    <h1 class="doc__title">{{ 'sections.async-await-vs-observable.title' | translate }}</h1>
+    <p class="doc__intro">{{ 'sections.async-await-vs-observable.intro' | translate }}</p>
+  </header>
+
+  <!-- ── 1 · TEORÍA ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.theory' | translate }}</span>
+    <p class="part__text">{{ 'sections.async-await-vs-observable.theory' | translate }}</p>
+    <app-doc-link [href]="docUrl" />
+  </article>
+
+  <!-- ── 2 · SÍMIL ──────────────────────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.simile' | translate }}</span>
+    <p class="part__text part__text--simile">{{ 'sections.async-await-vs-observable.simile' | translate }}</p>
+  </article>
+
+  <!-- ── 3 · EJEMPLOS DE USO COMÚN ──────────────────────────────────── -->
+  <article class="part">
+    <span class="part__label">{{ 'common.labels.examples' | translate }}</span>
+    <ol class="examples">
+      @for (ex of ('sections.async-await-vs-observable.examples' | translate); track $index) {
+        <li class="examples__item">
+          <span class="examples__num">{{ $index + 1 }}</span>
+          <span>{{ ex }}</span>
+        </li>
+      }
+    </ol>
+  </article>
+
+  <!-- ── 4 · DIAGRAMA / DESCRIPCIÓN ──────────────────────────────────── -->
+  <article class="block">
+    <div class="block__grid">
+      <div class="block__diagram">
+        <span class="block__tag">{{ 'sections.async-await-vs-observable.diagramWord' | translate }} 1</span>
+        <div class="diagram" role="img" [attr.aria-label]="'sections.async-await-vs-observable.p1.title' | translate">
+          <div class="compare">
+            <div class="compare__col">
+              <span class="node__title node__title--sm">Observable</span>
+              <div class="url-box" style="align-items: flex-start; text-align: left;">
+                <span class="url-box__leaf">next: () =&gt; &#123; &#125;</span>
+                <span class="url-box__leaf">error: () =&gt; &#123; &#125;</span>
+                <span class="url-box__leaf">complete: () =&gt; &#123; &#125;</span>
+              </div>
+            </div>
+            <div class="compare__col">
+              <span class="node__title node__title--sm">async / await</span>
+              <div class="url-box" style="align-items: flex-start; text-align: left;">
+                <span class="url-box__leaf">{{ 'sections.async-await-vs-observable.p1.next' | translate }}</span>
+                <span class="url-box__leaf">{{ 'sections.async-await-vs-observable.p1.error' | translate }}</span>
+                <span class="url-box__leaf">{{ 'sections.async-await-vs-observable.p1.complete' | translate }}</span>
+              </div>
+            </div>
+          </div>
+          <p class="dom-note">{{ 'sections.async-await-vs-observable.p1.note' | translate }}</p>
+        </div>
+      </div>
+      <div class="block__body">
+        <span class="flow__label">
+          {{ 'sections.async-await-vs-observable.stepWord' | translate }} 1 · {{ 'sections.async-await-vs-observable.p1.title' | translate }}
+        </span>
+        <p class="flow__lead">{{ 'sections.async-await-vs-observable.p1.lead' | translate }}</p>
+        <app-code-block [code]="codeEquivalent" language="TypeScript" filename="equivalencia.ts" />
+      </div>
+    </div>
+  </article>
+
+  <!-- ── 5 · EJERCICIO PRÁCTICO ──────────────────────────────────────── -->
+  <article class="block">
+    <div class="exercise">
+      <div class="exercise__code">
+        <span class="part__label">{{ 'common.labels.exercise' | translate }}</span>
+        <p class="exercise__desc">{{ 'sections.async-await-vs-observable.exercise.desc' | translate }}</p>
+      </div>
+      <div class="exercise__result">
+        <span class="part__label">{{ 'common.labels.result' | translate }}</span>
+        <app-async-await-vs-observable-exercise />
+      </div>
+    </div>
+  </article>
+
+</section>

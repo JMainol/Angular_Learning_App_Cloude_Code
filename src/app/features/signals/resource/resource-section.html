@@ -1,0 +1,47 @@
+<app-section-shell
+  code="3.8"
+  [title]="'sections.resource.title' | translate"
+  [theory]="'sections.resource.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.resource.simile' | translate"
+  [examples]="'sections.resource.examples' | translate"
+>
+  <app-code-block 
+    exercise-code
+    [code]="exerciseCode" 
+    language="TypeScript"
+    filename="resource-exercise.ts"
+  />
+  
+  <div exercise-code class="resource-diagram">
+    <div class="diagram" role="img" aria-label="Flujo de resource()">
+      <div class="node">
+        <span class="node__title">Inicia Carga / Cambia params</span>
+        <span class="node__cap">Signal disparador</span>
+      </div>
+      <div class="arrow" aria-hidden="true"></div>
+      <div class="node node--accent">
+        <span class="node__title">loader</span>
+        <span class="node__cap">Petición Asíncrona (Promesa)</span>
+      </div>
+      <div class="arrow" aria-hidden="true"></div>
+      <div class="branch branch--three">
+        <div class="node node--out">
+          <span class="node__title">resource.value()</span>
+          <span class="node__cap">Resultado</span>
+        </div>
+        <div class="node node--out">
+          <span class="node__title">resource.isLoading()</span>
+          <span class="node__cap">Estado de carga</span>
+        </div>
+        <div class="node node--out">
+          <span class="node__title">resource.error()</span>
+          <span class="node__cap">Posible error</span>
+        </div>
+      </div>
+      <span class="diagram__cap">El loader gestiona de forma transparente y unificada los 3 estados reactivos.</span>
+    </div>
+  </div>
+
+  <app-resource-exercise exercise-result />
+</app-section-shell>

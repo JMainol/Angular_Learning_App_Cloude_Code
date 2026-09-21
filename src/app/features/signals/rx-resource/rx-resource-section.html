@@ -1,0 +1,42 @@
+<app-section-shell
+  code="3.9"
+  [title]="'sections.rx-resource.title' | translate"
+  [theory]="'sections.rx-resource.theory' | translate"
+  [docUrl]="docUrl"
+  [simile]="'sections.rx-resource.simile' | translate"
+  [examples]="'sections.rx-resource.examples' | translate"
+>
+  <app-code-block 
+    exercise-code
+    [code]="exerciseCode" 
+    language="TypeScript"
+    filename="rx-resource-exercise.ts"
+  />
+  
+  <div exercise-code class="resource-diagram">
+    <div class="diagram" role="img" aria-label="Flujo de rxResource()">
+      <div class="node">
+        <span class="node__title">Cambio en params</span>
+        <span class="node__cap">Signal disparador</span>
+      </div>
+      <div class="arrow" aria-hidden="true"></div>
+      <div class="node node--accent">
+        <span class="node__title">stream</span>
+        <span class="node__cap">Devuelve Observable</span>
+      </div>
+      <div class="arrow" aria-hidden="true"></div>
+      <div class="node">
+        <span class="node__title">Petición en vuelo (HttpClient)</span>
+        <span class="node__cap">¡Se cancela si params vuelve a cambiar! (switchMap)</span>
+      </div>
+      <div class="arrow" aria-hidden="true"></div>
+      <div class="node node--out">
+        <span class="node__title">rxResource.value()</span>
+        <span class="node__cap">Emisión del Observable</span>
+      </div>
+      <span class="diagram__cap">Angular se suscribe y gestiona la vida del Observable de forma automática.</span>
+    </div>
+  </div>
+
+  <app-rx-resource-exercise exercise-result />
+</app-section-shell>

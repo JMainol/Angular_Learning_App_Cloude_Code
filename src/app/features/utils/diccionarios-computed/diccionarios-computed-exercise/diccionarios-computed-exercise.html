@@ -1,0 +1,47 @@
+<div class="panel">
+  <header class="ex-head">
+    <span class="ex-head__num">Ejercicio</span>
+    <span class="ex-head__title">diccionarios, computed y []</span>
+  </header>
+
+  <p>
+    Completa los <code class="code-inline">TODOs</code> en el código de la izquierda para que el badge cambie de clase (y por tanto, de color) 
+    dependiendo de qué botón pulses.
+  </p>
+  
+  <div class="filtros" style="margin-top: 1rem; margin-bottom: 2rem;">
+    <button 
+      type="button" 
+      class="chip"
+      [class.chip--on]="stockStatus() === StockStatus.IN_STOCK"
+      (click)="setStatus(StockStatus.IN_STOCK)"
+    >
+      En stock
+    </button>
+    <button 
+      type="button" 
+      class="chip"
+      [class.chip--on]="stockStatus() === StockStatus.LOW_STOCK"
+      (click)="setStatus(StockStatus.LOW_STOCK)"
+    >
+      Poco stock
+    </button>
+    <button 
+      type="button" 
+      class="chip"
+      [class.chip--on]="stockStatus() === StockStatus.OUT_OF_STOCK"
+      (click)="setStatus(StockStatus.OUT_OF_STOCK)"
+    >
+      Sin stock
+    </button>
+  </div>
+
+  <div class="resumen">
+    Estado actual del producto:
+    
+    <!-- Aquí aplicamos la clase calculada -->
+    <span class="chip" [class]="statusClass()">
+      {{ stockStatus() }}
+    </span>
+  </div>
+</div>
